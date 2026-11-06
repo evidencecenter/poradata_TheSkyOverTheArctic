@@ -1,0 +1,180 @@
+{
+ "by_station_date": [
+  {
+   "station": "ARH",
+   "date": "2026-08-15",
+   "yandex": 11,
+   "yandex_in_aviastats": 11,
+   "aviastats": 31,
+   "aviastats_in_yandex": 12
+  },
+  {
+   "station": "ARH",
+   "date": "2026-08-16",
+   "yandex": 11,
+   "yandex_in_aviastats": 9,
+   "aviastats": 30,
+   "aviastats_in_yandex": 10
+  },
+  {
+   "station": "ARH",
+   "date": "2026-08-17",
+   "yandex": 10,
+   "yandex_in_aviastats": 10,
+   "aviastats": 36,
+   "aviastats_in_yandex": 11
+  },
+  {
+   "station": "ARH",
+   "date": "2026-09-20",
+   "yandex": 29,
+   "yandex_in_aviastats": 29,
+   "aviastats": 29,
+   "aviastats_in_yandex": 29
+  },
+  {
+   "station": "ARH",
+   "date": "2026-09-21",
+   "yandex": 23,
+   "yandex_in_aviastats": 23,
+   "aviastats": 23,
+   "aviastats_in_yandex": 23
+  },
+  {
+   "station": "ARH",
+   "date": "2026-09-22",
+   "yandex": 25,
+   "yandex_in_aviastats": 25,
+   "aviastats": 24,
+   "aviastats_in_yandex": 24
+  },
+  {
+   "station": "ARH",
+   "date": "2026-09-23",
+   "yandex": 29,
+   "yandex_in_aviastats": 29,
+   "aviastats": 29,
+   "aviastats_in_yandex": 29
+  },
+  {
+   "station": "ARH",
+   "date": "2026-09-24",
+   "yandex": 25,
+   "yandex_in_aviastats": 25,
+   "aviastats": 25,
+   "aviastats_in_yandex": 25
+  },
+  {
+   "station": "ARH",
+   "date": "2026-09-25",
+   "yandex": 25,
+   "yandex_in_aviastats": 23,
+   "aviastats": 23,
+   "aviastats_in_yandex": 23
+  },
+  {
+   "station": "ARH",
+   "date": "2026-10-15",
+   "yandex": 23,
+   "yandex_in_aviastats": 23,
+   "aviastats": 23,
+   "aviastats_in_yandex": 23
+  },
+  {
+   "station": "ARH",
+   "date": "2026-10-16",
+   "yandex": 21,
+   "yandex_in_aviastats": 20,
+   "aviastats": 20,
+   "aviastats_in_yandex": 20
+  },
+  {
+   "station": "MMK",
+   "date": "2026-09-20",
+   "yandex": 33,
+   "yandex_in_aviastats": 33,
+   "aviastats": 35,
+   "aviastats_in_yandex": 34
+  },
+  {
+   "station": "MMK",
+   "date": "2026-09-21",
+   "yandex": 28,
+   "yandex_in_aviastats": 28,
+   "aviastats": 29,
+   "aviastats_in_yandex": 29
+  },
+  {
+   "station": "MMK",
+   "date": "2026-09-22",
+   "yandex": 33,
+   "yandex_in_aviastats": 33,
+   "aviastats": 34,
+   "aviastats_in_yandex": 34
+  },
+  {
+   "station": "MMK",
+   "date": "2026-09-23",
+   "yandex": 27,
+   "yandex_in_aviastats": 27,
+   "aviastats": 28,
+   "aviastats_in_yandex": 28
+  },
+  {
+   "station": "MMK",
+   "date": "2026-09-24",
+   "yandex": 29,
+   "yandex_in_aviastats": 29,
+   "aviastats": 30,
+   "aviastats_in_yandex": 30
+  },
+  {
+   "station": "MMK",
+   "date": "2026-09-25",
+   "yandex": 32,
+   "yandex_in_aviastats": 31,
+   "aviastats": 32,
+   "aviastats_in_yandex": 32
+  },
+  {
+   "station": "MMK",
+   "date": "2026-10-15",
+   "yandex": 27,
+   "yandex_in_aviastats": 27,
+   "aviastats": 27,
+   "aviastats_in_yandex": 27
+  },
+  {
+   "station": "MMK",
+   "date": "2026-10-16",
+   "yandex": 28,
+   "yandex_in_aviastats": 27,
+   "aviastats": 27,
+   "aviastats_in_yandex": 27
+  },
+  {
+   "station": "NNM",
+   "date": "2026-10-15",
+   "yandex": 10,
+   "yandex_in_aviastats": 10,
+   "aviastats": 10,
+   "aviastats_in_yandex": 10
+  },
+  {
+   "station": "NNM",
+   "date": "2026-10-16",
+   "yandex": 10,
+   "yandex_in_aviastats": 10,
+   "aviastats": 10,
+   "aviastats_in_yandex": 10
+  }
+ ],
+ "totals": {
+  "yandex_flights": 489,
+  "yandex_found": 482,
+  "aviastats_flights": 555,
+  "aviastats_found": 490,
+  "share_yandex_found": 0.986,
+  "share_aviastats_found": 0.883
+ }
+}
