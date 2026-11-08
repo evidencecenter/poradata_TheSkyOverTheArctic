@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Небо над Арктикой</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Как устроено авиасообщение в Арктической зоне России: сеть, крюки, парк, сезон, цены и субсидии по рейсам за октябрь 2025 — сентябрь 2026 года. Дата-лендинг «ПОРА считать».">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Forum&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout, издательский лонгрид: тёмный фотографический первый экран со статичной шапкой, затем светлая страница
+   в одну широкую колонку — крупные заголовки глав антиквой, большие цифры, графики на всю ширину.
+   Каждой главе — значок-миниатюра её данных в стеклянной плашке; сноски и подсказки хранят исходные цифры. */
+:root{
+  --bg:#FFFFFF; --bg-2:#F4F6F9; --bg-3:#E7ECF3; --ink:#0D1B33; --ink-2:#42526B; --muted:#7D8A9C; --line:#DEE4EC; --line-2:#C5CFDC;
+  --navy:#0B2A5B; --navy-2:#153B7A; --sky:#3C8BE0; --sky-deep:#1F6FD2; --sky-soft:#BFDCF8; --sky-pale:#E9F2FC; --grey-blue:#8FB0D4; --grey:#C9D3DF;
+  --accent:#16A88B; --accent-deep:#0E7F69; --accent-pale:#DCF3ED; --amber:#D98B1F; --amber-deep:#9A5F0E; --amber-pale:#FBEBD3; --brand:#006AD3;
+  --hero:#050D1F; --hero-ink:#EEF4FC; --hero-muted:#9DB4D6;
+  --map-land:#F1F4F8; --map-other:#E4EAF1; --map-border:#C2CCD9; --map-full:#C7DEF7; --map-part:#E0ECF9;
+  --c-yks:var(--accent); --c-kja:var(--sky); --c-nsk:var(--navy); --c-gdx:#8DBE2B; --c-pyj:#8392A6; --c-cee:#3E4C64;
+  --font-d:"Forum","Georgia","Times New Roman",serif; --font-b:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif; --font-m:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --maxw:1200px; --textw:780px; --gutter-l:max(20px, env(safe-area-inset-left, 0px)); --gutter-r:max(20px, env(safe-area-inset-right, 0px));
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0B1322; --bg-2:#111C30; --bg-3:#182540; --ink:#EEF3FA; --ink-2:#B8C4D6; --muted:#8392A6; --line:#22304A; --line-2:#30415E;
+  --navy:#9FC0EA; --navy-2:#7FA8DF; --sky:#4F9EEA; --sky-deep:#3B8FE0; --sky-soft:#244B7A; --sky-pale:#15243C; --grey-blue:#5E7799; --grey:#3A4A64;
+  --accent:#1A9C7E; --accent-deep:#5FD8BC; --accent-pale:#12332D; --amber:#C27F25; --amber-deep:#F0B45E; --amber-pale:#3A2A12; --brand:#69BEFF;
+  --map-land:#18253F; --map-other:#101B2E; --map-border:#2E4263; --map-full:#1F3C66; --map-part:#1A3254; --c-nsk:#9FC0EA; --c-cee:#8FA3BC; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0B1322; --bg-2:#111C30; --bg-3:#182540; --ink:#EEF3FA; --ink-2:#B8C4D6; --muted:#8392A6; --line:#22304A; --line-2:#30415E;
+  --navy:#9FC0EA; --navy-2:#7FA8DF; --sky:#4F9EEA; --sky-deep:#3B8FE0; --sky-soft:#244B7A; --sky-pale:#15243C; --grey-blue:#5E7799; --grey:#3A4A64;
+  --accent:#1A9C7E; --accent-deep:#5FD8BC; --accent-pale:#12332D; --amber:#C27F25; --amber-deep:#F0B45E; --amber-pale:#3A2A12; --brand:#69BEFF;
+  --map-land:#18253F; --map-other:#101B2E; --map-border:#2E4263; --map-full:#1F3C66; --map-part:#1A3254; --c-nsk:#9FC0EA; --c-cee:#8FA3BC; color-scheme:dark }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important} }
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-b);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+@media (max-width:640px){ body{font-size:17px} }
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--hero)}
+h1,h2,h3{margin:0;text-wrap:balance;font-weight:400}
+h1{font-family:var(--font-d);font-size:clamp(44px,8.4vw,120px);line-height:1;letter-spacing:.015em;text-transform:uppercase}
+h2{font-family:var(--font-d);font-size:clamp(34px,4.6vw,62px);line-height:1.08}
+h3{font-family:var(--font-d);font-size:clamp(24px,2.4vw,30px);line-height:1.2}
+p{margin:0}
+a{color:var(--sky-deep);text-underline-offset:3px}
+b,strong{font-weight:600}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-left:var(--gutter-l);padding-right:var(--gutter-r)}
+.eyebrow{font-family:var(--font-b);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--sky-deep);font-weight:600}
+.lede{font-size:clamp(18px,1.6vw,21px);line-height:1.5;color:var(--ink-2);max-width:var(--textw)}
+.prose{max-width:var(--textw);color:var(--ink);font-size:clamp(17px,1.4vw,19px);line-height:1.6}
+.prose p+p{margin-top:16px}
+.num{font-variant-numeric:tabular-nums}
+.note{font-size:14.5px;color:var(--muted);line-height:1.5;max-width:72ch}
+.note b{color:var(--ink-2);font-weight:500}
+.grid-2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px}
+.grid-2.wide{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+@media (max-width:860px){ .grid-2,.grid-2.wide{grid-template-columns:minmax(0,1fr);gap:40px} }
+/* footnotes and hover originals */
+.fn{display:inline-flex;align-items:center;justify-content:center;min-width:1.35em;height:1.35em;padding:0 .25em;margin-left:.15em;border-radius:1em;background:var(--sky-pale);color:var(--sky-deep);font-family:var(--font-b);font-size:.55em;font-weight:600;line-height:1;vertical-align:super;cursor:help;letter-spacing:0;text-transform:none}
+h2 .fn{font-size:.3em;vertical-align:.9em}
+.hv{border-bottom:1px dotted currentColor;cursor:help}
+.notes{margin-top:clamp(40px,5vw,56px);padding-top:16px;border-top:1px solid var(--line);max-width:var(--textw)}
+.notes h4{margin:0 0 8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.notes ol{margin:0;padding-left:22px;font-size:14px;color:var(--ink-2);line-height:1.5}
+.notes li+li{margin-top:6px}
+/* chapter anatomy */
+section.block{padding-block:clamp(72px,9vw,128px) 0}
+section.block+section.block .wrap>.ch-head{border-top:1px solid var(--line);padding-top:clamp(40px,5vw,64px)}
+.ch-head h2{margin-top:16px;max-width:26ch;text-wrap:pretty}
+.ch-head .lede{margin-top:24px}
+.glyph{width:clamp(72px,7.5vw,96px);height:clamp(72px,7.5vw,96px);margin-bottom:22px}
+.glyph svg{width:100%;height:100%;display:block;overflow:visible}
+.sub{margin-top:clamp(48px,6vw,80px)}
+.sub h3{max-width:40ch}
+.sub h3+.note,.sub h3+.lede{margin-top:10px}
+.sub-h{margin:0 0 14px}
+.cap{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;margin-top:12px;font-size:13px;color:var(--muted)}
+details.more{margin-top:clamp(40px,5vw,56px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+details.more>summary{cursor:pointer;list-style:none;padding:18px 0;font-family:var(--font-d);font-size:clamp(22px,2.2vw,27px);display:flex;justify-content:space-between;gap:16px;align-items:center}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::after{content:"+";font-family:var(--font-b);font-size:28px;color:var(--sky-deep);line-height:1}
+details.more[open]>summary::after{content:"–"}
+details.more>.in{padding-bottom:28px}
+/* key figures (second screen) */
+.key{padding-block:clamp(64px,8vw,112px) clamp(48px,6vw,72px)}
+.key h2{margin-top:14px;font-size:clamp(28px,3.4vw,44px);max-width:30ch}
+.keys{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:28px 32px;margin-top:36px}
+@media (max-width:1100px){ .keys{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:640px){ .keys{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 20px} .keys .kf:last-child{grid-column:1/-1} }
+.keys.three{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:40px} @media (max-width:640px){ .keys.three{grid-template-columns:minmax(0,1fr)} .keys.three .kf:last-child{grid-column:auto} }
+.kf{border-top:2px solid var(--ink);padding-top:16px;min-width:0}
+.kf .v{font-family:var(--font-d);font-size:clamp(40px,4.8vw,72px);line-height:1;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+.keys.three .kf .v{font-size:clamp(46px,6vw,88px)}
+.kf .v small{font-size:.36em;color:var(--ink-2);letter-spacing:0}
+.kf .l{font-size:16px;color:var(--ink-2);margin-top:12px;line-height:1.4}
+.kf.hi{border-color:var(--accent)} .kf.hi .v{color:var(--accent-deep)}
+.src{margin-top:40px;font-size:14.5px;color:var(--muted);max-width:80ch;line-height:1.5}
+.toc{margin-top:36px;padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 26px;align-items:baseline}
+.toc .t{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-right:6px}
+.toc a{font-size:16px;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-2);padding-bottom:2px}
+.toc a:hover{color:var(--sky-deep);border-color:var(--sky-deep)}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px 36px}
+.stats.two{grid-template-columns:repeat(2,minmax(0,1fr))} .stats.one{grid-template-columns:minmax(0,1fr)} @media (max-width:520px){ .stats.two{grid-template-columns:minmax(0,1fr)} }
+.stat{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line-2);padding-top:14px;min-width:0}
+.stat .v{font-family:var(--font-d);font-size:clamp(36px,3.8vw,56px);line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+.stat .v small{font-size:.4em;color:var(--ink-2);letter-spacing:0}
+.stat .l{font-size:15.5px;color:var(--ink-2);line-height:1.45}
+.stat.hi{border-color:var(--accent)} .stat.hi .v{color:var(--accent-deep)}
+.stat.old{border-color:var(--amber)} .stat.old .v{color:var(--amber-deep)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;color:var(--ink-2);align-items:center}
+.legend .k{display:inline-flex;align-items:center;gap:7px}
+.legend .sw{width:12px;height:12px;border-radius:2px;display:inline-block;flex:none}
+.legend .sw.line{height:2px;width:22px;border-radius:1px}
+.legend .sw.dot{border-radius:50%;width:10px;height:10px}
+.legend .sw.ring{border-radius:50%;width:10px;height:10px;background:transparent;border:2px solid var(--sky-deep)}
+.legend .sw.miss{border-radius:50%;width:10px;height:10px;background:transparent;border:1.5px dashed var(--muted)}
+/* header: статичная, не закреплена */
+.top{position:absolute;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:5;color:#fff}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:72px}
+.brand{display:inline-flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.brand .mark{width:44px;height:21px;display:block;flex:none}
+.brand .bt{font-weight:600;font-size:16px;letter-spacing:.01em;white-space:nowrap}
+.brand:hover .bt{text-decoration:underline;text-underline-offset:4px}
+.top .brand .mark{color:#8EC2FF}
+select{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line-2);border-radius:4px;padding:9px 34px 9px 12px;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--ink-2) 50%),linear-gradient(135deg,var(--ink-2) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px;background-repeat:no-repeat;max-width:100%}
+select:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,[tabindex]:focus-visible,summary:focus-visible{outline:2px solid var(--sky-deep);outline-offset:2px}
+/* hero */
+.hero{position:relative;background:var(--hero);color:var(--hero-ink);overflow:hidden;color-scheme:dark;min-height:max(560px,100svh);max-height:1100px;display:flex;align-items:center;justify-content:center;text-align:center;padding:calc(90px + env(safe-area-inset-top,0px)) var(--gutter-r) 80px var(--gutter-l)}
+.hero .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%;display:block;z-index:0}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(5,13,31,.55) 0%,rgba(5,13,31,.18) 30%,rgba(5,13,31,.25) 60%,rgba(5,13,31,.78) 100%)}
+.hero .in{position:relative;z-index:2;max-width:1100px;margin:0 auto}
+.hero h1{color:#fff;text-shadow:0 2px 30px rgba(0,0,0,.35)}
+.hero .lede{color:#E3ECF8;max-width:60ch;margin:28px auto 0;font-size:clamp(17px,1.7vw,22px);text-shadow:0 1px 16px rgba(0,0,0,.4)}
+.cue{position:absolute;left:0;right:0;bottom:max(22px,env(safe-area-inset-bottom,0px));z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px;color:#fff;text-decoration:none;font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;opacity:.85}
+.cue:hover{opacity:1}
+.cue svg{width:22px;height:22px;animation:cue 2.2s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+/* my airport picker */
+.pick{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:28px}
+.pick label{font-size:15px;color:var(--ink-2)}
+.pick select{min-width:240px}
+.pick.big{margin-top:36px;padding:20px 24px;background:var(--bg-2);border-radius:6px;gap:12px 20px}
+.pick.big label{font-size:17px;color:var(--ink)}
+.pick.big select{min-width:280px;font-size:16px}
+.pick .hint{font-size:14px;color:var(--muted);flex-basis:100%}
+@media (max-width:640px){ .pick select,.pick.big select{width:100%;min-width:0} }
+.mine-line{display:flex;gap:14px;align-items:flex-start;border-left:3px solid var(--accent);padding:4px 0 4px 18px;font-size:16.5px;color:var(--ink);margin-top:20px;max-width:var(--textw)}
+.mine-line .tag{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-deep);flex:none;margin-top:5px;font-weight:600}
+.mine-line[hidden]{display:none}
+/* sky: сутки над Арктикой */
+.sky-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;margin:18px 0 12px}
+.btn{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:4px;padding:8px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:4px;padding:2px;gap:2px;max-width:100%}
+.seg button{font-family:var(--font-b);font-size:14px;border:0;background:transparent;color:var(--ink-2);padding:7px 12px;border-radius:3px;cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.clock{font-family:var(--font-m);font-size:22px;font-variant-numeric:tabular-nums;color:var(--ink);min-width:5ch}
+.air{font-size:14px;color:var(--ink-2)}
+.air b{font-family:var(--font-m);font-weight:500;color:var(--ink)}
+.slider{flex:1 1 220px;min-width:180px;accent-color:var(--sky-deep)}
+.map .plane-dot{stroke:var(--bg);stroke-width:1;vector-effect:non-scaling-stroke}
+/* destination mix bar */
+.mix{display:flex;height:56px;gap:2px;border-radius:3px;overflow:hidden;margin-top:18px}
+.mix div{display:flex;flex-direction:column;justify-content:center;padding:0 10px;color:#fff;min-width:0;overflow:hidden;white-space:nowrap;cursor:default}
+.mix div b{font-family:var(--font-d);font-size:24px;font-weight:400;line-height:1}
+.mix div span{font-size:12.5px;opacity:.92;overflow:hidden;text-overflow:ellipsis}
+.mix .m-cap{background:var(--navy)} .mix .m-hub{background:var(--sky-deep)} .mix .m-oth{background:var(--grey-blue)} .mix .m-res{background:var(--sky)} .mix .m-in{background:var(--accent)}
+@media (max-width:640px){ .mix{height:48px} .mix div{padding:0 6px} .mix div span{display:none} .mix div b{font-size:19px} }
+/* scrolly */
+.scrolly{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(260px,1fr);gap:56px;align-items:start;margin-top:40px}
+.scrolly .sticky{position:sticky;top:calc(16px + env(safe-area-inset-top,0px));align-self:start}
+.scrolly .steps{display:flex;flex-direction:column;gap:38vh;padding-block:14vh 30vh}
+.step{opacity:.32;transition:opacity .4s;max-width:46ch}
+.step.on{opacity:1}
+.step h3{margin-bottom:10px;font-family:var(--font-b);font-weight:600;font-size:clamp(18px,1.6vw,21px);letter-spacing:-.01em;line-height:1.3}
+.step p{color:var(--ink-2);font-size:16.5px}
+.step .n{font-size:12px;letter-spacing:.16em;color:var(--sky-deep);font-weight:600;margin-bottom:10px;padding-top:10px;border-top:1px solid var(--line-2)}
+@media (max-width:860px){
+  .scrolly{display:block}
+  .scrolly .sticky{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;border-bottom:1px solid var(--line)}
+  .scrolly .steps{gap:44vh;padding-block:24px 26vh}
+  .step{opacity:1;max-width:none;background:var(--bg);padding:6px 0}
+}
+.mapbox{position:relative;width:100%;aspect-ratio:1000/560;max-width:100%}
+.mapbox svg{width:100%;height:100%;display:block;overflow:visible}
+.map .oth{fill:var(--map-other)}
+.map .ru{fill:var(--map-land);stroke:var(--map-border);stroke-width:.7;vector-effect:non-scaling-stroke}
+.map .a1{fill:none;stroke:var(--bg);stroke-width:.6;vector-effect:non-scaling-stroke}
+.map .full{fill:var(--map-full)}
+.map .circle{fill:none;stroke:var(--sky-deep);stroke-opacity:.6;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
+.map .tech{font-family:var(--font-m);letter-spacing:.06em;fill:var(--muted);pointer-events:none}
+.map .scale{stroke:var(--ink-2);stroke-width:1;vector-effect:non-scaling-stroke}
+.map .route{fill:none;stroke:var(--sky-deep);stroke-linecap:round;vector-effect:non-scaling-stroke;transition:stroke-opacity .5s,stroke .5s}
+.map .route.in{stroke:var(--accent)}
+.map .route.dim{stroke-opacity:.06}
+.map .route.hide{stroke-opacity:0}
+.map .node{stroke:var(--bg);stroke-width:1.2;vector-effect:non-scaling-stroke;transition:opacity .4s;cursor:default}
+.map .node.az{fill:var(--navy)}
+.map .node.local{fill:var(--accent)}
+.map .node.ext{fill:var(--muted)}
+.map .node.hub{fill:var(--bg);stroke:var(--sky-deep);stroke-width:2}
+.map .node.rootOut{fill:var(--ink-2)}
+.map .node.dim{opacity:.25}
+.map .node.hl{stroke:var(--accent);stroke-width:3}
+.map .miss{fill:var(--bg);stroke:var(--muted);stroke-width:1.2;stroke-dasharray:2 2;vector-effect:non-scaling-stroke;cursor:default}
+.map .lbl{font-family:var(--font-b);font-weight:500;fill:var(--ink);paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round;pointer-events:none;transition:opacity .4s}
+.map .lbl.ext{fill:var(--ink-2);font-weight:400}
+.map .lbl.dim{opacity:.3}
+.map .path{fill:none;stroke:var(--accent);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;paint-order:stroke}
+.map .path-casing{fill:none;stroke:var(--bg);stroke-width:7;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.map .direct{fill:none;stroke:var(--ink-2);stroke-width:1.5;stroke-dasharray:5 4;vector-effect:non-scaling-stroke}
+.map-legend{margin-top:12px} @media (max-width:860px){ .map-legend{margin-top:6px;gap:6px 14px;font-size:13px} .map-legend .mk{display:none} }
+.tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--bg);font-size:13.5px;line-height:1.45;padding:9px 12px;border-radius:4px;max-width:300px;box-shadow:0 10px 30px -10px rgba(0,0,0,.5);opacity:0;transition:opacity .12s}
+.tip b{font-weight:600}
+.tip.on{opacity:1}
+/* matrix */
+.matrix{width:100%;max-width:640px}
+.matrix svg{width:100%;height:auto;display:block;overflow:visible}
+.matrix .cell{cursor:default;stroke:var(--bg);stroke-width:2}
+.matrix .lab{font-family:var(--font-b);font-size:12px;fill:var(--ink-2)}
+.matrix .lab.on{fill:var(--ink);font-weight:600}
+/* detour */
+.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.95fr);gap:48px;align-items:start;margin-top:20px}
+@media (max-width:860px){ .calc{grid-template-columns:1fr;gap:32px} }
+.calc .controls{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:16px}
+.calc .controls .arrow{color:var(--muted);text-align:center;font-size:20px}
+.calc .controls select{width:100%}
+.result{margin-top:18px}
+.result h3{font-size:clamp(24px,2.4vw,32px)}
+.result .big{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px}
+.result .big .stat .v{font-size:clamp(28px,3vw,42px)}
+.result .route-line{font-size:16.5px;color:var(--ink-2);margin-top:16px;line-height:1.5}
+.result .route-line b{color:var(--ink)}
+.result .legs{margin:10px 0 0;padding:0;list-style:none;font-size:14px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.result .legs li{padding:6px 0;border-top:1px solid var(--line)}
+.ranked{margin-top:clamp(48px,6vw,72px)}
+.ranked table{width:100%;border-collapse:collapse;font-size:15px}
+.ranked th{text-align:left;font-weight:600;color:var(--muted);font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:8px 8px;border-bottom:1px solid var(--line-2)}
+.ranked td{padding:11px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.ranked td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:15px}
+.ranked td:first-child{white-space:nowrap}
+.ranked .bar{height:6px;border-radius:2px;background:var(--accent)}
+.ranked tr{cursor:default}
+@media (max-width:640px){
+  .ranked thead{display:none}
+  .ranked tr{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .ranked td{border:0;padding:0}
+  .ranked td:nth-child(2){grid-column:1/-1;grid-row:2;color:var(--ink-2);font-size:14px}
+  .ranked td.n.t{grid-column:2;grid-row:1}
+  .ranked td.n.x{grid-column:1/-1;grid-row:3;text-align:left}
+}
+.tablewrap{overflow-x:auto}
+/* unit chart */
+.units{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px}
+.unit{aspect-ratio:1;border-radius:3px;position:relative;cursor:default;background:var(--sky-deep);display:flex;align-items:flex-end;justify-content:flex-start;padding:6px;transition:transform .15s}
+.unit:hover{transform:translateY(-2px)}
+.unit.sov{background:var(--amber)}
+.unit.paved{background:transparent;border:2px solid var(--sky-deep)}
+.unit.paved.sov{border-color:var(--amber)}
+.unit .t{font-family:var(--font-m);font-size:10px;font-weight:500;color:#fff;line-height:1;letter-spacing:.02em}
+.unit.sov .t{color:#2B1A03}
+.unit.paved .t{color:var(--ink)}
+.unit.trunk{opacity:.55}
+.unit-groups{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1.1fr);gap:48px;align-items:start;margin-top:40px}
+@media (max-width:860px){ .unit-groups{grid-template-columns:1fr;gap:36px} }
+/* isolation barcode */
+.iso{margin-top:18px}
+.iso .row{display:grid;grid-template-columns:minmax(120px,180px) minmax(0,1fr) minmax(76px,96px);gap:12px;align-items:center;padding:3px 0;cursor:default}
+.iso .nm{font-size:14.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iso .bc{height:18px;display:block;width:100%}
+.iso .vl{font-size:13.5px;color:var(--ink-2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.iso .axis{display:grid;grid-template-columns:minmax(120px,180px) minmax(0,1fr) minmax(76px,96px);gap:12px;font-size:12px;color:var(--muted);margin-top:4px}
+.iso .axis .ms{display:flex;justify-content:space-between}
+@media (max-width:640px){ .iso .row,.iso .axis{grid-template-columns:92px minmax(0,1fr) 54px;gap:8px} .iso .nm{font-size:13px} .iso .vl{font-size:12px} }
+.gallery{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;margin-top:clamp(40px,5vw,64px)}
+@media (max-width:900px){ .gallery{grid-template-columns:repeat(2,minmax(0,1fr))} }
+.plane{background:var(--bg);box-shadow:0 0 0 1px var(--line);padding:18px 16px;display:flex;flex-direction:column;gap:6px}
+.plane svg{width:100%;height:54px;display:block}
+.plane .name{font-weight:600;font-size:15.5px}
+.plane .meta{font-size:13.5px;color:var(--ink-2);line-height:1.45}
+.plane.sov .name{color:var(--amber-deep)}
+/* heat strip */
+.heatwrap{margin-top:36px}
+.heat{display:grid;grid-template-columns:minmax(130px,190px) repeat(12,minmax(0,1fr)) minmax(48px,64px);gap:4px;align-items:center;font-size:14px}
+.heat .h{font-size:12.5px;color:var(--muted);text-align:center;letter-spacing:.02em;font-weight:500}
+.heat .r{color:var(--ink);font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:8px}
+.heat .r.mine{color:var(--accent-deep);font-weight:600}
+.heat .c{aspect-ratio:1.6;border-radius:2px;min-width:0;cursor:default;position:relative}
+.heat .cv{font-family:var(--font-m);font-size:12.5px;color:var(--ink-2);text-align:right;font-variant-numeric:tabular-nums}
+.heat .sep{grid-column:1/-1;height:10px}
+.heat .h .short{display:none}
+@media (max-width:640px){ .heat{grid-template-columns:minmax(78px,100px) repeat(12,minmax(0,1fr)) 40px;gap:2px} .heat .r{font-size:12px;white-space:normal;line-height:1.15} .heat .c{aspect-ratio:1.1} .heat .h .full{display:none} .heat .h .short{display:inline} }
+.ramp{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink-2);margin-top:14px;flex-wrap:wrap}
+.ramp .sw{height:8px;flex:0 0 140px;border-radius:2px;background:linear-gradient(90deg,#DCEBFA,#0D366B)}
+.chart{width:100%;max-width:100%}
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .axis{stroke:var(--line-2);stroke-width:1}
+.chart .tick{font-family:var(--font-m);font-size:12px;fill:var(--muted)}
+.chart .lab{font-family:var(--font-b);font-size:13px;fill:var(--ink-2)}
+.chart .lab.b{font-weight:600;fill:var(--ink)}
+.chart .ann{font-family:var(--font-b);font-size:13px;fill:var(--ink);font-weight:600;paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
+.chart .ann-s{font-family:var(--font-b);font-size:12px;fill:var(--ink-2);paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
+.chart .leader{stroke:var(--ink-2);stroke-width:1;fill:none}
+.chart .zone{font-family:var(--font-b);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;fill:var(--muted)}
+.chart .guide{stroke:var(--line-2);stroke-width:1;fill:none;stroke-dasharray:3 3}
+.chart .fit{fill:none;stroke-width:2.5;stroke-dasharray:6 4;stroke-linecap:round}
+.chart .dot{stroke:var(--bg);stroke-width:1.5;cursor:default;transition:opacity .3s}
+.chart .dot.dim{opacity:.12}
+.chart .dot.hl{stroke:var(--ink);stroke-width:2}
+.chart .ln{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.chart-price{max-width:980px}
+.seg-bar{display:flex;gap:2px;height:28px;border-radius:2px;overflow:hidden;margin:8px 0 8px}
+.seg-bar div{display:flex;align-items:center;padding-left:8px;font-family:var(--font-m);font-size:12px;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden;min-width:0}
+.seg-bar div.s1{background:var(--navy)} .seg-bar div.s2{background:var(--sky)} .seg-bar div.s3{background:var(--grey)} .seg-bar div.s4{background:var(--bg-3)}
+.seg-bar div.s3,.seg-bar div.s4{color:var(--ink)}
+.seg-rows{display:flex;flex-direction:column;gap:18px}
+.seg-rows .t{font-size:15px;font-weight:600;margin-bottom:2px}
+.tickets{display:grid;grid-template-columns:1fr;gap:18px}
+.ticket{border:1px dashed var(--line-2);border-radius:4px;padding:18px 20px;position:relative;background:var(--bg)}
+.ticket.small{border-color:var(--accent)}
+.ticket .rt{font-weight:600;font-size:18px;letter-spacing:-.01em;margin-bottom:8px}
+.ticket .m{font-size:13.5px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:4px 14px}
+.ticket .m b{color:var(--ink);font-weight:600}
+.ticket .pk{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:14px}
+.ticket .pk .p{font-family:var(--font-d);font-size:42px;line-height:1}
+.ticket.small .pk .p{color:var(--accent-deep)}
+.ticket .pk .d{font-size:15px;color:var(--ink-2)}
+.check{margin-top:clamp(40px,5vw,56px);padding:22px 24px;background:var(--bg-2);border-radius:6px;max-width:var(--textw)}
+.check h3{font-size:clamp(21px,2vw,25px)}
+.check p{margin-top:10px;color:var(--ink-2);font-size:16.5px}
+.resort{font-size:13px;border-collapse:collapse;width:100%;min-width:640px}
+.resort th{font-weight:600;color:var(--muted);font-size:11.5px;padding:6px 4px;text-align:center;border-bottom:1px solid var(--line-2)}
+.resort th:first-child{text-align:left;position:sticky;left:0;background:var(--bg)}
+.resort td{padding:3px 2px;text-align:center;font-variant-numeric:tabular-nums;font-family:var(--font-m);font-size:12.5px}
+.resort td:first-child{text-align:left;white-space:nowrap;color:var(--ink);padding-right:10px;font-family:var(--font-b);font-size:14px;position:sticky;left:0;background:var(--bg)}
+.resort td span{display:block;border-radius:2px;padding:6px 2px;min-width:44px}
+/* subsidies */
+.waffle{margin:0}
+.waffle .wt{font-size:15.5px;color:var(--ink);margin-bottom:14px;font-weight:600}
+.dots{display:grid;grid-template-columns:repeat(10,26px);gap:8px}
+.dots i{display:block;width:26px;height:26px;border-radius:50%;background:var(--navy);cursor:default}
+.dots i.in{background:var(--accent);box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--accent)}
+.waffle .legend{margin-top:18px;flex-direction:column;align-items:flex-start;gap:8px;font-size:15px}
+.waffle .legend .sw.dot{width:14px;height:14px}
+@media (max-width:400px){ .dots{grid-template-columns:repeat(10,18px);gap:6px} .dots i{width:18px;height:18px} }
+.hbars{display:flex;flex-direction:column;gap:12px;margin-top:16px;max-width:620px}
+.hbars .r{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:12px;align-items:center}
+.hbars .nm{font-size:15px}
+.hbars .b{display:flex;align-items:center;gap:10px}
+.hbars .b i{display:block;height:22px;background:var(--navy);border-radius:2px}
+.hbars .b span{font-family:var(--font-d);font-size:22px;line-height:1}
+.hbars .r.none .b span{font-family:var(--font-b);font-size:14px;color:var(--muted)}
+/* conclusions */
+.concl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 48px;margin-top:clamp(36px,5vw,56px);max-width:1040px}
+@media (max-width:860px){ .concl{grid-template-columns:1fr} }
+.concl .item{padding:20px 0 24px;border-top:1px solid var(--line-2);font-size:17px;line-height:1.55;color:var(--ink-2);min-width:0}
+.concl .item b{display:block;color:var(--ink);font-family:var(--font-d);font-weight:400;font-size:clamp(22px,2.2vw,27px);margin-bottom:8px}
+/* method */
+.method-ch{padding-block:clamp(72px,9vw,128px) clamp(56px,7vw,96px)}
+.method-ch .wrap>.ch-head{border-top:1px solid var(--line);padding-top:clamp(40px,5vw,64px)}
+.method{max-width:var(--textw);margin-top:clamp(28px,3.5vw,44px)}
+.method h3{margin:clamp(36px,4vw,48px) 0 14px;font-size:clamp(22px,2.2vw,27px)}
+.method ul{margin:0;padding-left:20px;color:var(--ink-2);font-size:16px;line-height:1.55}
+.method li+li{margin-top:9px}
+.method li::marker{color:var(--sky-deep)}
+footer{padding-block:32px 48px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:14px 34px;justify-content:space-between;align-items:center}
+footer .brand{color:var(--brand)} footer .brand .bt{color:var(--ink)} footer .brand .mark{width:40px;height:19px}
+footer a{color:var(--ink-2)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="tip" id="tip" role="tooltip"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="pora-mark" viewBox="0 0 70.62 32.77"><path d="M11.4175 17.8138C7.01965 17.8138 1.97339 21.2496 0 22.9411V32.7728H70.6193V22.4125C70.6193 21.7549 66.6549 11.2793 60.5233 11.2793C52.8588 11.2793 44.7714 25.5312 33.6182 25.5312C27.5394 25.5312 16.9148 17.8138 11.4175 17.8138Z" fill="currentColor"/><path d="M8.08744 29.4423C5.02163 29.4423 1.58576 25.1255 0 22.9407V32.7724H67.9235C53.1231 32.7724 48.1015 0 37.2126 0C28.0681 0 20.7207 29.4423 8.08744 29.4423Z" fill="currentColor" fill-opacity=".38"/></symbol></svg>
+
+<header class="top" id="topbar">
+  <div class="wrap">
+    <a class="brand" href="https://t.me/poradata" target="_blank" rel="noopener" aria-label="ПОРА считать, телеграм-канал"><svg class="mark" aria-hidden="true"><use href="#pora-mark"/></svg><span class="bt">ПОРА считать</span></a>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <img class="bg" src="img/hero.jpg" srcset="img/hero-m.jpg 1100w, img/hero.jpg 2200w" sizes="100vw" alt="Северное сияние над заснеженными лиственницами плато Путорана" fetchpriority="high">
+  <div class="in">
+    <h1>Небо над Арктикой</h1>
+    <p class="lede">Из каждых 100 мест в самолётах, которые летают через аэропорты Арктической зоны, <span data-n="mainland_of_100"></span> ведут на большую землю. Как устроено авиасообщение в Арктике: куда и на чём летают, когда и за сколько. По <span data-n="flights"></span> рейсам за октябрь 2025 — сентябрь 2026 года и ценам на <span data-n="price_routes"></span> маршрутов.</p>
+  </div>
+  <a class="cue" href="#key"><span>Листайте</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l7 7 7-7"/></svg></a>
+</section>
+
+<section class="key" id="key">
+  <div class="wrap">
+    <div class="eyebrow">Арктическая зона РФ · октябрь 2025 — сентябрь 2026</div>
+    <h2>Авиасообщение Арктики за год в пяти цифрах</h2>
+    <div class="keys" aria-label="Ключевые цифры">
+      <div class="kf"><div class="v" data-n="arctic_airports" data-count></div><div class="l">аэропортов АЗРФ с рейсами</div></div>
+      <div class="kf"><div class="v" data-n="routes" data-count></div><div class="l">маршрутов</div></div>
+      <div class="kf"><div class="v" data-n="flights" data-count></div><div class="l">рейсов за год</div></div>
+      <div class="kf"><div class="v"><span class="hv" data-n="seats_mln" data-count data-tipkey="seats_exact"></span><small> млн</small></div><div class="l">мест за год<span class="fn" data-note="Места — вместимость самолётов, а не проданные билеты. Пассажиров меньше: в первом полугодии 2026 года через аэропорт Мурманска прошло 87 % от числа мест в расписании, через Апатиты — 83 % (пассажиропоток по данным Минтранса Мурманской области)."></span></div></div>
+      <div class="kf hi"><div class="v"><span data-n="share_inside" data-count></span><small> %</small></div><div class="l">мест внутри Арктики</div></div>
+    </div>
+    <p class="src">Источник данных: Aviastats, сервис для анализа авиационной отрасли России; реестр аэродромов Росавиации. Рейсы и цены за октябрь 2025 — сентябрь 2026 года: это последние 12 месяцев, за которые в выгрузке есть местные рейсы Якутии.</p>
+    <nav class="toc" aria-label="Разделы"><span class="t">Содержание</span><a href="#network">Сеть</a><a href="#detour">Соседи</a><a href="#fleet">Парк</a><a href="#season">Сезон</a><a href="#prices">Цены</a><a href="#subsidies">Субсидии</a><a href="#conclusions">Выводы</a><a href="#method">Методология</a></nav>
+  </div>
+</section>
+
+<section class="block" id="network">
+  <div class="wrap">
+    <div class="ch-head"><div class="glyph" data-glyph="network" aria-hidden="true"></div><div class="eyebrow">Структура сети</div><h2>Арктика связана с Москвой лучше, чем сама с собой</h2><p class="lede">Каждая линия на карте ниже — направление, по которому за год выполнялись рейсы. Толщина — число мест. Но сначала — как эта сеть выглядит в течение одних суток.</p></div>
+    <div class="sub">
+      <h3>Обычные сутки над Арктикой</h3>
+      <p class="note">Каждая точка — самолёт в воздухе по расписанию: синие летят на большую землю, бирюзовые — внутри Арктики и местных сетей. Время московское.</p>
+      <div class="sky-ctl">
+        <button class="btn" id="sky-play" type="button" aria-label="Пауза">❚❚ Пауза</button>
+        <div class="seg" role="group" aria-label="Какой день показать"><button class="on" data-day="winter" type="button">Зима, 18 февраля 2026</button><button data-day="summer" type="button">Лето, 8 июля 2026</button></div>
+        <span class="clock" id="sky-clock">00:00</span>
+        <input class="slider" id="sky-time" type="range" min="0" max="1439" step="1" value="0" aria-label="Время суток">
+        <span class="air">в воздухе <b id="sky-air">0</b> · за сутки <b id="sky-total">0</b> <span id="sky-total-w">рейсов</span></span>
+      </div>
+      <div class="mapbox map" id="map-sky"></div>
+      <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
+    </div>
+    <div class="sub">
+      <h3>Куда ведут рейсы из аэропортов Арктической зоны</h3>
+      <p class="note">Доля мест за год по другому концу маршрута.</p>
+      <div class="mix" id="mix" role="img"></div>
+      <div class="legend" id="mix-legend" style="margin-top:12px"></div>
+      <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
+    </div>
+    <div class="sub">
+      <h3>Как устроена сеть</h3>
+      <p class="note">Прокрутите, чтобы разобрать сеть на части. Пунктирные кружки — аэродромы Арктической зоны из реестра Росавиации, которых нет в данных Aviastats.</p>
+      <div class="pick"><label for="mine-network-select">Мой аэропорт</label><select id="mine-network-select" class="mine-select" aria-label="Выбрать свой аэропорт АЗРФ"><option value="">Выбрать аэропорт</option></select></div>
+      <div class="mine-line" id="mine-network" hidden><span class="tag">мой аэропорт</span><span class="txt"></span></div>
+      <div class="scrolly">
+        <div class="sticky">
+          <div class="mapbox map" id="map-main"></div>
+          <div class="legend map-legend" id="map-legend"></div>
+        </div>
+        <div class="steps" id="steps">
+          <div class="step on" data-mode="all"><div class="n">ШАГ 1 · ВСЯ СЕТЬ</div><h3><span data-n="airports_phrase"></span>, <span data-n="routes_phrase"></span></h3><p>Через <span data-n="arctic_airports"></span> аэропортов АЗРФ за год прошло <span data-n="seats_mln"></span> млн мест<span class="fn" data-note="Места — вместимость самолётов по верхней границе. Пассажиров меньше: по пассажиропотоку Мурманска и Апатитов в первом полугодии 2026 года — 83–87 % от числа мест."></span> на <span data-n="flights"></span> рейсах <span data-n="airlines"></span> авиакомпаний. Средняя дальность рейса — <span data-n="mean_dist"></span> км.</p></div>
+          <div class="step" data-mode="capitals"><div class="n">ШАГ 2 · СТОЛИЦЫ</div><h3><span data-n="share_capitals"></span> % мест летят в Москву и Петербург</h3><p>Шереметьево одно принимает <span data-n="svo_share"></span> % потока, Пулково — <span data-n="led_share"></span> %. Эти два аэропорта связаны прежде всего с Мурманском, Архангельском и Апатитами. Домодедово работает на Норильск и ЯНАО.</p></div>
+          <div class="step" data-mode="hubs"><div class="n">ШАГ 3 · ХАБЫ</div><h3>Ещё <span data-n="share_hubs"></span> % берут Тюмень, Уфа, Красноярск, Новосибирск и Екатеринбург</h3><p>Уральские и сибирские хабы обслуживают добывающие ЯНАО и Норильск: вахта, командировки, пересадки на юг. Курорты — Сочи, Минеральные Воды, Анталья — дают ещё <span data-n="share_resorts"></span> % мест, почти две трети из них с мая по сентябрь.</p></div>
+          <div class="step" data-mode="inside"><div class="n">ШАГ 4 · ВНУТРИ АРКТИКИ</div><h3>Внутри Арктики остаётся <span data-n="share_inside"></span> % мест и <span data-n="share_inside_fl"></span> % рейсов</h3><p>Если оставить только рейсы между аэропортами АЗРФ и внутри местных сетей, карта почти пустеет. Почти четыре из пяти таких рейсов не выходят за границы своего региона. Прямых рейсов между соседними регионами вдоль побережья почти нет.</p></div>
+          <div class="step" data-mode="clusters"><div class="n">ШАГ 5 · МЕСТНЫЕ СЕТИ</div><h3>Сеть собрана из местных сетей вокруг <span data-n="n_centers"></span> центров</h3><p><span data-n="n_local_phrase"></span> на большую землю только через центр своей сети. <span data-n="out_centers_phrase"></span> за пределами Арктической зоны: Якутск держит <span data-n="yks_local"></span> местных аэропортов, Красноярск — <span data-n="kja_local"></span>, Магадан и Полярный — по одному. Только Хатанга и Оленёк входят в две сети сразу.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="notes" hidden></div>
+  </div>
+</section>
+
+<section class="block" id="detour">
+  <div class="wrap">
+    <div class="ch-head"><div class="glyph" data-glyph="detour" aria-hidden="true"></div><div class="eyebrow">Соседи через Москву</div><h2>Из <span data-n="pairs"></span> пары магистральных аэропортов регулярно связаны <span data-n="pairs_conn"></span></h2><p class="lede">Радиальная сеть удобна, чтобы улететь в Москву или Петербург, но не к соседям. Регулярной считаем связь, когда в обе стороны не реже раза в неделю в течение 47 недель года есть прямой рейс или стыковка с одной пересадкой от 1 до 12 часов<span class="fn" id="fn-thr" data-note="Порог в 47 недель взят из методики ПОРА. График ниже."></span>. Прямые круглогодичные рейсы в обе стороны есть всего у <span data-n="pairs_direct"></span> пар. Воркута, Певек и Усинск не имеют регулярной связи ни с одним магистральным аэропортом АЗРФ.</p></div>
+    <div class="grid-2 wide sub" style="align-items:start">
+      <div>
+        <h3>Какие пары связаны регулярно</h3>
+        <p class="note" style="margin-bottom:14px">Магистральные аэропорты АЗРФ с запада на восток. Наведите на клетку, чтобы увидеть, сколько недель в году есть связь и сколько обычно занимает дорога.</p>
+        <div class="matrix" id="matrix"></div>
+        <div class="legend" style="margin-top:12px"><span class="k"><span class="sw" style="background:var(--navy)"></span>прямой рейс круглый год</span><span class="k"><span class="sw" style="background:var(--sky)"></span>с пересадкой до 12 часов</span><span class="k"><span class="sw" style="background:var(--bg-3);box-shadow:inset 0 0 0 1px var(--line-2)"></span>нет регулярной связи</span></div>
+        <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
+      </div>
+      <div>
+        <h3>Если менять порог</h3>
+        <p class="note" style="margin-bottom:14px">Сколько пар из 91 связано регулярно, если требовать связь в течение разного числа недель в году.</p>
+        <div class="chart" id="chart-sens"></div>
+        <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
+      </div>
+    </div>
+    <div class="sub">
+      <h3>Сколько лететь между двумя аэропортами</h3>
+      <p class="note">Время — медиана самого быстрого варианта по дням, когда можно вылететь, по расписанию за год: до двух пересадок, не меньше часа на пересадку и прибытие в пределах трёх суток.</p>
+      <div class="calc">
+        <div>
+          <div class="controls">
+            <select id="from" aria-label="Откуда"></select><div class="arrow">→</div><select id="to" aria-label="Куда"></select>
+          </div>
+          <div class="result" id="detour-result"></div>
+        </div>
+        <div><div class="mapbox map" id="map-detour"></div><p class="note" style="margin-top:10px">Пунктир — расстояние по прямой, цветная линия — обычный путь по рейсам.</p></div>
+      </div>
+    </div>
+    <div class="ranked">
+      <h3>Самые долгие поездки между соседями</h3>
+      <p class="note" style="margin:10px 0 16px">Магистральные аэропорты не дальше 1 000 км друг от друга; пары, между которыми есть дорога или железная дорога, не входят. Лишние часы — насколько дорога по рейсам длиннее прямого рейса<span class="fn" id="fn-direct" data-note="Прямой рейс оцениваем по расписанию турбовинтовых самолётов."></span>. Наведите на строку, чтобы увидеть расстояния.</p>
+      <div class="tablewrap"><table id="ranked"><thead><tr><th>Пара</th><th>Как лететь</th><th class="n">Обычно в пути</th><th class="n">Лишние часы</th></tr></thead><tbody></tbody></table></div>
+      <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
+    </div>
+    <div class="notes" hidden></div>
+  </div>
+</section>
+
+<section class="block" id="fleet">
+  <div class="wrap">
+    <div class="ch-head"><div class="glyph" data-glyph="fleet" aria-hidden="true"></div><div class="eyebrow">Парк</div><h2>На <span data-n="sov_dir"></span> из <span data-n="local_dir"></span> местных направлений летают в основном Ан-24, Як-42 и Ми-8</h2><p class="lede">Прямых рейсов между соседями мало в том числе из-за самолётов. Местные направления — рейсы между аэропортами АЗРФ и рейсы из местных аэропортов к центрам их сетей за пределами зоны. Один квадрат — одно направление, цвет — основной тип судна по числу мест: советской постройки или нет, заливка — может ли он садиться на грунтовую полосу.</p></div>
+    <div class="mine-line" id="mine-fleet" hidden><span class="tag">мой аэропорт</span><span class="txt"></span></div>
+    <div class="unit-groups">
+      <div>
+        <div class="legend" style="margin-bottom:18px"><span class="k"><span class="sw" style="background:var(--amber)"></span>Ан-24, Ан-26, Як-42, Ми-8 (советская постройка)</span><span class="k"><span class="sw" style="background:var(--sky-deep)"></span>ATR, DHC-8, CRJ, SSJ 100, Boeing 737</span><span class="k"><span class="sw" style="background:transparent;border:2px solid var(--ink-2)"></span>только бетонная полоса</span></div>
+        <h3 class="sub-h">Местные направления · <span data-n="local_dir"></span></h3>
+        <div class="units" id="units-local"></div>
+        <h3 class="sub-h" style="margin-top:32px">Между магистральными аэропортами · <span data-n="trunk_dir"></span></h3>
+        <div class="units" id="units-trunk"></div>
+        <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
+      </div>
+      <div class="stats one">
+        <div class="stat old"><div class="v"><span data-n="sov_seats"></span><small> %</small></div><div class="l">мест на местных направлениях приходится на суда советской постройки</div></div>
+        <div class="stat"><div class="v"><span data-n="unp_dir"></span><small> из <span data-n="local_dir"></span></small></div><div class="l">направлений зависят от бортов, способных садиться на грунт: Ан-24, Ан-26, ATR, DHC-8</div></div>
+        <div class="stat"><div class="v"><span data-n="unp_seats"></span><small> %</small></div><div class="l">мест на местных направлениях перевозят такие борта</div></div>
+      </div>
+    </div>
+    <div class="sub">
+      <h3>Как часто улетают из посёлков</h3>
+      <p class="note">Каждая строка — местный аэропорт, каждая чёрточка — день, когда из него был хотя бы один вылет, с 1 октября 2025 по 30 сентября 2026 года. Справа — дни с вылетами за год. Наведите на строку, чтобы увидеть число рейсов.</p>
+      <div class="iso" id="iso"></div>
+      <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
+      <div class="prose" style="margin-top:24px"><p id="iso-text"></p></div>
+    </div>
+    <div class="gallery" id="gallery"></div>
+    <p class="prose" style="margin-top:28px">По оценке ГосНИИ ГА, к 2030 году выбудет около четверти парка Ан-24 и Ан-26: в стране около 100 таких машин со средним возрастом около 50 лет. Первый серийный Ил-114-300 Минпромторг обещает передать Второму Архангельскому авиаотряду до конца 2026 года, ещё два — в начале 2027-го. Сертификацию «Байкала» (ЛМС-901) в министерстве допускают перенести на 2027 год.</p>
+    <div class="notes" hidden></div>
+  </div>
+</section>
+
+<section class="block" id="season">
+  <div class="wrap">
+    <div class="ch-head"><div class="glyph" data-glyph="season" aria-hidden="true"></div><div class="eyebrow">Сезон</div><h2>Летом рейсов на курорты в полтора раза больше среднего, а у Хибин и Мурманска пик зимой</h2><p class="lede">Старый парк приходится растягивать на весь год, а спрос меняется по сезонам. Число мест в сутки по месяцам с октября 2025 по сентябрь 2026 года. Цвет клетки — отношение к среднему за год по строке: тёмный синий — месяц загружен сильнее среднего.</p></div>
+    <div class="pick big"><label for="mine-season-select">Мой аэропорт</label><select id="mine-season-select" class="mine-select" aria-label="Выбрать свой аэропорт АЗРФ"><option value="">Выбрать аэропорт</option></select><span class="hint">Строка аэропорта подсветится в таблице; карта сети, парк, цены и калькулятор поездки тоже покажут его данные.</span></div>
+    <div class="mine-line" id="mine-season" hidden><span class="tag">мой аэропорт</span><span class="txt"></span></div>
+    <div class="heatwrap">
+      <h3 class="sub-h">Магистральные аэропорты АЗРФ по месяцам</h3>
+      <div class="heat" id="heat"></div>
+      <div class="ramp"><span>0,6×</span><span class="sw"></span><span>1,4× среднего за год</span><span style="margin-left:auto">КВ — коэффициент вариации: чем больше, тем сильнее сезонность</span></div>
+      <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
+    </div>
+    <div class="sub">
+      <h3>Куда летят в разные месяцы</h3>
+      <p class="note" style="margin-bottom:14px">Мест в сутки по группам направлений, индекс к среднему за год = 100.</p>
+      <div class="chart" id="chart-groups"></div>
+      <div class="legend" id="legend-groups" style="margin-top:12px"></div>
+      <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
+    </div>
+    <details class="more">
+      <summary>Две Арктики: туристическая и вахтовая</summary>
+      <div class="in">
+        <p class="note" style="margin-bottom:14px">По горизонтали — сезонность (коэффициент вариации по месяцам), по вертикали — концентрация потока на немногих хабах (индекс Херфиндаля — Хиршмана). Только магистральные аэропорты, связи вне АЗРФ; Бованенково и Воркута не показаны: у них КВ больше 0,6, рейсы на большую землю бывают лишь несколько месяцев в году.</p>
+        <div class="chart" id="chart-cvhhi"></div>
+        <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
+      </div>
+    </details>
+    <div class="prose" style="margin-top:36px"><p>Архангельск, Норильск и Анадырь летом загружены на 23–43 % сильнее среднего: отпуска, туристы, поездки на юг. У Хибин и Мурманска пик зимой, в сезон горных лыж и северного сияния: в марте в Апатитах мест в сутки в полтора раза больше среднего. Новый Уренгой, Надым и Салехард летают ровно весь год и сразу во множество городов: вахта не зависит от сезона. Мурманск и Архангельск, наоборот, почти целиком завязаны на Москву и Петербург. Рейсов внутри Арктики и местных сетей тоже больше летом: в июне — на 15 % больше среднего, в январе — на 21 % меньше. На рейсах Новосибирск — Певек около 85 % мест выкупают недропользователи для вахтовиков (оценка S7, 2025).</p></div>
+    <div class="notes" hidden></div>
+  </div>
+</section>
+
+<section class="block" id="prices">
+  <div class="wrap">
+    <div class="ch-head"><div class="glyph" data-glyph="prices" aria-hidden="true"></div><div class="eyebrow">Цены</div><h2>На том же расстоянии билет через малый аэродром стоит примерно втрое дороже<span class="fn" id="fn-fair"></span></h2><p class="lede">Сезон отражается и в цене, но главный разрыв — между малыми и магистральными бортами. Для каждого маршрута взята медиана минимальной цены билета за 30 дней до вылета по датам с 1 октября 2025 по 30 сентября 2026 года. Малые борта — маршруты, где хотя бы один аэропорт класса Г, Д или Е: Тикси, Диксон, Батагай и другие посёлки Якутии и Красноярского края. Километр короткого перелёта всегда дороже длинного, поэтому сравниваем маршруты одной длины.</p></div>
+    <div class="pick"><label for="mine-prices-select">Мой аэропорт</label><select id="mine-prices-select" class="mine-select" aria-label="Выбрать свой аэропорт АЗРФ"><option value="">Выбрать аэропорт</option></select></div>
+    <div class="mine-line" id="mine-prices" hidden><span class="tag">мой аэропорт</span><span class="txt"></span></div>
+    <div class="keys three">
+      <div class="kf hi"><div class="v">≈×3</div><div class="l">во столько раз дороже билет через малый аэродром при одинаковом расстоянии</div></div>
+      <div class="kf"><div class="v"><span data-n="rk_small"></span><small> ₽/км</small></div><div class="l">медиана по <span data-n="n_small"></span> маршрутам через аэропорты классов Г, Д, Е</div></div>
+      <div class="kf"><div class="v"><span data-n="rk_trunk"></span><small> ₽/км</small></div><div class="l">медиана по <span data-n="n_trunk"></span> остальным маршрутам; разрыв держится весь год: от ×<span data-n="gap_min"></span> до ×<span data-n="gap_max"></span> по месяцам</div></div>
+    </div>
+    <div class="sub chart-price">
+      <h3>Цена и расстояние: каждая точка — маршрут</h3>
+      <p class="note" style="margin-bottom:14px">Обе оси логарифмические. Размер точки — число рейсов за год. Пунктирные кривые — типичная цена для маршрута такой длины в каждой группе; серые линии — 1, 10 и 40 ₽ за километр.</p>
+      <div class="chart" id="chart-price"></div>
+      <div class="legend" style="margin-top:12px"><span class="k"><span class="sw dot" style="background:var(--accent)"></span>через аэропорт класса Г, Д, Е</span><span class="k"><span class="sw dot" style="background:var(--sky-deep)"></span>остальные маршруты</span></div>
+      <div class="cap"><span>Источник: минимальные цены Aviastats; расчёты ПОРА</span></div>
+    </div>
+    <div class="grid-2 sub">
+      <div>
+        <h3>Два билета на одно расстояние</h3>
+        <p class="note" style="margin-top:10px">Медиана цены за 30 дней до вылета. Рабочие дни — при средней зарплате в регионе, где находится арктический аэропорт маршрута.</p>
+        <div class="tickets" id="tickets" style="margin-top:16px"></div>
+      </div>
+      <div>
+        <h3>Покупать заранее почти бесполезно</h3>
+        <p class="note" style="margin-top:10px">Как цена за 3 дня до вылета относится к цене за 30 дней, по маршрутам.</p>
+        <div class="seg-rows" id="depth" style="margin-top:16px"></div>
+      </div>
+    </div>
+    <div class="check">
+      <h3>Конкуренция на цену почти не влияет</h3>
+      <p>На <span data-n="mono_share"></span> % маршрутов с ценами летает одна авиакомпания. При одинаковом расстоянии билеты на таких маршрутах не дороже, чем там, где перевозчиков несколько: разница <span data-n="mono_effect"></span> %, в пределах погрешности<span class="fn" id="fn-mono"></span>.</p>
+    </div>
+    <details class="more">
+      <summary>С курортов в Арктику: цена зависит от того, пустым ли летит борт</summary>
+      <div class="in">
+        <p class="note" style="margin-bottom:16px">Средняя минимальная цена билета с курортов (Сочи, Минеральные Воды, Краснодар, Геленджик, Махачкала, Анталья) в магистральные аэропорты по месяцу вылета, ₽. Цвет — от дешёвых к дорогим внутри строки.</p>
+        <div class="tablewrap"><table class="resort" id="resort"></table></div>
+        <div class="cap"><span>Источник: минимальные цены Aviastats; расчёты ПОРА</span></div>
+        <div class="prose" style="margin-top:24px"><p>В Мурманск и Нарьян-Мар билеты с курортов в начале лета стоят вдвое дешевле августовских: борта летят с юга почти пустыми, а в августе семьи возвращаются к учебному году. В Норильск цена падает в декабре, феврале и марте, когда спрос на юг минимален.</p></div>
+      </div>
+    </details>
+    <div class="notes" hidden></div>
+  </div>
+</section>
+
+<section class="block" id="subsidies">
+  <div class="wrap">
+    <div class="ch-head"><div class="glyph" data-glyph="subsidies" aria-hidden="true"></div><div class="eyebrow">Субсидии</div><h2>Из 58 субсидируемых направлений одно соединяет два аэропорта АЗРФ</h2><p class="lede">Высокие цены на местных линиях могла бы сглаживать федеральная поддержка, но она устроена по той же радиальной схеме. Расчёты ПОРА по перечню Росавиации региональных перевозок на 2026 год: 69 строк, 58 направлений, около 4 870 парных рейсов. Один кружок — одно направление.</p></div>
+    <div class="grid-2" style="margin-top:40px;align-items:start">
+      <figure class="waffle">
+        <div class="wt">58 субсидируемых направлений с участием аэропортов АЗРФ, 2026 год</div>
+        <div class="dots" id="dots" role="img" aria-label="58 направлений, из них одно внутри АЗРФ"></div>
+        <div class="legend"><span class="k"><span class="sw dot" style="background:var(--navy)"></span>57 направлений между аэропортом АЗРФ и городом вне зоны</span><span class="k"><span class="sw dot" style="background:var(--accent)"></span>1 направление между двумя аэропортами АЗРФ: Нарьян-Мар — Архангельск</span></div>
+      </figure>
+      <div class="stats two">
+        <div class="stat"><div class="v">98<small> %</small></div><div class="l">парных рейсов идут между АЗРФ и внешними городами; внутри зоны — 2 %, это Нарьян-Мар — Архангельск, 105 парных рейсов</div></div>
+        <div class="stat"><div class="v">88<small> %</small></div><div class="l">парных рейсов приходится на ЯНАО и НАО; на Мурманскую область 7 %, на Коми 5 %</div></div>
+        <div class="stat"><div class="v">36<small> %</small></div><div class="l">парных рейсов выполняют 50-местные CRJ; Ан-24, Ан-26 и вертолётов в региональном перечне нет</div></div>
+        <div class="stat"><div class="v">0</div><div class="l">строк по Якутии: самая большая местная сеть в федеральную региональную программу не попадает</div></div>
+      </div>
+    </div>
+    <div class="sub">
+      <h3>Субсидируемых кресел на жителя в год</h3>
+      <p class="note">Чем меньше у территории других способов добраться до большой земли, тем больше субсидируемых мест: всего около 1,1 млн в год.</p>
+      <div class="hbars" id="per-resident"></div>
+      <div class="cap"><span>Источник: расчёт ПОРА по перечню Росавиации на 2026 год, <a href="https://t.me/poradata/195" target="_blank" rel="noopener">«ПОРА считать»</a></span></div>
+    </div>
+    <div class="prose" style="margin-top:36px"><p>Федеральная поддержка повторяет радиальную форму сети. Вне региональной программы есть три социально значимых маршрута на Чукотке (от 8 395 до 13 860 ₽ в одну сторону) и 16 специальных тарифов для льготных категорий: девять из Норильска (от 2 500 до 6 800 ₽), пять из Анадыря и Певека (от 9 000 до 13 400 ₽), Нарьян-Мар — Москва за 4 000 ₽ и Калининград — Архангельск за 5 500 ₽. Федеральной программы для внутрирегиональных линий нет: регионы Арктики и ДФО просили на неё 14,8 млрд ₽ на 2023–2024 годы, Якутия оценивала свою потребность в 3,7 млрд ₽ при собственных 1,2 млрд.</p></div>
+    <div class="notes" hidden></div>
+  </div>
+</section>
+
+<section class="block" id="conclusions">
+  <div class="wrap">
+    <div class="ch-head"><div class="glyph" data-glyph="conclusions" aria-hidden="true"></div><div class="eyebrow">Выводы</div><h2>Что показали данные</h2></div>
+    <div class="concl">
+      <div class="item"><b>Структура</b>Внутри АЗРФ только <span data-n="share_inside"></span> % мест. Местные сети изолированы, регулярная связь есть у <span data-n="pairs_conn"></span> из <span data-n="pairs"></span> пары магистральных аэропортов, а дорога к соседу через Москву может занять больше суток</div>
+      <div class="item"><b>Парк</b><span data-n="sov_dir"></span> из <span data-n="local_dir"></span> местных направлений держатся на судах советской постройки, <span data-n="unp_dir"></span> — на бортах, садящихся на грунт. В <span data-n="iso_2pw_phrase"></span> рейсы бывают в среднем не чаще двух раз в неделю</div>
+      <div class="item"><b>Сезонность</b>Пик летом, поток задают отпуска и туризм; у Хибин и Мурманска пик зимой. Цены с курортов падают, когда борт летит пустым</div>
+      <div class="item"><b>Стоимость</b>На том же расстоянии билет через малый аэродром примерно втрое дороже (<span data-n="rk_small"></span> против <span data-n="rk_trunk"></span> ₽ за км), разрыв держится круглый год</div>
+    </div>
+  </div>
+</section>
+
+<section class="method-ch" id="method">
+  <div class="wrap">
+    <div class="ch-head"><div class="glyph" data-glyph="method" aria-hidden="true"></div><h2>Методология</h2></div>
+    <div class="method">
+      <ul>
+        <li>Один физический рейс — одно время вылета по UTC и пара аэропортов. Записи одного рейса под номерами разных авиакомпаний (<span data-n="dups"></span> дублей) объединены; места взяты по верхней границе вместимости судна.</li>
+        <li>Пропуски по типу судна (<span data-n="miss0"></span> записей) заполнены по номеру рейса и авиакомпании на том же маршруте, осталось <span data-n="miss1"></span>.</li>
+        <li>Время вылета и прилёта. В выгрузке местное время всех аэропортов записано как московское, поэтому рейс Норильск → Москва по ней длится 30 минут, а Москва → Норильск — больше 8 часов. Это подтверждают три признака: дата вылета всегда совпадает с датой по московскому времени; на табло Яндекса в Мурманске, Архангельске и Нарьян-Маре время рейсов в Екатеринбург, Уфу, Пермь и Калининград совпадает с выгрузкой в обе стороны; у рейсов туда-обратно разница длительностей равна двойной разнице поясов. Время пересчитано по поясу каждого аэропорта у <span data-n="tz_shift"></span> рейсов; для Депутатского, Усть-Куйги, Саккырыра и Барнаула пояс в выгрузке тоже неверный. У <span data-n="imputed"></span> рейсов время полёта и после пересчёта невозможное — прилёт взят по медиане того же маршрута.</li>
+        <li>Аэропорты Москвы, Архангельск с Васьково и Красноярск с Черемшанкой считаются одним городом.</li>
+        <li>Узловые аэропорты: вне АЗРФ, топ-5 по местам, рейсам или направлениям. Магистральные аэропорты АЗРФ (в презентации ПОРА — корневые): с прямыми рейсами в узловые, включая другие аэропорты того же города. Местные: без таких рейсов, выходят на большую землю через центр своей местной сети (в презентации — куста). Центры вне АЗРФ: Якутск, Красноярск, Магадан, Полярный.</li>
+        <li>Доли потока считаются по рейсам через аэропорты АЗРФ по другому концу маршрута: столицы, хабы, курорты, остальные города. Группа «внутри Арктики» включает рейсы между аэропортами АЗРФ и рейсы местных аэропортов к центрам своих сетей; строго между аэропортами АЗРФ — <span data-n="strict_seats"></span> % мест и <span data-n="strict_fl"></span> % рейсов.</li>
+        <li>Время в пути: для каждого вылета из аэропорта АЗРФ ищем самый ранний прилёт во все аэропорты АЗРФ по расписанию — до двух пересадок, не меньше часа на пересадку в том же аэропорту и четырёх часов между аэропортами одного города, прибытие в пределах трёх суток; рейсы с промежуточной посадкой под одним номером считаются без пересадки. Для каждой пары и дня берём самый быстрый вариант, затем медиану по дням.</li>
+        <li>Прямой рейс оцениваем по расписанию турбовинтовых самолётов на <span data-n="bt_routes"></span> маршрутах: <span data-n="bt_a_phrase"></span> плюс <span data-n="bt_b"></span> минуты на километр, то есть около <span data-n="bt_kmh"></span> км/ч в полёте. Расстояния — по прямой (ортодромия), воздушные трассы длиннее.</li>
+        <li>Дни без вылетов: дни периода, когда из аэропорта не было ни одного вылета по расписанию.</li>
+        <li>Цена километра: медиана цены за 30 дней до вылета, делённая на ортодромию; маршруты с более чем 10 вылетами за год по расписанию. Сравнение при равном расстоянии — тремя способами: медианы в диапазонах 500–1 000 и 1 000–2 000 км, сопоставление каждого маршрута малых бортов с магистральными той же длины (±20 %) и регрессия логарифма цены на логарифм расстояния.</li>
+        <li>Конкуренция: число авиакомпаний-эксплуатантов с долей рейсов на маршруте от 10 %; влияние оценено регрессией логарифма цены на логарифм расстояния, класс аэродрома и признак одного перевозчика.</li>
+        <li>Цена в рабочих днях: цена билета, делённая на среднюю начисленную зарплату за август 2026 года в регионе арктического аэропорта маршрута и умноженная на 21 рабочий день. В посёлках зарплаты ниже средних по региону, поэтому для их жителей билет ещё дороже.</li>
+        <li>Советская постройка: Ан-24, Ан-26, Як-42, Ми-8. Садятся на грунт: Ан-24, Ан-26, ATR 42/72, DHC-8, Ми-8.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+<footer><div class="wrap"><a class="brand" href="https://t.me/poradata" target="_blank" rel="noopener"><svg class="mark" aria-hidden="true"><use href="#pora-mark"/></svg><span class="bt">ПОРА считать</span></a><span>Проектный офис развития Арктики · 2026 · Источник данных: Aviastats, сервис для анализа авиационной отрасли России</span><span><a href="https://t.me/poradata" target="_blank" rel="noopener">t.me/poradata</a> · <a href="https://porarctic.ru" target="_blank" rel="noopener">porarctic.ru</a></span></div></footer>
+
+<script>/*__DATA__*/</script>
+<script>/*__JS__*/</script>
+</body>
+</html>
