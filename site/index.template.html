@@ -20,7 +20,7 @@
   --map-land:#F1F4F8; --map-other:#E4EAF1; --map-border:#C2CCD9; --map-full:#C7DEF7; --map-part:#E0ECF9;
   --c-yks:var(--accent); --c-kja:var(--sky); --c-nsk:var(--navy); --c-gdx:#8DBE2B; --c-pyj:#8392A6; --c-cee:#3E4C64;
   --font-d:"Forum","Georgia","Times New Roman",serif; --font-b:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif; --font-m:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-  --maxw:1200px; --textw:780px; --gutter-l:max(20px, env(safe-area-inset-left, 0px)); --gutter-r:max(20px, env(safe-area-inset-right, 0px));
+  --maxw:1200px; --textw:none; --gutter-l:max(20px, env(safe-area-inset-left, 0px)); --gutter-r:max(20px, env(safe-area-inset-right, 0px));
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
@@ -52,7 +52,7 @@ b,strong{font-weight:600}
 .prose{max-width:var(--textw);color:var(--ink);font-size:clamp(17px,1.4vw,19px);line-height:1.6}
 .prose p+p{margin-top:16px}
 .num{font-variant-numeric:tabular-nums}
-.note{font-size:14.5px;color:var(--muted);line-height:1.5;max-width:72ch}
+.note{font-size:14.5px;color:var(--muted);line-height:1.5}
 .note b{color:var(--ink-2);font-weight:500}
 .grid-2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px}
 .grid-2.wide{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
@@ -68,12 +68,12 @@ h2 .fn{font-size:.3em;vertical-align:.9em}
 /* chapter anatomy */
 section.block{padding-block:clamp(72px,9vw,128px) 0}
 section.block+section.block .wrap>.ch-head{border-top:1px solid var(--line);padding-top:clamp(40px,5vw,64px)}
-.ch-head h2{margin-top:16px;max-width:26ch;text-wrap:pretty}
+.ch-head h2{margin-top:16px;text-wrap:pretty}
 .ch-head .lede{margin-top:24px}
 .glyph{width:clamp(72px,7.5vw,96px);height:clamp(72px,7.5vw,96px);margin-bottom:22px}
 .glyph svg{width:100%;height:100%;display:block;overflow:visible}
 .sub{margin-top:clamp(48px,6vw,80px)}
-.sub h3{max-width:40ch}
+
 .sub h3+.note,.sub h3+.lede{margin-top:10px}
 .sub-h{margin:0 0 14px}
 .cap{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;margin-top:12px;font-size:13px;color:var(--muted)}
@@ -85,7 +85,7 @@ details.more[open]>summary::after{content:"–"}
 details.more>.in{padding-bottom:28px}
 /* key figures (second screen) */
 .key{padding-block:clamp(64px,8vw,112px) clamp(48px,6vw,72px)}
-.key h2{margin-top:14px;font-size:clamp(28px,3.4vw,44px);max-width:30ch}
+.key h2{margin-top:14px;font-size:clamp(28px,3.4vw,44px)}
 .keys{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:28px 32px;margin-top:36px}
 @media (max-width:1100px){ .keys{grid-template-columns:repeat(3,minmax(0,1fr))} }
 @media (max-width:640px){ .keys{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 20px} .keys .kf:last-child{grid-column:1/-1} }
@@ -96,7 +96,7 @@ details.more>.in{padding-bottom:28px}
 .kf .v small{font-size:.36em;color:var(--ink-2);letter-spacing:0}
 .kf .l{font-size:16px;color:var(--ink-2);margin-top:12px;line-height:1.4}
 .kf.hi{border-color:var(--accent)} .kf.hi .v{color:var(--accent-deep)}
-.src{margin-top:40px;font-size:14.5px;color:var(--muted);max-width:80ch;line-height:1.5}
+.src{margin-top:40px;font-size:14.5px;color:var(--muted);line-height:1.5}
 .toc{margin-top:36px;padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 26px;align-items:baseline}
 .toc .t{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-right:6px}
 .toc a{font-size:16px;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-2);padding-bottom:2px}
@@ -129,7 +129,6 @@ select{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:
 select:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,[tabindex]:focus-visible,summary:focus-visible{outline:2px solid var(--sky-deep);outline-offset:2px}
 /* hero */
 .hero{position:relative;background:var(--hero);color:var(--hero-ink);overflow:hidden;color-scheme:dark;min-height:max(560px,100svh);max-height:1100px;display:flex;align-items:center;justify-content:center;text-align:center;padding:calc(90px + env(safe-area-inset-top,0px)) var(--gutter-r) 80px var(--gutter-l)}
-.hero .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%;display:block;z-index:0}
 .hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(5,13,31,.55) 0%,rgba(5,13,31,.18) 30%,rgba(5,13,31,.25) 60%,rgba(5,13,31,.78) 100%)}
 .hero .in{position:relative;z-index:2;max-width:1100px;margin:0 auto}
 .hero h1{color:#fff;text-shadow:0 2px 30px rgba(0,0,0,.35)}
@@ -354,7 +353,7 @@ select:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,[t
 .hbars .b span{font-family:var(--font-d);font-size:22px;line-height:1}
 .hbars .r.none .b span{font-family:var(--font-b);font-size:14px;color:var(--muted)}
 /* conclusions */
-.concl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 48px;margin-top:clamp(36px,5vw,56px);max-width:1040px}
+.concl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 48px;margin-top:clamp(36px,5vw,56px)}
 @media (max-width:860px){ .concl{grid-template-columns:1fr} }
 .concl .item{padding:20px 0 24px;border-top:1px solid var(--line-2);font-size:17px;line-height:1.55;color:var(--ink-2);min-width:0}
 .concl .item b{display:block;color:var(--ink);font-family:var(--font-d);font-weight:400;font-size:clamp(22px,2.2vw,27px);margin-bottom:8px}
@@ -384,7 +383,6 @@ footer a{color:var(--ink-2)}
 </header>
 
 <section class="hero" id="top">
-  <img class="bg" src="img/hero.jpg" srcset="img/hero-m.jpg 1100w, img/hero.jpg 2200w" sizes="100vw" alt="Северное сияние над заснеженными лиственницами плато Путорана" fetchpriority="high">
   <div class="in">
     <h1>Небо над Арктикой</h1>
     <p class="lede">Из каждых 100 мест в самолётах, которые летают через аэропорты Арктической зоны, <span data-n="mainland_of_100"></span> ведут на большую землю. Как устроено авиасообщение в Арктике: куда и на чём летают, когда и за сколько. По <span data-n="flights"></span> рейсам за октябрь 2025 — сентябрь 2026 года и ценам на <span data-n="price_routes"></span> маршрутов.</p>
