@@ -328,4 +328,21 @@ function setMine(code){ mineCode=code||null; try{ localStorage.setItem('skyarcti
 function syncMine(v){ mineSels.forEach(s=>{ if(s.value!==v) s.value=v; }); }
 mineSels.forEach(s=>s.addEventListener('change',()=>{ syncMine(s.value); setMine(s.value); }));
 try{ const saved=localStorage.getItem('skyarctic-mine'); if(saved&&D.profiles[saved]){ syncMine(saved); setMine(saved); } }catch(e){}
+// ---------- типографика: без висячих предлогов ----------
+// Короткие предлоги, союзы и частицы (до двух букв, а также «для», «без», «над», «под», «при», «про», «или», «как», «что»)
+// привязываем неразрывным пробелом к следующему слову, число — к следующему слову, единице или знаку, тире — к предыдущему слову.
+const RX_SHORT=/(^|[\s(«„"'—–\-])([а-яёa-z]{1,2}|для|без|над|под|при|про|или|как|что)[ \t\n\r]+/giu;
+const RX_NUM=/(\d)[ \t\n\r\u00A0]+(?=[%₽×]|(?:км|ч|м|т|кг|г)(?![а-яё])|[а-яёa-z]{3})/giu;   // число + слово от трёх букв, единица или знак; предлог после числа не привязываем, чтобы не было длинных неразрывных цепочек
+const RX_DASH=/[ \t\n\r]+(—)/g;
+const TYPO_SKIP='svg,script,style,select,textarea';
+function typoText(t){ let r=t, prev=null; for(let i=0;i<3&&r!==prev;i++){ prev=r; r=r.replace(RX_SHORT,'$1$2\u00A0'); } return r.replace(RX_NUM,'$1\u00A0').replace(RX_DASH,'\u00A0$1'); }
+function typo(root){ if(!root) return; if(root.nodeType===3){ root=root.parentNode; if(!root) return; } if(root.nodeType!==1) return; if(root.closest&&root.closest(TYPO_SKIP)) return;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{ const p=n.parentElement; return p&&!p.closest(TYPO_SKIP)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT; }});
+  const list=[]; while(w.nextNode()) list.push(w.currentNode); for(const n of list){ const t=typoText(n.data); if(t!==n.data) n.data=t; } }
+typo(document.body);
+// текст, который скрипт дописывает позже: калькулятор, подсказки, «мой аэропорт»
+const typoQueue=new Set(); let typoRaf=0;
+new MutationObserver(ms=>{ for(const m of ms){ if(m.type==='characterData') typoQueue.add(m.target); else m.addedNodes.forEach(n=>typoQueue.add(n)); }
+  if(!typoRaf) typoRaf=requestAnimationFrame(()=>{ typoRaf=0; const q=[...typoQueue]; typoQueue.clear(); for(const n of q) if(n.isConnected) typo(n); }); })
+  .observe(document.body,{subtree:true,childList:true,characterData:true});
 })();
