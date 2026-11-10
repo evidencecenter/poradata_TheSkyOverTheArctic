@@ -1,0 +1,264 @@
+/* Illustrative aircraft geometry and portable 3D renderer. No libraries or network. */
+(function(root){
+  'use strict';
+  const catalog=[
+    {id:'ssj100',name:'Sukhoi Superjet 100',family:'SSJ 100',length:11.6,radius:.64,span:10.2,sweep:.44,windows:20,engine:'wing',engineRadius:.46,tail:'low',winglet:0},
+    {id:'boeing737',name:'Boeing 737',family:'Boeing 737',length:13.5,radius:.68,span:11.7,sweep:.46,windows:26,engine:'wing',engineRadius:.54,tail:'low',winglet:.9},
+    {id:'a320',name:'Airbus A320',family:'Airbus A320',length:13.2,radius:.74,span:11.6,sweep:.43,windows:25,engine:'wing',engineRadius:.60,tail:'low',winglet:.42},
+    {id:'crj',name:'Bombardier CRJ 100/200',family:'CRJ 100/200',length:12.6,radius:.49,span:9.2,sweep:.43,windows:22,engine:'rear',engineRadius:.40,tail:'t',winglet:.35},
+    {id:'an24',name:'Ан-24',family:'Ан-24',length:10.9,radius:.66,span:13.0,sweep:.075,windows:15,engine:'prop',engineRadius:.42,tail:'low',winglet:0,blades:4,highWing:true},
+    {id:'embraer',name:'Embraer 170/190',family:'Embraer E-Jet',length:12.1,radius:.60,span:10.7,sweep:.42,windows:23,engine:'wing',engineRadius:.45,tail:'low',winglet:.7},
+    {id:'dhc8',name:'De Havilland DHC-8-300',family:'DHC-8',length:13.6,radius:.53,span:12.5,sweep:.06,windows:18,engine:'prop',engineRadius:.40,tail:'t',winglet:0,blades:4,highWing:true},
+    {id:'atr',name:'ATR 42/72',family:'ATR 42/72',length:12.1,radius:.59,span:12.8,sweep:.06,windows:18,engine:'prop',engineRadius:.42,tail:'t',winglet:0,blades:6,highWing:true},
+    {id:'yak42',name:'Як-42',family:'Як-42',length:12.5,radius:.67,span:11.3,sweep:.39,windows:22,engine:'trijet',engineRadius:.46,tail:'t',winglet:0},
+    {id:'an26',name:'Ан-26',family:'Ан-26',length:11.5,radius:.67,span:13.2,sweep:.075,windows:8,engine:'prop',engineRadius:.43,tail:'low',winglet:0,blades:4,highWing:true,cargo:true}
+  ];
+  const palette={paint:[234,240,246],wing:[219,231,242],belly:[160,185,209],edge:[139,169,195],glass:[20,44,65],dark:[18,32,45],metal:[104,133,157],blue:[101,164,217]};
+  const norm=v=>{const n=Math.hypot(...v)||1;return v.map(x=>x/n);};
+  const sub=(a,b)=>a.map((x,i)=>x-b[i]);
+  const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+  const dot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0);
+  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  const mix=(a,b,t)=>a+(b-a)*t;
+  const modelCache=new Map();
+
+  function createModel(id){
+    if(modelCache.has(id))return modelCache.get(id);
+    const spec=catalog.find(s=>s.id===id||s.family===id||s.name===id)||catalog[0];
+    const faces=[];const L=spec.length,R=spec.radius,W=spec.span;
+    const material=name=>palette[name]||palette.paint;
+    function tri(a,b,c,color,normal,vertexNormals){
+      const n=normal||norm(cross(sub(b,a),sub(c,a)));
+      if(Math.hypot(...cross(sub(b,a),sub(c,a)))<1e-8)return;
+      faces.push({p:[a,b,c],n,vn:vertexNormals,c:material(color),center:a.map((x,i)=>(x+b[i]+c[i])/3)});
+    }
+    function quad(a,b,c,d,color,normal,vn){tri(a,b,c,color,normal,vn&&[vn[0],vn[1],vn[2]]);tri(a,c,d,color,normal,vn&&[vn[0],vn[2],vn[3]]);}
+    function thinQuad(a,b,c,d,color,normal){quad(a,b,c,d,color,normal);quad(d,c,b,a,color,normal.map(x=>-x));}
+    const profile=[[-.5,.025,.16],[-.47,.16,.14],[-.42,.37,.10],[-.36,.68,.04],[-.30,.91,0],[-.23,1,0],[.20,1,0],[.30,.99,-.01],[.37,.87,-.03],[.42,.66,-.05],[.465,.35,-.07],[.49,.11,-.08],[.5,.015,-.08]];
+    function bodyAt(z){
+      const t=z/L;let i=0;while(i<profile.length-2&&t>profile[i+1][0])i++;
+      const a=profile[i],b=profile[i+1],f=clamp((t-a[0])/(b[0]-a[0]),0,1);
+      return [mix(a[1],b[1],f)*R,mix(a[2],b[2],f)*R];
+    }
+    function bp(z,angle,offset){const [r,y]=bodyAt(z);return [(r+(offset||0))*Math.cos(angle),y+(r*.94+(offset||0))*Math.sin(angle),z];}
+    function bn(z,angle){const e=L*.008;return norm([Math.cos(angle),Math.sin(angle)/.94,-(bodyAt(z+e)[0]-bodyAt(z-e)[0])/(2*e)]);}
+    const bodyRows=34,radial=24;
+    for(let j=0;j<bodyRows;j++){
+      const z0=L*(-.5+j/bodyRows),z1=L*(-.5+(j+1)/bodyRows);
+      for(let k=0;k<radial;k++){
+        const a=k*Math.PI*2/radial,b=(k+1)*Math.PI*2/radial;
+        const mid=(a+b)/2;
+        const eps=.002,r0=bodyAt((z0+z1)/2-eps)[0],r1=bodyAt((z0+z1)/2+eps)[0];
+        const n=norm([Math.cos(mid),Math.sin(mid)/.94,-(r1-r0)/(eps*2)]);
+        quad(bp(z0,a),bp(z1,a),bp(z1,b),bp(z0,b),Math.sin(mid)<-.5?'belly':'paint',n,[bn(z0,a),bn(z1,a),bn(z1,b),bn(z0,b)]);
+      }
+    }
+    function panel(z0,z1,a0,a1,color,subdivisions){
+      const steps=subdivisions||1;
+      for(let i=0;i<steps;i++)for(let j=0;j<steps;j++){
+        const za=mix(z0,z1,i/steps),zb=mix(z0,z1,(i+1)/steps),aa=mix(a0,a1,j/steps),ab=mix(a0,a1,(j+1)/steps);
+        const points=[bp(za,aa,.024),bp(zb,aa,.024),bp(zb,ab,.024),bp(za,ab,.024)];
+        quad(...points,color,bn((za+zb)/2,(aa+ab)/2));
+      }
+    }
+    for(const side of [-1,1]){
+      const a=side===1?.27:Math.PI-.27;
+      for(let k=0;k<spec.windows;k++){
+        const z=mix(-L*.29,L*.31,k/(spec.windows-1));
+        panel(z-.065,z+.065,a-.13,a+.13,'glass');
+      }
+      for(const z of [-L*.32,L*.335]){
+        const a0=side===1?-.35:Math.PI-.6,a1=side===1?.6:Math.PI+.35;
+        panel(z-.018,z+.018,a0,a1,'edge');
+      }
+    }
+    [[.42,1.08],[1.17,1.97],[2.06,2.72]].forEach(angles=>panel(L*.365,L*.435,angles[0],angles[1],'glass',5));
+
+    function airfoil(u,t){return 5*t*(.2969*Math.sqrt(u)-.126*u-.3516*u*u+.2843*u*u*u-.1036*u*u*u*u);}
+    function wing(stations,side,vertical){
+      const steps=12;
+      function at(row,u,top){
+        const [span,lead,trail,y,thick]=row,chord=lead-trail;
+        const h=airfoil(u,thick)*chord*(top?1:-1);
+        return vertical?[h,span,lead-u*chord]:[side*span,y+h+.012*chord*Math.sin(Math.PI*u),lead-u*chord];
+      }
+      for(let i=0;i<stations.length-1;i++)for(let j=0;j<steps;j++)for(const top of [true,false]){
+        const a=at(stations[i],j/steps,top),b=at(stations[i+1],j/steps,top),c=at(stations[i+1],(j+1)/steps,top),d=at(stations[i],(j+1)/steps,top);
+        const color=j===0?'edge':top?'wing':'belly';
+        if(vertical?!top:(side===1)===top)quad(a,b,c,d,color);else quad(d,c,b,a,color);
+      }
+      const tip=stations[stations.length-1];
+      for(let j=0;j<steps;j++)quad(at(tip,j/steps,true),at(tip,(j+1)/steps,true),at(tip,(j+1)/steps,false),at(tip,j/steps,false),'edge');
+    }
+    const wy=spec.highWing?R*.64:-R*.28;
+    const chord=spec.highWing?L*.18:L*.25;
+    const wingRows=[0,.34,.7,1].map(t=>{
+      const x=mix(R*.6,W/2,t),lead=L*.075-spec.sweep*(x-R*.6);
+      return [x,lead,lead-chord*(1-.73*t),wy+t*.30,.115-t*.073];
+    });
+    [-1,1].forEach(s=>wing(wingRows,s,false));
+    if(spec.winglet){
+      const tip=wingRows[wingRows.length-1];
+      [-1,1].forEach(s=>{
+        const x=s*tip[0],y=tip[3],z=tip[1];
+        thinQuad([x,y,z],[x+s*.12,y+spec.winglet,z-.2],[x+s*.1,y+spec.winglet,z-.65],[x,y,z-.7],'wing',norm([s*.85,.1,.2]));
+      });
+    }
+    const tailH=R*2.8,tailBase=R*.25;
+    wing([[tailBase,-L*.315,-L*.49,0,.14],[R*1.6,-L*.38,-L*.485,0,.10],[tailH,-L*.435,-L*.485,0,.07]],1,true);
+    const ty=spec.tail==='t'?tailH*.94:R*.40;
+    const tailSpan=W*(spec.highWing?.29:.31)/2;
+    const tailRows=[[R*.1,-L*.35,-L*.475,ty,.10],[tailSpan*.6,-L*.385,-L*.485,ty+.08,.07],[tailSpan,-L*.42,-L*.49,ty+.16,.04]];
+    [-1,1].forEach(s=>wing(tailRows,s,false));
+
+    function revolve(cx,cy,cz,rows,color,segments){
+      const n=segments||20;
+      for(let j=0;j<rows.length-1;j++)for(let k=0;k<n;k++){
+        const [z0,r0]=rows[j],[z1,r1]=rows[j+1],a=k*2*Math.PI/n,b=(k+1)*2*Math.PI/n;
+        const pt=(z,r,t)=>[cx+r*Math.cos(t),cy+r*Math.sin(t),cz+z];
+        const m=(a+b)/2,slope=(r1-r0)/(z1-z0||.001);
+        const na=norm([Math.cos(a),Math.sin(a),-slope]),nb=norm([Math.cos(b),Math.sin(b),-slope]);
+        quad(pt(z0,r0,a),pt(z1,r1,a),pt(z1,r1,b),pt(z0,r0,b),color,norm([Math.cos(m),Math.sin(m),-slope]),[na,na,nb,nb]);
+      }
+    }
+    function disk(cx,cy,z,r,color,back){
+      for(let k=0;k<20;k++){const a=k*Math.PI/10,b=(k+1)*Math.PI/10;tri([cx,cy,z],[cx+r*Math.cos(a),cy+r*Math.sin(a),z],[cx+r*Math.cos(b),cy+r*Math.sin(b),z],color,[0,0,back?-1:1]);}
+    }
+    function box(x0,x1,y0,y1,z0,z1,color){
+      quad([x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0],color,[-1,0,0]);quad([x1,y0,z1],[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],color,[1,0,0]);
+      quad([x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0],color,[0,1,0]);quad([x0,y0,z1],[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],color,[0,-1,0]);
+      quad([x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1],color,[0,0,1]);quad([x1,y0,z0],[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],color,[0,0,-1]);
+    }
+    function jet(cx,cy,cz,r){
+      revolve(cx,cy,cz,[[-1.1*r,.55*r],[-.6*r,.87*r],[.65*r,r],[1.05*r,.94*r],[1.15*r,.78*r]],'paint');
+      disk(cx,cy,cz-1.1*r,.55*r,'dark',true);
+      revolve(cx,cy,cz,[[.9*r,.73*r],[1.15*r,.78*r]],'metal');
+      disk(cx,cy,cz+.86*r,.72*r,'dark');
+      for(let k=0;k<12;k++){
+        const a=k*Math.PI/6,b=a+.21;
+        tri([cx+Math.cos(a)*r*.15,cy+Math.sin(a)*r*.15,cz+.89*r],[cx+Math.cos(a+.16)*r*.67,cy+Math.sin(a+.16)*r*.67,cz+.89*r],[cx+Math.cos(b+.16)*r*.67,cy+Math.sin(b+.16)*r*.67,cz+.89*r],'metal',[0,0,1]);
+      }
+      revolve(cx,cy,cz,[[.88*r,.19*r],[1.08*r,.015*r]],'edge',12);
+    }
+    function prop(cx,cy,cz,r){
+      revolve(cx,cy,cz,[[-2.0*r,.2*r],[-1.0*r,.85*r],[1.1*r,r],[1.7*r,.65*r]],'paint');
+      const z=cz+1.75*r,pr=r*2.45;
+      for(let k=0;k<spec.blades;k++){
+        const a=k*2*Math.PI/spec.blades+.2,rad=(radius,offset)=>[cx+Math.cos(a)*radius-Math.sin(a)*offset,cy+Math.sin(a)*radius+Math.cos(a)*offset,z];
+        thinQuad(rad(r*.30,-r*.12),rad(pr*.83,-r*.17),rad(pr,r*.10),rad(r*.42,r*.25),'dark',[0,0,1]);
+        thinQuad(rad(pr*.82,-r*.14),rad(pr*.94,-r*.04),rad(pr,r*.10),rad(pr*.88,r*.16),'blue',[0,0,1]);
+      }
+      revolve(cx,cy,z,[[0,r*.31],[r*.42,r*.24],[r*.78,.015]],'edge',16);
+    }
+    if(spec.engine==='wing'||spec.engine==='prop')[-1,1].forEach(s=>{
+      const x=s*W*.225,r=spec.engineRadius;
+      if(spec.engine==='prop')prop(x,wy-r*.7,L*.09,r);
+      else{
+        const y=wy-r*1.45,z=L*.08-spec.sweep*(Math.abs(x)-R*.6)+r*.55;
+        box(x-.07,x+.07,y+r*.55,wy,z-r*.65,z+r*.30,'edge');jet(x,y,z,r);
+      }
+    });
+    if(spec.engine==='rear'||spec.engine==='trijet')[-1,1].forEach(s=>{
+      const x=s*(R+spec.engineRadius*.8),y=R*.16,z=-L*.29;
+      box(s===1?R*.5:x,s===1?x:-R*.5,y-.04,y+.08,z-.55,z+.35,'edge');jet(x,y,z,spec.engineRadius);
+    });
+    if(spec.engine==='trijet')jet(0,R*1.2,-L*.365,spec.engineRadius*.94);
+    const all=faces.flatMap(f=>f.p),radius=Math.max(...all.map(p=>Math.hypot(...p)));
+    const model={id:spec.id,name:spec.name,spec,faces,radius,triangleCount:faces.length};
+    modelCache.set(spec.id,model);return model;
+  }
+
+  function rotate(v,yaw,pitch){
+    const cy=Math.cos(yaw),sy=Math.sin(yaw),cx=Math.cos(pitch),sx=Math.sin(pitch);
+    const x=v[0]*cy+v[2]*sy,z=-v[0]*sy+v[2]*cy;
+    return [x,v[1]*cx-z*sx,v[1]*sx+z*cx];
+  }
+  function projection(model,options){
+    const o=options||{},w=o.width||480,h=o.height||300,yaw=o.yaw===undefined?.62:o.yaw,pitch=o.pitch===undefined?.63:o.pitch,zoom=o.zoom||1;
+    const light=norm([-.45,.75,.7]);
+    const cosY=Math.cos(yaw),sinY=Math.sin(yaw),cosP=Math.cos(pitch),sinP=Math.sin(pitch);
+    const transform=v=>{const x=v[0]*cosY+v[2]*sinY,z=-v[0]*sinY+v[2]*cosY;return [x,v[1]*cosP-z*sinP,v[1]*sinP+z*cosP];};
+    function illuminate(n,c){
+      const diff=Math.max(0,dot(n,light)),shade=.38+.64*diff;
+      const shine=Math.pow(Math.max(0,n[2]*.72+n[1]*.35-n[0]*.25),18)*22;
+      return c.map((value,i)=>Math.round(clamp(value*shade+shine+(1-diff)*[1,6,12][i],0,255)));
+    }
+    let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+    const raw=model.faces.map(f=>{
+      const pts=f.p.map(transform);
+      pts.forEach(p=>{minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0]);minY=Math.min(minY,p[1]);maxY=Math.max(maxY,p[1]);});
+      const n=transform(f.n),col=illuminate(n,f.c),rgbs=f.vn&&f.vn.map(vn=>illuminate(transform(vn),f.c));
+      return {pts,z:pts.reduce((s,p)=>s+p[2],0)/3,color:`rgb(${col.join(',')})`,rgb:col,rgbs,nz:n[2]};
+    }).filter(f=>f.nz>-.025);
+    const base=Math.min(w*.88/(model.spec.span*1.05),h*.88/(model.spec.length*.72));
+    const scale=Math.min(base,w*.88/(maxX-minX),h*.88/(maxY-minY))*zoom;
+    const cx=(minX+maxX)/2,cy=(minY+maxY)/2;
+    const polygons=raw.map(f=>({points:f.pts.map(p=>[w/2+(p[0]-cx)*scale,h/2-(p[1]-cy)*scale,p[2]]),z:f.z,color:f.color,rgb:f.rgb,rgbs:f.rgbs,nz:f.nz}));
+    polygons.sort((a,b)=>a.z-b.z);
+    return {width:w,height:h,polygons,triangles:model.triangleCount,yaw,pitch,zoom};
+  }
+  /* A small software depth buffer keeps glazing, propellers and intersecting
+     wings correctly occluded, even where WebGL is disabled. Pixels are only
+     recomputed when the user changes the view; no animation loop is required. */
+  function rasterize(model,options){
+    const o=options||{},w=Math.round(o.width||480),h=Math.round(o.height||300),size=w*h;
+    const b=o.buffer&&o.buffer.width===w&&o.buffer.height===h?o.buffer:{width:w,height:h,data:new Uint8ClampedArray(size*4),depth:new Float32Array(size)};
+    b.data.fill(0);b.depth.fill(-Infinity);
+    const scene=projection(model,Object.assign({},o,{width:w,height:h}));
+    for(const face of scene.polygons){
+      let [p0,p1,p2]=face.points;
+      let [c0,c1,c2]=face.rgbs||[face.rgb,face.rgb,face.rgb];
+      let area=(p2[0]-p1[0])*(p0[1]-p1[1])-(p2[1]-p1[1])*(p0[0]-p1[0]);
+      if(Math.abs(area)<.0001)continue;
+      if(area<0){const p=p1;p1=p2;p2=p;const c=c1;c1=c2;c2=c;area=-area;}
+      const xa=Math.max(0,Math.floor(Math.min(p0[0],p1[0],p2[0]))),xb=Math.min(w-1,Math.ceil(Math.max(p0[0],p1[0],p2[0])));
+      const ya=Math.max(0,Math.floor(Math.min(p0[1],p1[1],p2[1]))),yb=Math.min(h-1,Math.ceil(Math.max(p0[1],p1[1],p2[1])));
+      const dx0=p1[1]-p2[1],dy0=p2[0]-p1[0],dx1=p2[1]-p0[1],dy1=p0[0]-p2[0],dx2=p0[1]-p1[1],dy2=p1[0]-p0[0];
+      let row0=dy0*(ya+.5-p1[1])+dx0*(xa+.5-p1[0]);
+      let row1=dy1*(ya+.5-p2[1])+dx1*(xa+.5-p2[0]);
+      let row2=dy2*(ya+.5-p0[1])+dx2*(xa+.5-p0[0]);
+      const iz=1/area,dzx=(dx0*p0[2]+dx1*p1[2]+dx2*p2[2])*iz,dzy=(dy0*p0[2]+dy1*p1[2]+dy2*p2[2])*iz;
+      let rowZ=(row0*p0[2]+row1*p1[2]+row2*p2[2])*iz;
+      const dcx=c0.map((v,i)=>(dx0*v+dx1*c1[i]+dx2*c2[i])*iz),dcy=c0.map((v,i)=>(dy0*v+dy1*c1[i]+dy2*c2[i])*iz);
+      const rowC=c0.map((v,i)=>(row0*v+row1*c1[i]+row2*c2[i])*iz);
+      for(let y=ya;y<=yb;y++){
+        let e0=row0,e1=row1,e2=row2,z=rowZ,index=y*w+xa;
+        let r=rowC[0],g=rowC[1],blue=rowC[2];
+        for(let x=xa;x<=xb;x++,index++){
+          if(e0>=-.00001&&e1>=-.00001&&e2>=-.00001&&z>b.depth[index]){
+            b.depth[index]=z;const i=index*4;b.data[i]=r;b.data[i+1]=g;b.data[i+2]=blue;b.data[i+3]=255;
+          }
+          e0+=dx0;e1+=dx1;e2+=dx2;z+=dzx;r+=dcx[0];g+=dcx[1];blue+=dcx[2];
+        }
+        row0+=dy0;row1+=dy1;row2+=dy2;rowZ+=dzy;
+        rowC[0]+=dcy[0];rowC[1]+=dcy[1];rowC[2]+=dcy[2];
+      }
+    }
+    b.triangles=scene.triangles;b.yaw=scene.yaw;b.pitch=scene.pitch;
+    return b;
+  }
+  const canvasBuffers=typeof WeakMap!=='undefined'?new WeakMap():new Map();
+  function render(canvas,model,options){
+    const o=options||{},width=o.width||canvas.clientWidth||480,height=o.height||canvas.clientHeight||300;
+    const dpr=Math.min(o.dpr||(typeof devicePixelRatio==='number'?devicePixelRatio:1),1.5);
+    const dw=Math.round(width*dpr),dh=Math.round(height*dpr);
+    if(canvas.width!==dw||canvas.height!==dh){canvas.width=dw;canvas.height=dh;}
+    const ctx=canvas.getContext('2d',{alpha:true});if(!ctx)return null;
+    const frame=rasterize(model,Object.assign({},o,{width:dw,height:dh,buffer:canvasBuffers.get(canvas)}));
+    canvasBuffers.set(canvas,frame);
+    const bitmap=ctx.createImageData(dw,dh);bitmap.data.set(frame.data);
+    ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,dw,dh);ctx.putImageData(bitmap,0,0);
+    if(o.background&&o.background!=='transparent'){
+      ctx.globalCompositeOperation='destination-over';ctx.fillStyle=o.background;ctx.fillRect(0,0,dw,dh);ctx.globalCompositeOperation='source-over';
+    }
+    return {triangles:frame.triangles,yaw:frame.yaw,pitch:frame.pitch,engine:'canvas-3d-depth-buffer'};
+  }
+  function toSVG(model,options){
+    const s=projection(model,options),bg=options&&options.background;
+    const paths=s.polygons.map(f=>`<path d="M${f.points.map(p=>p.slice(0,2).map(v=>v.toFixed(2)).join(',')).join('L')}Z" fill="${f.color}" stroke="${f.color}" stroke-width=".45" stroke-linejoin="round"/>`).join('');
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${s.width}" height="${s.height}" viewBox="0 0 ${s.width} ${s.height}">${bg&&bg!=='transparent'?`<rect width="100%" height="100%" fill="${bg}"/>`:''}${paths}</svg>`;
+  }
+  const api={catalog,createModel,render,rasterize,toSVG,project:projection,version:'1.0.0'};
+  if(typeof module!=='undefined'&&module.exports)module.exports=api;
+  if(root)root.Fleet3D=api;
+})(typeof window!=='undefined'?window:typeof globalThis!=='undefined'?globalThis:this);

@@ -1,13 +1,12 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Небо над Арктикой</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Как устроено авиасообщение в Арктической зоне России: сеть, крюки, парк, сезон, цены и субсидии по рейсам за октябрь 2025 — сентябрь 2026 года. Дата-лендинг «ПОРА считать».">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Forum&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
 <style>
 /* Layout, издательский лонгрид: тёмный фотографический первый экран со статичной шапкой, затем светлая страница
    в одну широкую колонку — крупные заголовки глав антиквой, большие цифры, графики на всю ширину.
@@ -158,7 +157,7 @@ select:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible,[t
 .clock{font-family:var(--font-m);font-size:22px;font-variant-numeric:tabular-nums;color:var(--ink);min-width:5ch}
 .air{font-size:14px;color:var(--ink-2)}
 .air b{font-family:var(--font-m);font-weight:500;color:var(--ink)}
-.slider{flex:1 1 220px;min-width:180px;accent-color:var(--sky-deep)}
+.slider{flex:1 1 140px;min-width:180px;accent-color:var(--sky-deep)}
 .map .plane-dot{stroke:var(--bg);stroke-width:1;vector-effect:non-scaling-stroke}
 /* destination mix bar */
 .mix{display:flex;height:56px;gap:2px;border-radius:3px;overflow:hidden;margin-top:18px}
@@ -371,8 +370,10 @@ footer .brand{color:var(--brand)} footer .brand .bt{color:var(--ink)} footer .br
 footer a{color:var(--ink-2)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
+<style>/*__EDITORIAL_CSS__*/</style>
 </head>
 <body>
+<div id="reading-progress" aria-hidden="true"></div>
 <div class="tip" id="tip" role="tooltip"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="pora-mark" viewBox="0 0 70.62 32.77"><path d="M11.4175 17.8138C7.01965 17.8138 1.97339 21.2496 0 22.9411V32.7728H70.6193V22.4125C70.6193 21.7549 66.6549 11.2793 60.5233 11.2793C52.8588 11.2793 44.7714 25.5312 33.6182 25.5312C27.5394 25.5312 16.9148 17.8138 11.4175 17.8138Z" fill="currentColor"/><path d="M8.08744 29.4423C5.02163 29.4423 1.58576 25.1255 0 22.9407V32.7724H67.9235C53.1231 32.7724 48.1015 0 37.2126 0C28.0681 0 20.7207 29.4423 8.08744 29.4423Z" fill="currentColor" fill-opacity=".38"/></symbol></svg>
 
@@ -383,67 +384,67 @@ footer a{color:var(--ink-2)}
 </header>
 
 <section class="hero" id="top">
-  <div class="in">
-    <h1>Небо над Арктикой</h1>
-    <p class="lede">Из каждых 100 мест в самолётах, которые летают через аэропорты Арктической зоны, <span data-n="mainland_of_100"></span> ведут на большую землю. Как устроено авиасообщение в Арктике: куда и на чём летают, когда и за сколько. По <span data-n="flights"></span> рейсам за октябрь 2025 — сентябрь 2026 года и ценам на <span data-n="price_routes"></span> маршрутов.</p>
+  <div class="hero-stage">
+    <div class="hero-ocean" aria-hidden="true"></div>
+    <div class="flight-scene" aria-hidden="true"><canvas id="aircraft-canvas"></canvas><div class="aircraft-poster"></div></div>
+    <h1 class="hero-title"><span>Небо над</span> <span>Арктикой</span></h1>
+    <div class="hero-caption" aria-hidden="true"><span>Источник: Aviastats · расчёты ПОРА</span></div>
   </div>
-  <a class="cue" href="#key"><span>Листайте</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l7 7 7-7"/></svg></a>
 </section>
 
 <section class="key" id="key">
   <div class="wrap">
     <div class="eyebrow">Арктическая зона РФ · октябрь 2025 — сентябрь 2026</div>
     <h2>Авиасообщение Арктики за год в пяти цифрах</h2>
+    <p class="lede key-intro">Из каждых 100 мест в самолётах, которые летают через аэропорты Арктической зоны, <span data-n="mainland_of_100"></span> ведут на большую землю. Как устроено авиасообщение в Арктике: куда и на чём летают, когда и за сколько. По <span data-n="flights"></span> рейсам за октябрь 2025 — сентябрь 2026 года и ценам на <span data-n="price_routes"></span> маршрутов.</p>
     <div class="keys" aria-label="Ключевые цифры">
-      <div class="kf"><div class="v" data-n="arctic_airports" data-count></div><div class="l">аэропортов АЗРФ с рейсами</div></div>
-      <div class="kf"><div class="v" data-n="routes" data-count></div><div class="l">маршрутов</div></div>
-      <div class="kf"><div class="v" data-n="flights" data-count></div><div class="l">рейсов за год</div></div>
-      <div class="kf"><div class="v"><span class="hv" data-n="seats_mln" data-count data-tipkey="seats_exact"></span><small> млн</small></div><div class="l">мест за год<span class="fn" data-note="Места — вместимость самолётов, а не проданные билеты. Пассажиров меньше: в первом полугодии 2026 года через аэропорт Мурманска прошло 87 % от числа мест в расписании, через Апатиты — 83 % (пассажиропоток по данным Минтранса Мурманской области)."></span></div></div>
-      <div class="kf hi"><div class="v"><span data-n="share_inside" data-count></span><small> %</small></div><div class="l">мест внутри Арктики</div></div>
+      <div class="kf"><div class="v" data-n="arctic_airports" data-count-v3></div><div class="l"><a class="lim-link" href="#limits">аэропортов АЗРФ с рейсами</a></div></div>
+      <div class="kf"><div class="v" data-n="routes" data-count-v3></div><div class="l">маршрутов</div></div>
+      <div class="kf"><div class="v" data-n="flights" data-count-v3></div><div class="l">рейсов за год</div></div>
+      <div class="kf"><div class="v"><span class="hv" data-n="seats_mln" data-count-v3 data-tipkey="seats_exact"></span><small> млн</small></div><div class="l">пассажиропоток за год, мест<span class="fn" data-note="Пассажиропоток оцениваем по числу мест на рейсах — вместимости самолётов по верхней границе, а не по проданным билетам. Реальных пассажиров меньше: в первом полугодии 2026 года через аэропорт Мурманска прошло 87 % от числа мест в расписании, через Апатиты — 83 % (данные Минтранса Мурманской области)."></span></div></div>
+      <div class="kf hi"><div class="v"><span data-n="share_inside" data-count-v3></span><small> %</small></div><div class="l">пассажиропотока — внутри Арктики и местных сетей</div></div>
     </div>
-    <p class="src">Источник данных: Aviastats, сервис для анализа авиационной отрасли России; реестр аэродромов Росавиации. Рейсы и цены за октябрь 2025 — сентябрь 2026 года: это последние 12 месяцев, за которые в выгрузке есть местные рейсы Якутии.</p>
-    <nav class="toc" aria-label="Разделы"><span class="t">Содержание</span><a href="#network">Сеть</a><a href="#detour">Соседи</a><a href="#fleet">Парк</a><a href="#season">Сезон</a><a href="#prices">Цены</a><a href="#subsidies">Субсидии</a><a href="#conclusions">Выводы</a><a href="#method">Методология</a></nav>
+    <p class="key-limits">Данные по корпоративным и местным рейсам неполные — <a class="lim-link" href="#limits">какие ограничения есть у данных</a>.</p>
+
   </div>
 </section>
 
+<div class="editorial-nav-shell"><nav class="toc editorial-nav" aria-label="Разделы"><span class="t">Содержание</span><a href="#network">Сеть</a><a href="#detour">Соседи</a><a href="#fleet">Парк</a><a href="#season">Сезон</a><a href="#prices">Цены</a><a href="#subsidies">Субсидии</a><a href="#conclusions">Выводы</a><a href="#method">Методология</a></nav></div>
+
 <section class="block" id="network">
   <div class="wrap">
-    <div class="ch-head"><div class="glyph" data-glyph="network" aria-hidden="true"></div><div class="eyebrow">Структура сети</div><h2>Арктика связана с Москвой лучше, чем сама с собой</h2><p class="lede">Каждая линия на карте ниже — направление, по которому за год выполнялись рейсы. Толщина — число мест. Но сначала — как эта сеть выглядит в течение одних суток.</p></div>
-    <div class="sub">
+    <div class="ch-head"><div class="glyph" data-glyph="network" aria-hidden="true"></div><h2>Больше половины пассажиропотока Арктики приходится на Москву и Петербург</h2><p class="lede">Каждая линия на карте ниже — направление, по которому за год выполнялись рейсы. Толщина — пассажиропоток. Но сначала — как эта сеть выглядит в течение одних суток.</p></div>
+    <div class="sub sky-panel">
       <h3>Обычные сутки над Арктикой</h3>
-      <p class="note">Каждая точка — самолёт в воздухе по расписанию: синие летят на большую землю, бирюзовые — внутри Арктики и местных сетей. Время московское.</p>
+      <p class="note">Каждая точка — самолёт в воздухе по расписанию: синие летят на большую землю, бирюзовые — внутри Арктики и местных сетей. Время московское. Рейс с промежуточной посадкой показан как отдельные рейсы до каждой точки: Нарьян-Мар — Махачкала — Сочи — как два рейса из Нарьян-Мара, до Махачкалы и до Сочи.</p>
       <div class="sky-ctl">
+        <div class="seg" role="group" aria-label="Какой день показать"><button class="on" data-day="winter" type="button">Зима</button><button data-day="summer" type="button">Лето</button></div>
         <button class="btn" id="sky-play" type="button" aria-label="Пауза">❚❚ Пауза</button>
-        <div class="seg" role="group" aria-label="Какой день показать"><button class="on" data-day="winter" type="button">Зима, 18 февраля 2026</button><button data-day="summer" type="button">Лето, 8 июля 2026</button></div>
         <span class="clock" id="sky-clock">00:00</span>
         <input class="slider" id="sky-time" type="range" min="0" max="1439" step="1" value="0" aria-label="Время суток">
         <span class="air">в воздухе <b id="sky-air">0</b> · за сутки <b id="sky-total">0</b> <span id="sky-total-w">рейсов</span></span>
       </div>
       <div class="mapbox map" id="map-sky"></div>
-      <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
     </div>
     <div class="sub">
       <h3>Куда ведут рейсы из аэропортов Арктической зоны</h3>
-      <p class="note">Доля мест за год по другому концу маршрута.</p>
+      <p class="note">Доля пассажиропотока за год по другому концу маршрута<span class="fn" data-note="Пассажиропоток — число мест на рейсах по верхней границе вместимости самолёта, а не проданные билеты. Пассажиров меньше: в Мурманске и Апатитах в первом полугодии 2026 года — 83–87 % от числа мест."></span>.</p>
       <div class="mix" id="mix" role="img"></div>
-      <div class="legend" id="mix-legend" style="margin-top:12px"></div>
-      <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
+      <div class="legend" id="mix-legend" hidden style="margin-top:12px"></div>
     </div>
     <div class="sub">
       <h3>Как устроена сеть</h3>
       <p class="note">Прокрутите, чтобы разобрать сеть на части. Пунктирные кружки — аэродромы Арктической зоны из реестра Росавиации, которых нет в данных Aviastats.</p>
-      <div class="pick"><label for="mine-network-select">Мой аэропорт</label><select id="mine-network-select" class="mine-select" aria-label="Выбрать свой аэропорт АЗРФ"><option value="">Выбрать аэропорт</option></select></div>
-      <div class="mine-line" id="mine-network" hidden><span class="tag">мой аэропорт</span><span class="txt"></span></div>
       <div class="scrolly">
         <div class="sticky">
           <div class="mapbox map" id="map-main"></div>
           <div class="legend map-legend" id="map-legend"></div>
         </div>
         <div class="steps" id="steps">
-          <div class="step on" data-mode="all"><div class="n">ШАГ 1 · ВСЯ СЕТЬ</div><h3><span data-n="airports_phrase"></span>, <span data-n="routes_phrase"></span></h3><p>Через <span data-n="arctic_airports"></span> аэропортов АЗРФ за год прошло <span data-n="seats_mln"></span> млн мест<span class="fn" data-note="Места — вместимость самолётов по верхней границе. Пассажиров меньше: по пассажиропотоку Мурманска и Апатитов в первом полугодии 2026 года — 83–87 % от числа мест."></span> на <span data-n="flights"></span> рейсах <span data-n="airlines"></span> авиакомпаний. Средняя дальность рейса — <span data-n="mean_dist"></span> км.</p></div>
-          <div class="step" data-mode="capitals"><div class="n">ШАГ 2 · СТОЛИЦЫ</div><h3><span data-n="share_capitals"></span> % мест летят в Москву и Петербург</h3><p>Шереметьево одно принимает <span data-n="svo_share"></span> % потока, Пулково — <span data-n="led_share"></span> %. Эти два аэропорта связаны прежде всего с Мурманском, Архангельском и Апатитами. Домодедово работает на Норильск и ЯНАО.</p></div>
-          <div class="step" data-mode="hubs"><div class="n">ШАГ 3 · ХАБЫ</div><h3>Ещё <span data-n="share_hubs"></span> % берут Тюмень, Уфа, Красноярск, Новосибирск и Екатеринбург</h3><p>Уральские и сибирские хабы обслуживают добывающие ЯНАО и Норильск: вахта, командировки, пересадки на юг. Курорты — Сочи, Минеральные Воды, Анталья — дают ещё <span data-n="share_resorts"></span> % мест, почти две трети из них с мая по сентябрь.</p></div>
-          <div class="step" data-mode="inside"><div class="n">ШАГ 4 · ВНУТРИ АРКТИКИ</div><h3>Внутри Арктики остаётся <span data-n="share_inside"></span> % мест и <span data-n="share_inside_fl"></span> % рейсов</h3><p>Если оставить только рейсы между аэропортами АЗРФ и внутри местных сетей, карта почти пустеет. Почти четыре из пяти таких рейсов не выходят за границы своего региона. Прямых рейсов между соседними регионами вдоль побережья почти нет.</p></div>
+          <div class="step on" data-mode="all"><div class="step-top"><div class="n">ШАГ 1 · ВСЯ СЕТЬ</div><div class="step-picker"><div class="pick"><label class="sr-only" for="mine-network-select">Выбрать аэропорт</label><select id="mine-network-select" class="mine-select" aria-label="Выбрать свой аэропорт АЗРФ"><option value="">Выбрать аэропорт</option></select></div></div></div><h3 tabindex="-1"><span data-n="airports_phrase"></span>, <span data-n="routes_phrase"></span></h3><p>Пассажиропоток через <span data-n="arctic_airports"></span> аэропортов АЗРФ за год — <span data-n="seats_mln"></span> млн мест на <span data-n="flights"></span> рейсах <span data-n="airlines"></span> авиакомпаний. Средняя дальность рейса — <span data-n="mean_dist"></span> км.</p><div class="mine-line" id="mine-network" hidden><span class="txt"></span></div></div>
+          <div class="step" data-mode="capitals"><div class="n">ШАГ 2 · СТОЛИЦЫ</div><h3><span data-n="share_capitals"></span> % пассажиропотока — рейсы в Москву и Петербург</h3><p>Шереметьево одно принимает <span data-n="svo_share"></span> % потока, Пулково — <span data-n="led_share"></span> %. Эти два аэропорта связаны прежде всего с Мурманском, Архангельском и Апатитами. Домодедово работает на Норильск и ЯНАО.</p></div>
+          <div class="step" data-mode="hubs"><div class="n">ШАГ 3 · ХАБЫ</div><h3>Ещё <span data-n="share_hubs"></span> % берут Тюмень, Уфа, Красноярск, Новосибирск и Екатеринбург</h3><p>Уральские и сибирские хабы обслуживают добывающие ЯНАО и Норильск: вахта, командировки, пересадки на юг. Курорты — Сочи, Минеральные Воды, Анталья — дают ещё <span data-n="share_resorts"></span> % пассажиропотока, почти две трети — с мая по сентябрь.</p></div>
+          <div class="step" data-mode="inside"><div class="n">ШАГ 4 · ВНУТРИ АРКТИКИ</div><h3>Внутри Арктики остаётся <span data-n="share_inside"></span> % пассажиропотока и <span data-n="share_inside_fl"></span> % рейсов</h3><p>Если оставить только рейсы между аэропортами АЗРФ и внутри местных сетей, карта почти пустеет. Почти четыре из пяти таких рейсов не выходят за границы своего региона. Прямых рейсов между соседними регионами вдоль побережья почти нет. Правда, корпоративные и местные рейсы есть в данных не полностью.</p></div>
           <div class="step" data-mode="clusters"><div class="n">ШАГ 5 · МЕСТНЫЕ СЕТИ</div><h3>Сеть собрана из местных сетей вокруг <span data-n="n_centers"></span> центров</h3><p><span data-n="n_local_phrase"></span> на большую землю только через центр своей сети. <span data-n="out_centers_phrase"></span> за пределами Арктической зоны: Якутск держит <span data-n="yks_local"></span> местных аэропортов, Красноярск — <span data-n="kja_local"></span>, Магадан и Полярный — по одному. Только Хатанга и Оленёк входят в две сети сразу.</p></div>
         </div>
       </div>
@@ -454,20 +455,18 @@ footer a{color:var(--ink-2)}
 
 <section class="block" id="detour">
   <div class="wrap">
-    <div class="ch-head"><div class="glyph" data-glyph="detour" aria-hidden="true"></div><div class="eyebrow">Соседи через Москву</div><h2>Из <span data-n="pairs"></span> пары магистральных аэропортов регулярно связаны <span data-n="pairs_conn"></span></h2><p class="lede">Радиальная сеть удобна, чтобы улететь в Москву или Петербург, но не к соседям. Регулярной считаем связь, когда в обе стороны не реже раза в неделю в течение 47 недель года есть прямой рейс или стыковка с одной пересадкой от 1 до 12 часов<span class="fn" id="fn-thr" data-note="Порог в 47 недель взят из методики ПОРА. График ниже."></span>. Прямые круглогодичные рейсы в обе стороны есть всего у <span data-n="pairs_direct"></span> пар. Воркута, Певек и Усинск не имеют регулярной связи ни с одним магистральным аэропортом АЗРФ.</p></div>
-    <div class="grid-2 wide sub" style="align-items:start">
+    <div class="ch-head"><div class="glyph" data-glyph="detour" aria-hidden="true"></div><h2>Из <span data-n="pairs"></span> пары магистральных аэропортов регулярно связаны <span data-n="pairs_conn"></span></h2><p class="lede">Радиальная сеть удобна, чтобы улететь в Москву или Петербург, но не к соседям. Регулярной считаем связь, когда в обе стороны не реже раза в неделю в течение 47 недель года есть прямой рейс или стыковка с одной пересадкой от 1 до 12 часов<span class="fn" id="fn-thr" data-note="Порог в 47 недель взят из методики ПОРА. График ниже."></span>. Прямые круглогодичные рейсы в обе стороны есть всего у <span data-n="pairs_direct"></span> пар. Воркута, Певек и Усинск не имеют регулярной связи ни с одним магистральным аэропортом АЗРФ.</p></div>
+    <div class="grid-2 wide sub connectivity-comparison">
       <div>
         <h3>Какие пары связаны регулярно</h3>
-        <p class="note" style="margin-bottom:14px">Магистральные аэропорты АЗРФ с запада на восток. Наведите на клетку, чтобы увидеть, сколько недель в году есть связь и сколько обычно занимает дорога.</p>
+        <p class="note" style="margin-bottom:14px">Магистральные аэропорты АЗРФ с запада на восток, сентябрь 2025 — август 2026 года: сентябрь 2026-го в выгрузке — ещё расписание, а не выполненные рейсы. Наведите на клетку, чтобы увидеть, сколько недель в году есть связь и сколько обычно занимает дорога.</p>
         <div class="matrix" id="matrix"></div>
         <div class="legend" style="margin-top:12px"><span class="k"><span class="sw" style="background:var(--navy)"></span>прямой рейс круглый год</span><span class="k"><span class="sw" style="background:var(--sky)"></span>с пересадкой до 12 часов</span><span class="k"><span class="sw" style="background:var(--bg-3);box-shadow:inset 0 0 0 1px var(--line-2)"></span>нет регулярной связи</span></div>
-        <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
       </div>
       <div>
         <h3>Если менять порог</h3>
         <p class="note" style="margin-bottom:14px">Сколько пар из 91 связано регулярно, если требовать связь в течение разного числа недель в году.</p>
         <div class="chart" id="chart-sens"></div>
-        <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
       </div>
     </div>
     <div class="sub">
@@ -480,14 +479,13 @@ footer a{color:var(--ink-2)}
           </div>
           <div class="result" id="detour-result"></div>
         </div>
-        <div><div class="mapbox map" id="map-detour"></div><p class="note" style="margin-top:10px">Пунктир — расстояние по прямой, цветная линия — обычный путь по рейсам.</p></div>
+        <div class="detour-map-stage"><p class="note">Пунктир — расстояние по прямой, цветная линия — обычный путь по рейсам. Линии изогнуты, потому что это кратчайший путь по поверхности Земли: на плоской карте он выглядит дугой.</p><div class="mapbox map" id="map-detour"></div></div>
       </div>
     </div>
     <div class="ranked">
       <h3>Самые долгие поездки между соседями</h3>
-      <p class="note" style="margin:10px 0 16px">Магистральные аэропорты не дальше 1 000 км друг от друга; пары, между которыми есть дорога или железная дорога, не входят. Лишние часы — насколько дорога по рейсам длиннее прямого рейса<span class="fn" id="fn-direct" data-note="Прямой рейс оцениваем по расписанию турбовинтовых самолётов."></span>. Наведите на строку, чтобы увидеть расстояния.</p>
+      <p class="note" style="margin:10px 0 16px">Магистральные аэропорты не дальше 1 000 км друг от друга; пары, между которыми есть автодорога или железная дорога, не входят. Лишние часы — насколько дорога по рейсам длиннее прямого рейса<span class="fn" id="fn-direct" data-note="Прямой рейс оцениваем по расписанию турбовинтовых самолётов."></span>. Наведите на строку, чтобы увидеть расстояния.</p>
       <div class="tablewrap"><table id="ranked"><thead><tr><th>Пара</th><th>Как лететь</th><th class="n">Обычно в пути</th><th class="n">Лишние часы</th></tr></thead><tbody></tbody></table></div>
-      <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
     </div>
     <div class="notes" hidden></div>
   </div>
@@ -495,88 +493,82 @@ footer a{color:var(--ink-2)}
 
 <section class="block" id="fleet">
   <div class="wrap">
-    <div class="ch-head"><div class="glyph" data-glyph="fleet" aria-hidden="true"></div><div class="eyebrow">Парк</div><h2>На <span data-n="sov_dir"></span> из <span data-n="local_dir"></span> местных направлений летают в основном Ан-24, Як-42 и Ми-8</h2><p class="lede">Прямых рейсов между соседями мало в том числе из-за самолётов. Местные направления — рейсы между аэропортами АЗРФ и рейсы из местных аэропортов к центрам их сетей за пределами зоны. Один квадрат — одно направление, цвет — основной тип судна по числу мест: советской постройки или нет, заливка — может ли он садиться на грунтовую полосу.</p></div>
-    <div class="mine-line" id="mine-fleet" hidden><span class="tag">мой аэропорт</span><span class="txt"></span></div>
+    <div class="ch-head"><div class="glyph" data-glyph="fleet" aria-hidden="true"></div><h2>На <span data-n="sov_dir"></span> из <span data-n="local_dir"></span> местных направлений летают в основном Ан-24, Як-42 и Ми-8</h2><p class="lede">Местные направления — рейсы между аэропортами АЗРФ и рейсы из местных аэропортов к центрам их сетей за пределами зоны. Один квадрат — одно направление, цвет — основной тип судна по числу мест: разработан в СССР или нет, заливка — может ли он садиться на грунтовую полосу.</p></div>
+    <div class="mine-line" id="mine-fleet" hidden><span class="txt"></span></div>
     <div class="unit-groups">
       <div>
-        <div class="legend" style="margin-bottom:18px"><span class="k"><span class="sw" style="background:var(--amber)"></span>Ан-24, Ан-26, Як-42, Ми-8 (советская постройка)</span><span class="k"><span class="sw" style="background:var(--sky-deep)"></span>ATR, DHC-8, CRJ, SSJ 100, Boeing 737</span><span class="k"><span class="sw" style="background:transparent;border:2px solid var(--ink-2)"></span>только бетонная полоса</span></div>
+        <div class="legend" style="margin-bottom:18px"><span class="k"><span class="sw" style="background:var(--amber)"></span>Ан-24, Ан-26, Як-42, Ми-8 (разработаны в СССР)</span><span class="k"><span class="sw" style="background:var(--sky-deep)"></span>ATR, DHC-8, CRJ, SSJ 100, Boeing 737</span><span class="k"><span class="sw" style="background:transparent;border:2px solid var(--ink-2)"></span>только бетонная полоса</span></div>
         <h3 class="sub-h">Местные направления · <span data-n="local_dir"></span></h3>
         <div class="units" id="units-local"></div>
         <h3 class="sub-h" style="margin-top:32px">Между магистральными аэропортами · <span data-n="trunk_dir"></span></h3>
         <div class="units" id="units-trunk"></div>
-        <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
       </div>
       <div class="stats one">
-        <div class="stat old"><div class="v"><span data-n="sov_seats"></span><small> %</small></div><div class="l">мест на местных направлениях приходится на суда советской постройки</div></div>
-        <div class="stat"><div class="v"><span data-n="unp_dir"></span><small> из <span data-n="local_dir"></span></small></div><div class="l">направлений зависят от бортов, способных садиться на грунт: Ан-24, Ан-26, ATR, DHC-8</div></div>
-        <div class="stat"><div class="v"><span data-n="unp_seats"></span><small> %</small></div><div class="l">мест на местных направлениях перевозят такие борта</div></div>
+        <div class="stat old"><div class="v"><span data-n="sov_seats"></span><small> %</small></div><div class="l">пассажиропотока местных направлений приходится на типы, разработанные в СССР<span class="fn" data-note="Ан-24 и Ан-26 выпускали только в СССР, до 1979 и 1986 года. Як-42 и Ми-8 — советские разработки, но часть машин выпущена уже в России, а Ми-8 производят и сейчас."></span></div></div>
+        <div class="stat"><div class="v"><span data-n="unp_dir"></span><small> из <span data-n="local_dir"></span></small></div><div class="l">направлений зависят от бортов, способных садиться на грунт: Ан-24, Ан-26, ATR, DHC-8<span class="fn" data-note="Это свойство самолётов, а не аэродромов: в Тикси, Черском, Светлогорске, Туруханске, Подкаменной Тунгуске, Хатанге и Диксоне полосы с твёрдым покрытием, хотя туда летают и такие борта."></span></div></div>
+        <div class="stat"><div class="v"><span data-n="unp_seats"></span><small> %</small></div><div class="l">пассажиропотока местных направлений приходится на такие борта</div></div>
       </div>
     </div>
     <div class="sub">
       <h3>Как часто улетают из посёлков</h3>
       <p class="note">Каждая строка — местный аэропорт, каждая чёрточка — день, когда из него был хотя бы один вылет, с 1 октября 2025 по 30 сентября 2026 года. Справа — дни с вылетами за год. Наведите на строку, чтобы увидеть число рейсов.</p>
       <div class="iso" id="iso"></div>
-      <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
       <div class="prose" style="margin-top:24px"><p id="iso-text"></p></div>
     </div>
     <div class="gallery" id="gallery"></div>
-    <p class="prose" style="margin-top:28px">По оценке ГосНИИ ГА, к 2030 году выбудет около четверти парка Ан-24 и Ан-26: в стране около 100 таких машин со средним возрастом около 50 лет. Первый серийный Ил-114-300 Минпромторг обещает передать Второму Архангельскому авиаотряду до конца 2026 года, ещё два — в начале 2027-го. Сертификацию «Байкала» (ЛМС-901) в министерстве допускают перенести на 2027 год.</p>
+    <p class="prose" style="margin-top:28px"><a href="https://www.interfax.ru/russia/929699" target="_blank" rel="noopener">По оценке ГосНИИ ГА</a>, к 2030 году выбудет около четверти парка Ан-24 и Ан-26: в стране около 100 таких машин со средним возрастом около 50 лет. Первый серийный Ил-114-300 Минпромторг обещает передать Второму Архангельскому авиаотряду до конца 2026 года, ещё два — в начале 2027-го. Сертификацию «Байкала» (ЛМС-901) в министерстве допускают перенести на 2027 год.</p>
     <div class="notes" hidden></div>
   </div>
 </section>
 
 <section class="block" id="season">
   <div class="wrap">
-    <div class="ch-head"><div class="glyph" data-glyph="season" aria-hidden="true"></div><div class="eyebrow">Сезон</div><h2>Летом рейсов на курорты в полтора раза больше среднего, а у Хибин и Мурманска пик зимой</h2><p class="lede">Старый парк приходится растягивать на весь год, а спрос меняется по сезонам. Число мест в сутки по месяцам с октября 2025 по сентябрь 2026 года. Цвет клетки — отношение к среднему за год по строке: тёмный синий — месяц загружен сильнее среднего.</p></div>
-    <div class="pick big"><label for="mine-season-select">Мой аэропорт</label><select id="mine-season-select" class="mine-select" aria-label="Выбрать свой аэропорт АЗРФ"><option value="">Выбрать аэропорт</option></select><span class="hint">Строка аэропорта подсветится в таблице; карта сети, парк, цены и калькулятор поездки тоже покажут его данные.</span></div>
-    <div class="mine-line" id="mine-season" hidden><span class="tag">мой аэропорт</span><span class="txt"></span></div>
+    <div class="ch-head"><div class="glyph" data-glyph="season" aria-hidden="true"></div><h2>Летом рейсов на курорты в полтора раза больше среднего, а у Хибин и Мурманска пик зимой</h2><p class="lede">Спрос меняется по сезонам: летом растут рейсы на юг, зимой — в Хибины. В таблице — пассажиропоток в сутки по месяцам с октября 2025 по сентябрь 2026 года. Цвет клетки — отношение к среднему за год по строке: тёмный синий — месяц загружен сильнее среднего.</p></div>
+    <div class="pick big"><label class="sr-only" for="mine-season-select">Выбрать аэропорт</label><select id="mine-season-select" class="mine-select" aria-label="Выбрать свой аэропорт АЗРФ"><option value="">Выбрать аэропорт</option></select><span class="hint">Строка аэропорта подсветится в таблице; карта сети, парк, цены и калькулятор поездки тоже покажут его данные.</span></div>
+    <div class="mine-line" id="mine-season" hidden><span class="txt"></span></div>
     <div class="heatwrap">
       <h3 class="sub-h">Магистральные аэропорты АЗРФ по месяцам</h3>
       <div class="heat" id="heat"></div>
       <div class="ramp"><span>0,6×</span><span class="sw"></span><span>1,4× среднего за год</span><span style="margin-left:auto">КВ — коэффициент вариации: чем больше, тем сильнее сезонность</span></div>
-      <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
     </div>
     <div class="sub">
       <h3>Куда летят в разные месяцы</h3>
-      <p class="note" style="margin-bottom:14px">Мест в сутки по группам направлений, индекс к среднему за год = 100.</p>
+      <p class="note" style="margin-bottom:14px">Пассажиропоток в сутки по группам направлений; среднее за год в каждой группе принято за 100.</p>
       <div class="chart" id="chart-groups"></div>
       <div class="legend" id="legend-groups" style="margin-top:12px"></div>
-      <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
     </div>
     <details class="more">
       <summary>Две Арктики: туристическая и вахтовая</summary>
       <div class="in">
         <p class="note" style="margin-bottom:14px">По горизонтали — сезонность (коэффициент вариации по месяцам), по вертикали — концентрация потока на немногих хабах (индекс Херфиндаля — Хиршмана). Только магистральные аэропорты, связи вне АЗРФ; Бованенково и Воркута не показаны: у них КВ больше 0,6, рейсы на большую землю бывают лишь несколько месяцев в году.</p>
         <div class="chart" id="chart-cvhhi"></div>
-        <div class="cap"><span>Источник: расписание Aviastats; расчёты ПОРА</span></div>
       </div>
     </details>
-    <div class="prose" style="margin-top:36px"><p>Архангельск, Норильск и Анадырь летом загружены на 23–43 % сильнее среднего: отпуска, туристы, поездки на юг. У Хибин и Мурманска пик зимой, в сезон горных лыж и северного сияния: в марте в Апатитах мест в сутки в полтора раза больше среднего. Новый Уренгой, Надым и Салехард летают ровно весь год и сразу во множество городов: вахта не зависит от сезона. Мурманск и Архангельск, наоборот, почти целиком завязаны на Москву и Петербург. Рейсов внутри Арктики и местных сетей тоже больше летом: в июне — на 15 % больше среднего, в январе — на 21 % меньше. На рейсах Новосибирск — Певек около 85 % мест выкупают недропользователи для вахтовиков (оценка S7, 2025).</p></div>
+    <div class="prose" style="margin-top:36px"><p>У Архангельска, Норильска и Анадыря пассажиропоток в пиковый летний месяц на 23–43 % выше среднего: отпуска, туристы, поездки на юг. У Хибин и Мурманска пик зимой, в сезон горных лыж и северного сияния: в марте пассажиропоток Апатитов в полтора раза выше среднего. Новый Уренгой, Надым и Салехард летают ровно весь год и сразу во множество городов: вахта не зависит от сезона. Мурманск и Архангельск, наоборот, почти целиком завязаны на Москву и Петербург. Пассажиропоток внутри Арктики и местных сетей тоже выше летом: в июне — на <span data-n="inside_jun"></span> % выше среднего, в январе — на <span data-n="inside_jan"></span> % ниже. На рейсах Новосибирск — Певек около 85 % мест выкупают недропользователи для вахтовиков (оценка S7, 2025).</p></div>
     <div class="notes" hidden></div>
   </div>
 </section>
 
 <section class="block" id="prices">
   <div class="wrap">
-    <div class="ch-head"><div class="glyph" data-glyph="prices" aria-hidden="true"></div><div class="eyebrow">Цены</div><h2>На том же расстоянии билет через малый аэродром стоит примерно втрое дороже<span class="fn" id="fn-fair"></span></h2><p class="lede">Сезон отражается и в цене, но главный разрыв — между малыми и магистральными бортами. Для каждого маршрута взята медиана минимальной цены билета за 30 дней до вылета по датам с 1 октября 2025 по 30 сентября 2026 года. Малые борта — маршруты, где хотя бы один аэропорт класса Г, Д или Е: Тикси, Диксон, Батагай и другие посёлки Якутии и Красноярского края. Километр короткого перелёта всегда дороже длинного, поэтому сравниваем маршруты одной длины.</p></div>
-    <div class="pick"><label for="mine-prices-select">Мой аэропорт</label><select id="mine-prices-select" class="mine-select" aria-label="Выбрать свой аэропорт АЗРФ"><option value="">Выбрать аэропорт</option></select></div>
-    <div class="mine-line" id="mine-prices" hidden><span class="tag">мой аэропорт</span><span class="txt"></span></div>
+    <div class="ch-head"><div class="glyph" data-glyph="prices" aria-hidden="true"></div><h2>На том же расстоянии билет через малый аэродром стоит примерно втрое дороже<span class="fn" id="fn-fair"></span></h2><p class="lede">Сезон отражается и в цене, но главный разрыв — между малыми и магистральными бортами. Для каждого маршрута взята медиана минимальной цены билета за 30 дней до вылета по датам с 20 ноября 2025 по 30 сентября 2026 года: раньше цен в выгрузке нет. Берём только маршруты, которые покрываются рейсами расписания. Малые борта — маршруты, где хотя бы один аэропорт класса Г, Д или Е: Тикси, Диксон, Батагай и другие посёлки Якутии и Красноярского края. Километр короткого перелёта всегда дороже длинного, поэтому сравниваем маршруты одной длины.</p></div>
+    <div class="pick"><label class="sr-only" for="mine-prices-select">Выбрать аэропорт</label><select id="mine-prices-select" class="mine-select" aria-label="Выбрать свой аэропорт АЗРФ"><option value="">Выбрать аэропорт</option></select></div>
+    <div class="mine-line" id="mine-prices" hidden><span class="txt"></span></div>
     <div class="keys three">
       <div class="kf hi"><div class="v">≈×3</div><div class="l">во столько раз дороже билет через малый аэродром при одинаковом расстоянии</div></div>
-      <div class="kf"><div class="v"><span data-n="rk_small"></span><small> ₽/км</small></div><div class="l">медиана по <span data-n="n_small"></span> маршрутам через аэропорты классов Г, Д, Е</div></div>
-      <div class="kf"><div class="v"><span data-n="rk_trunk"></span><small> ₽/км</small></div><div class="l">медиана по <span data-n="n_trunk"></span> остальным маршрутам; разрыв держится весь год: от ×<span data-n="gap_min"></span> до ×<span data-n="gap_max"></span> по месяцам</div></div>
+      <div class="kf"><div class="v"><span data-n="rk_small"></span><small> ₽/км</small></div><div class="l">медиана по <span data-n="n_small"></span> маршрутам через аэропорты классов Г, Д, Е, без поправки на расстояние</div></div>
+      <div class="kf"><div class="v"><span data-n="rk_trunk"></span><small> ₽/км</small></div><div class="l">медиана по <span data-n="n_trunk"></span> остальным маршрутам, без поправки на расстояние; разрыв держится весь год: от ×<span data-n="gap_min"></span> до ×<span data-n="gap_max"></span> по месяцам</div></div>
     </div>
     <div class="sub chart-price">
       <h3>Цена и расстояние: каждая точка — маршрут</h3>
       <p class="note" style="margin-bottom:14px">Обе оси логарифмические. Размер точки — число рейсов за год. Пунктирные кривые — типичная цена для маршрута такой длины в каждой группе; серые линии — 1, 10 и 40 ₽ за километр.</p>
       <div class="chart" id="chart-price"></div>
       <div class="legend" style="margin-top:12px"><span class="k"><span class="sw dot" style="background:var(--accent)"></span>через аэропорт класса Г, Д, Е</span><span class="k"><span class="sw dot" style="background:var(--sky-deep)"></span>остальные маршруты</span></div>
-      <div class="cap"><span>Источник: минимальные цены Aviastats; расчёты ПОРА</span></div>
     </div>
     <div class="grid-2 sub">
       <div>
         <h3>Два билета на одно расстояние</h3>
-        <p class="note" style="margin-top:10px">Медиана цены за 30 дней до вылета. Рабочие дни — при средней зарплате в регионе, где находится арктический аэропорт маршрута.</p>
+        <p class="note" style="margin-top:10px">Медиана цены за 30 дней до вылета. Мест в рейсе — медиана по рейсам маршрута. Рабочие дни — при средней зарплате в регионе, где находится арктический аэропорт маршрута.</p>
         <div class="tickets" id="tickets" style="margin-top:16px"></div>
       </div>
       <div>
@@ -594,7 +586,6 @@ footer a{color:var(--ink-2)}
       <div class="in">
         <p class="note" style="margin-bottom:16px">Средняя минимальная цена билета с курортов (Сочи, Минеральные Воды, Краснодар, Геленджик, Махачкала, Анталья) в магистральные аэропорты по месяцу вылета, ₽. Цвет — от дешёвых к дорогим внутри строки.</p>
         <div class="tablewrap"><table class="resort" id="resort"></table></div>
-        <div class="cap"><span>Источник: минимальные цены Aviastats; расчёты ПОРА</span></div>
         <div class="prose" style="margin-top:24px"><p>В Мурманск и Нарьян-Мар билеты с курортов в начале лета стоят вдвое дешевле августовских: борта летят с юга почти пустыми, а в августе семьи возвращаются к учебному году. В Норильск цена падает в декабре, феврале и марте, когда спрос на юг минимален.</p></div>
       </div>
     </details>
@@ -604,12 +595,13 @@ footer a{color:var(--ink-2)}
 
 <section class="block" id="subsidies">
   <div class="wrap">
-    <div class="ch-head"><div class="glyph" data-glyph="subsidies" aria-hidden="true"></div><div class="eyebrow">Субсидии</div><h2>Из 58 субсидируемых направлений одно соединяет два аэропорта АЗРФ</h2><p class="lede">Высокие цены на местных линиях могла бы сглаживать федеральная поддержка, но она устроена по той же радиальной схеме. Расчёты ПОРА по перечню Росавиации региональных перевозок на 2026 год: 69 строк, 58 направлений, около 4 870 парных рейсов. Один кружок — одно направление.</p></div>
+    <div class="ch-head"><div class="glyph" data-glyph="subsidies" aria-hidden="true"></div><h2><span>Из 58</span> <wbr>субсидируемых направлений одно соединяет два аэропорта АЗРФ</h2><p class="lede">Высокие цены на местных линиях могла бы сглаживать федеральная поддержка, но она устроена по той же радиальной схеме. Один кружок — одно направление.</p></div>
     <div class="grid-2" style="margin-top:40px;align-items:start">
       <figure class="waffle">
         <div class="wt">58 субсидируемых направлений с участием аэропортов АЗРФ, 2026 год</div>
         <div class="dots" id="dots" role="img" aria-label="58 направлений, из них одно внутри АЗРФ"></div>
         <div class="legend"><span class="k"><span class="sw dot" style="background:var(--navy)"></span>57 направлений между аэропортом АЗРФ и городом вне зоны</span><span class="k"><span class="sw dot" style="background:var(--accent)"></span>1 направление между двумя аэропортами АЗРФ: Нарьян-Мар — Архангельск</span></div>
+        <div class="cap"><span>Источник: расчёты ПОРА по перечню Росавиации региональных перевозок на 2026 год: 69 строк, 58 направлений, около 4 870 парных рейсов</span></div>
       </figure>
       <div class="stats two">
         <div class="stat"><div class="v">98<small> %</small></div><div class="l">парных рейсов идут между АЗРФ и внешними городами; внутри зоны — 2 %, это Нарьян-Мар — Архангельск, 105 парных рейсов</div></div>
@@ -618,12 +610,6 @@ footer a{color:var(--ink-2)}
         <div class="stat"><div class="v">0</div><div class="l">строк по Якутии: самая большая местная сеть в федеральную региональную программу не попадает</div></div>
       </div>
     </div>
-    <div class="sub">
-      <h3>Субсидируемых кресел на жителя в год</h3>
-      <p class="note">Чем меньше у территории других способов добраться до большой земли, тем больше субсидируемых мест: всего около 1,1 млн в год.</p>
-      <div class="hbars" id="per-resident"></div>
-      <div class="cap"><span>Источник: расчёт ПОРА по перечню Росавиации на 2026 год, <a href="https://t.me/poradata/195" target="_blank" rel="noopener">«ПОРА считать»</a></span></div>
-    </div>
     <div class="prose" style="margin-top:36px"><p>Федеральная поддержка повторяет радиальную форму сети. Вне региональной программы есть три социально значимых маршрута на Чукотке (от 8 395 до 13 860 ₽ в одну сторону) и 16 специальных тарифов для льготных категорий: девять из Норильска (от 2 500 до 6 800 ₽), пять из Анадыря и Певека (от 9 000 до 13 400 ₽), Нарьян-Мар — Москва за 4 000 ₽ и Калининград — Архангельск за 5 500 ₽. Федеральной программы для внутрирегиональных линий нет: регионы Арктики и ДФО просили на неё 14,8 млрд ₽ на 2023–2024 годы, Якутия оценивала свою потребность в 3,7 млрд ₽ при собственных 1,2 млрд.</p></div>
     <div class="notes" hidden></div>
   </div>
@@ -631,12 +617,12 @@ footer a{color:var(--ink-2)}
 
 <section class="block" id="conclusions">
   <div class="wrap">
-    <div class="ch-head"><div class="glyph" data-glyph="conclusions" aria-hidden="true"></div><div class="eyebrow">Выводы</div><h2>Что показали данные</h2></div>
+    <div class="ch-head"><div class="glyph" data-glyph="conclusions" aria-hidden="true"></div><h2>Что показали данные</h2></div>
     <div class="concl">
-      <div class="item"><b>Структура</b>Внутри АЗРФ только <span data-n="share_inside"></span> % мест. Местные сети изолированы, регулярная связь есть у <span data-n="pairs_conn"></span> из <span data-n="pairs"></span> пары магистральных аэропортов, а дорога к соседу через Москву может занять больше суток</div>
-      <div class="item"><b>Парк</b><span data-n="sov_dir"></span> из <span data-n="local_dir"></span> местных направлений держатся на судах советской постройки, <span data-n="unp_dir"></span> — на бортах, садящихся на грунт. В <span data-n="iso_2pw_phrase"></span> рейсы бывают в среднем не чаще двух раз в неделю</div>
+      <div class="item"><b>Структура</b>Больше половины пассажиропотока — рейсы в Москву и Петербург, внутри Арктики и местных сетей — только <span data-n="share_inside"></span> %. Местные сети изолированы, регулярная связь есть у <span data-n="pairs_conn"></span> из <span data-n="pairs"></span> пары магистральных аэропортов, а дорога к соседу через Москву может занять больше суток</div>
+      <div class="item"><b>Парк</b><span data-n="sov_dir"></span> из <span data-n="local_dir"></span> местных направлений держатся на самолётах и вертолётах советской разработки, <span data-n="unp_dir"></span> — на бортах, садящихся на грунт. В <span data-n="iso_2pw_phrase"></span> рейсы бывают в среднем не чаще двух раз в неделю</div>
       <div class="item"><b>Сезонность</b>Пик летом, поток задают отпуска и туризм; у Хибин и Мурманска пик зимой. Цены с курортов падают, когда борт летит пустым</div>
-      <div class="item"><b>Стоимость</b>На том же расстоянии билет через малый аэродром примерно втрое дороже (<span data-n="rk_small"></span> против <span data-n="rk_trunk"></span> ₽ за км), разрыв держится круглый год</div>
+      <div class="item"><b>Стоимость</b>На том же расстоянии билет через малый аэродром примерно втрое дороже: в <span data-n="fair_lo"></span>–<span data-n="fair_hi"></span> раза в зависимости от способа сравнения. Разрыв держится круглый год</div>
     </div>
   </div>
 </section>
@@ -648,24 +634,49 @@ footer a{color:var(--ink-2)}
       <ul>
         <li>Один физический рейс — одно время вылета по UTC и пара аэропортов. Записи одного рейса под номерами разных авиакомпаний (<span data-n="dups"></span> дублей) объединены; места взяты по верхней границе вместимости судна.</li>
         <li>Пропуски по типу судна (<span data-n="miss0"></span> записей) заполнены по номеру рейса и авиакомпании на том же маршруте, осталось <span data-n="miss1"></span>.</li>
-        <li>Время вылета и прилёта. В выгрузке местное время всех аэропортов записано как московское, поэтому рейс Норильск → Москва по ней длится 30 минут, а Москва → Норильск — больше 8 часов. Это подтверждают три признака: дата вылета всегда совпадает с датой по московскому времени; на табло Яндекса в Мурманске, Архангельске и Нарьян-Маре время рейсов в Екатеринбург, Уфу, Пермь и Калининград совпадает с выгрузкой в обе стороны; у рейсов туда-обратно разница длительностей равна двойной разнице поясов. Время пересчитано по поясу каждого аэропорта у <span data-n="tz_shift"></span> рейсов; для Депутатского, Усть-Куйги, Саккырыра и Барнаула пояс в выгрузке тоже неверный. У <span data-n="imputed"></span> рейсов время полёта и после пересчёта невозможное — прилёт взят по медиане того же маршрута.</li>
+        <li>Время вылета и прилёта. В столбце UTC выгрузки на самом деле местное время по расписанию, а столбец «местное время» получен из него прибавлением пояса аэропорта. Поэтому рейс Норильск → Москва по выгрузке длится 30 минут, а Москва → Норильск — больше 8 часов. Местное время берём из столбца UTC, а настоящее UTC считаем по поясу каждого аэропорта — это меняет длительность у <span data-n="tz_shift"></span> рейсов, где хотя бы один аэропорт вне московского пояса. Для Депутатского, Усть-Куйги, Саккырыра и Барнаула пояс в выгрузке тоже неверный. Дату вылета пересчитали по местному времени. У <span data-n="imputed"></span> рейсов время полёта и после этого невозможное — прилёт взят по медиане того же маршрута.</li>
         <li>Аэропорты Москвы, Архангельск с Васьково и Красноярск с Черемшанкой считаются одним городом.</li>
-        <li>Узловые аэропорты: вне АЗРФ, топ-5 по местам, рейсам или направлениям. Магистральные аэропорты АЗРФ (в презентации ПОРА — корневые): с прямыми рейсами в узловые, включая другие аэропорты того же города. Местные: без таких рейсов, выходят на большую землю через центр своей местной сети (в презентации — куста). Центры вне АЗРФ: Якутск, Красноярск, Магадан, Полярный.</li>
-        <li>Доли потока считаются по рейсам через аэропорты АЗРФ по другому концу маршрута: столицы, хабы, курорты, остальные города. Группа «внутри Арктики» включает рейсы между аэропортами АЗРФ и рейсы местных аэропортов к центрам своих сетей; строго между аэропортами АЗРФ — <span data-n="strict_seats"></span> % мест и <span data-n="strict_fl"></span> % рейсов.</li>
+        <li>Узловые аэропорты: вне АЗРФ, топ-5 по местам, рейсам или направлениям. Магистральные аэропорты АЗРФ: с прямыми рейсами в узловые, включая другие аэропорты того же города. Местные: без таких рейсов, выходят на большую землю через центр своей местной сети. Центры вне АЗРФ: Якутск, Красноярск, Магадан, Полярный.</li>
+        <li>Пассажиропоток — число мест на рейсах по верхней границе вместимости судна. Доли потока считаются по рейсам через аэропорты АЗРФ по другому концу маршрута: Москва и Петербург, хабы, курорты, остальные города. Группа «внутри Арктики» включает рейсы между аэропортами АЗРФ и рейсы местных аэропортов к центрам своих сетей; строго между аэропортами АЗРФ — <span data-n="strict_seats"></span> % пассажиропотока и <span data-n="strict_fl"></span> % рейсов.</li>
+        <li>Регулярная связь: в обе стороны не реже раза в неделю в течение 47 из 52 недель (около 90 %) есть прямой рейс или стыковка от 1 до 12 часов. Считаем за сентябрь 2025 — август 2026 года: сентябрь 2026-го в выгрузке — ещё расписание.</li>
         <li>Время в пути: для каждого вылета из аэропорта АЗРФ ищем самый ранний прилёт во все аэропорты АЗРФ по расписанию — до двух пересадок, не меньше часа на пересадку в том же аэропорту и четырёх часов между аэропортами одного города, прибытие в пределах трёх суток; рейсы с промежуточной посадкой под одним номером считаются без пересадки. Для каждой пары и дня берём самый быстрый вариант, затем медиану по дням.</li>
         <li>Прямой рейс оцениваем по расписанию турбовинтовых самолётов на <span data-n="bt_routes"></span> маршрутах: <span data-n="bt_a_phrase"></span> плюс <span data-n="bt_b"></span> минуты на километр, то есть около <span data-n="bt_kmh"></span> км/ч в полёте. Расстояния — по прямой (ортодромия), воздушные трассы длиннее.</li>
         <li>Дни без вылетов: дни периода, когда из аэропорта не было ни одного вылета по расписанию.</li>
-        <li>Цена километра: медиана цены за 30 дней до вылета, делённая на ортодромию; маршруты с более чем 10 вылетами за год по расписанию. Сравнение при равном расстоянии — тремя способами: медианы в диапазонах 500–1 000 и 1 000–2 000 км, сопоставление каждого маршрута малых бортов с магистральными той же длины (±20 %) и регрессия логарифма цены на логарифм расстояния.</li>
+        <li>Цена километра: медиана цены за 30 дней до вылета, делённая на ортодромию; только маршруты, которые покрываются рейсами расписания, — больше 10 вылетов за год. Сравнение при равном расстоянии — тремя способами: медианы в диапазонах 500–1 000 и 1 000–2 000 км, сопоставление каждого маршрута малых бортов с магистральными той же длины (±20 %) и регрессия логарифма цены на логарифм расстояния.</li>
         <li>Конкуренция: число авиакомпаний-эксплуатантов с долей рейсов на маршруте от 10 %; влияние оценено регрессией логарифма цены на логарифм расстояния, класс аэродрома и признак одного перевозчика.</li>
         <li>Цена в рабочих днях: цена билета, делённая на среднюю начисленную зарплату за август 2026 года в регионе арктического аэропорта маршрута и умноженная на 21 рабочий день. В посёлках зарплаты ниже средних по региону, поэтому для их жителей билет ещё дороже.</li>
-        <li>Советская постройка: Ан-24, Ан-26, Як-42, Ми-8. Садятся на грунт: Ан-24, Ан-26, ATR 42/72, DHC-8, Ми-8.</li>
+        <li>Разработаны в СССР: Ан-24, Ан-26, Як-42, Ми-8. Ан-24 и Ан-26 выпускали только в СССР; часть Як-42 и Ми-8 выпущена уже в России. Садятся на грунт: Ан-24, Ан-26, ATR 42/72, DHC-8, Ми-8.</li>
       </ul>
     </div>
+    <div class="source-summary" id="sources">
+      <h3>Источники и ограничения</h3>
+    <p class="src">Источник данных: Aviastats, сервис для анализа авиационной отрасли России; реестр аэродромов Росавиации. Рейсы и цены за октябрь 2025 — сентябрь 2026 года: это последние 12 месяцев, за которые в выгрузке есть местные рейсы Якутии. Данные по корпоративным и местным рейсам неполные — <a class="lim-link" href="#limits">какие ограничения есть у данных</a>.</p>
+      <div class="source-details">
+        <p>Источник: расписание Aviastats; расчёты ПОРА</p>
+        <p>Источник: минимальные цены Aviastats; расчёты ПОРА</p>
+        <p>Источник: перечень Росавиации региональных перевозок на 2026 год; расчёты ПОРА</p>
+      </div>
+    <details class="more limits" id="limits">
+      <summary>Какие ограничения есть у данных</summary>
+      <div class="in"><ul>
+        <li><b>Расписание, а не только выполненные рейсы.</b> Выгрузку Aviastats сделали 7 сентября 2026 года. Рейсы позже этой даты — расписание на тот день: в нём может не оказаться части рейсов, которые появятся позже. Поэтому связность аэропортов считаем за сентябрь 2025 — август 2026 года.</li>
+        <li><b>Период.</b> Остальные расчёты — за октябрь 2025 — сентябрь 2026 года: местные рейсы Якутии есть в выгрузке только с октября 2025-го.</li>
+        <li><b>Не все аэропорты.</b> В данных нет рейсов <span data-n="missing_n"></span> аэродромов АЗРФ из реестра Росавиации: <span data-n="missing_list"></span>. На карте сети они отмечены пунктиром.</li>
+        <li><b>Корпоративные и местные рейсы неполные.</b> Из вахтовых перевозчиков в данных есть только «Газпром авиа»; рейсов на Ан-2 и вертолётах почти нет.</li>
+        <li><b>Только рейсы через Арктику.</b> Рейсов между городами вне зоны, например Якутск — Москва, в выгрузке нет. Калькулятор поездки не видит маршрутов, где обе пересадки приходятся на такие города.</li>
+        <li><b>Рейсы с промежуточной посадкой.</b> Такой рейс записан как отдельные рейсы до каждой точки: Нарьян-Мар — Махачкала — Сочи — как два рейса из Нарьян-Мара, до Махачкалы и до Сочи. Это около 1 % рейсов, их места учтены дважды.</li>
+        <li><b>Пассажиропоток — по местам.</b> Считаем число мест на рейсах, а не проданные билеты. Реальных пассажиров меньше: в Мурманске и Апатитах в первом полугодии 2026 года — 83–87 % от числа мест.</li>
+        <li><b>Цены.</b> Минимальные цены на прямые рейсы за 30, 14 и 3 дня до вылета, с 20 ноября 2025 года; около половины значений пропущено. Берём только цены на маршрутах, которые покрываются рейсами расписания, — больше 10 вылетов за год.</li>
+      </ul></div>
+    </details>
+    </div>
+
   </div>
 </section>
-<footer><div class="wrap"><a class="brand" href="https://t.me/poradata" target="_blank" rel="noopener"><svg class="mark" aria-hidden="true"><use href="#pora-mark"/></svg><span class="bt">ПОРА считать</span></a><span>Проектный офис развития Арктики · 2026 · Источник данных: Aviastats, сервис для анализа авиационной отрасли России</span><span><a href="https://t.me/poradata" target="_blank" rel="noopener">t.me/poradata</a> · <a href="https://porarctic.ru" target="_blank" rel="noopener">porarctic.ru</a></span></div></footer>
+<footer><div class="wrap"><a class="brand" href="https://t.me/poradata" target="_blank" rel="noopener"><svg class="mark" aria-hidden="true"><use href="#pora-mark"/></svg><span class="bt">ПОРА считать</span></a><span>Проектный офис развития Арктики · 2026</span><span><a href="https://t.me/poradata" target="_blank" rel="noopener">t.me/poradata</a> · <a href="https://porarctic.ru" target="_blank" rel="noopener">porarctic.ru</a></span></div></footer>
 
 <script>/*__DATA__*/</script>
 <script>/*__JS__*/</script>
+<script>/*__EDITORIAL_JS__*/</script>
 </body>
 </html>

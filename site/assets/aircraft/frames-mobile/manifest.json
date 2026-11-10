@@ -1,0 +1,126 @@
+{
+  "width": 520,
+  "height": 1125,
+  "count": 17,
+  "frames": [
+    {
+      "file": "frame-00.webp",
+      "progress": 0,
+      "width": 520,
+      "height": 1125,
+      "bytes": 26520
+    },
+    {
+      "file": "frame-01.webp",
+      "progress": 0.0625,
+      "width": 520,
+      "height": 1125,
+      "bytes": 26938
+    },
+    {
+      "file": "frame-02.webp",
+      "progress": 0.125,
+      "width": 520,
+      "height": 1125,
+      "bytes": 27510
+    },
+    {
+      "file": "frame-03.webp",
+      "progress": 0.1875,
+      "width": 520,
+      "height": 1125,
+      "bytes": 27912
+    },
+    {
+      "file": "frame-04.webp",
+      "progress": 0.25,
+      "width": 520,
+      "height": 1125,
+      "bytes": 28464
+    },
+    {
+      "file": "frame-05.webp",
+      "progress": 0.3125,
+      "width": 520,
+      "height": 1125,
+      "bytes": 28076
+    },
+    {
+      "file": "frame-06.webp",
+      "progress": 0.375,
+      "width": 520,
+      "height": 1125,
+      "bytes": 28430
+    },
+    {
+      "file": "frame-07.webp",
+      "progress": 0.4375,
+      "width": 520,
+      "height": 1125,
+      "bytes": 28352
+    },
+    {
+      "file": "frame-08.webp",
+      "progress": 0.5,
+      "width": 520,
+      "height": 1125,
+      "bytes": 28002
+    },
+    {
+      "file": "frame-09.webp",
+      "progress": 0.5625,
+      "width": 520,
+      "height": 1125,
+      "bytes": 27112
+    },
+    {
+      "file": "frame-10.webp",
+      "progress": 0.625,
+      "width": 520,
+      "height": 1125,
+      "bytes": 25452
+    },
+    {
+      "file": "frame-11.webp",
+      "progress": 0.6875,
+      "width": 520,
+      "height": 1125,
+      "bytes": 23896
+    },
+    {
+      "file": "frame-12.webp",
+      "progress": 0.75,
+      "width": 520,
+      "height": 1125,
+      "bytes": 22242
+    },
+    {
+      "file": "frame-13.webp",
+      "progress": 0.8125,
+      "width": 520,
+      "height": 1125,
+      "bytes": 20868
+    },
+    {
+      "file": "frame-14.webp",
+      "progress": 0.875,
+      "width": 520,
+      "height": 1125,
+      "bytes": 19080
+    },
+    {
+      "file": "frame-15.webp",
+      "progress": 0.9375,
+      "width": 520,
+      "height": 1125,
+      "bytes": 18200
+    },
+    {
+      "file": "frame-16.webp",
+      "progress": 1,
+      "width": 520,
+      "height": 1125,
+      "bytes": 17016
+    }
+  ]
+}
