@@ -12,9 +12,10 @@ def load_flights(OUT):
     import pandas as pd
     if (OUT/'flights_clean.pkl').exists(): return pd.read_pickle(OUT/'flights_clean.pkl')
     fl = pd.read_csv(OUT/'flights_clean.csv.gz', parse_dates=['departure_date','scheduled_departure_local','scheduled_departure_utc','scheduled_arrival_local','scheduled_arrival_utc'])
-    for c in ['origin_azrf','destination_azrf','both_azrf','soviet','unpaved','ac_filled','arr_imputed']: fl[c] = fl[c].astype(bool)
+    for c in ['origin_azrf','destination_azrf','both_azrf','soviet','unpaved','ac_filled','arr_imputed','stop_dup']: fl[c] = fl[c].astype(bool)
     return fl
 fl = load_flights(OUT)
+fl = fl[~fl.stop_dup]   # рейс с промежуточной посадкой на табло — одна строка
 res = []
 for (st, d), grp in y.groupby(['station_iata', 'board_date']):
     a = fl[(fl.departure_date == d) & ((fl.origin_airport_iata == st) | (fl.destination_airport_iata == st))]

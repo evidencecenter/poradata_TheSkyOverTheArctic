@@ -10,6 +10,7 @@
   function init(){
     const engine=window.Fleet3D,gallery=document.getElementById('gallery');
     if(!engine||!gallery||gallery.dataset.fleetViewer==='ready')return;
+    if(engine.view){initial.yaw=engine.view.yaw;initial.pitch=engine.view.pitch;}
     const states=new Map();
     let frame=0;
     const queue=new Set();
@@ -29,7 +30,7 @@
         if(!state.model)state.model=engine.createModel(state.id);
         const result=engine.render(state.canvas,state.model,{
           width:bounds.width,height:bounds.height,yaw:state.yaw,pitch:state.pitch,zoom:state.zoom,
-          dpr:1.5
+          dpr:2
         });
         if(result){
           state.canvas.dataset.renderEngine=result.engine;

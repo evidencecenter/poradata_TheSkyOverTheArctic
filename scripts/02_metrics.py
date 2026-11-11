@@ -8,9 +8,11 @@ def load_flights(OUT):
     import pandas as pd
     if (OUT/'flights_clean.pkl').exists(): return pd.read_pickle(OUT/'flights_clean.pkl')
     fl = pd.read_csv(OUT/'flights_clean.csv.gz', parse_dates=['departure_date','scheduled_departure_local','scheduled_departure_utc','scheduled_arrival_local','scheduled_arrival_utc'])
-    for c in ['origin_azrf','destination_azrf','both_azrf','soviet','unpaved','ac_filled','arr_imputed']: fl[c] = fl[c].astype(bool)
+    for c in ['origin_azrf','destination_azrf','both_azrf','soviet','unpaved','ac_filled','arr_imputed','stop_dup']: fl[c] = fl[c].astype(bool)
     return fl
-fl = load_flights(OUT)
+fl_all = load_flights(OUT)
+# рейс с промежуточной посадкой в подсчётах рейсов и мест — одна запись (шаг 1); для связности и крюка нужны все записи
+fl = fl_all[~fl_all.stop_dup].copy()
 ap = pd.read_csv(OUT/'airports.csv').set_index('iata')
 
 CITY_MAIN = {'MOW': 'SVO', 'KJA': 'KJA', 'ARH': 'ARH'}
@@ -28,6 +30,8 @@ def gc_km(a, b):
 W0, W1 = pd.Timestamp('2025-10-01'), pd.Timestamp('2026-09-30')
 f = fl[(fl.departure_date >= W0) & (fl.departure_date <= W1)].copy()
 f['week'] = ((f.departure_date - W0).dt.days // 7).clip(upper=51)   # 52 недели периода
+f_all = fl_all[(fl_all.departure_date >= W0) & (fl_all.departure_date <= W1)].copy()
+f_all['week'] = ((f_all.departure_date - W0).dt.days // 7).clip(upper=51)
 f['touch_azrf'] = f.origin_azrf | f.destination_azrf
 assert f.touch_azrf.all()
 f['dist_km'] = [gc_km(a, b) for a, b in zip(f.origin_airport_iata, f.destination_airport_iata)]
@@ -191,7 +195,7 @@ report['fleet_all'] = gal.sort_values('flights', ascending=False).reset_index().
 # ---------- 6. регулярность и связность корневых аэропортов АЗРФ ----------
 # окно связности сдвинуто на месяц назад: выгрузка сделана в начале сентября 2026 года, сентябрь — ещё прогноз расписания
 C0, C1 = pd.Timestamp('2025-09-01'), pd.Timestamp('2026-08-31')
-fc = fl[(fl.departure_date >= C0) & (fl.departure_date <= C1)].copy()
+fc = fl_all[(fl_all.departure_date >= C0) & (fl_all.departure_date <= C1)].copy()
 fc['week'] = ((fc.departure_date - C0).dt.days // 7).clip(upper=51)
 weeks_total = fc.week.nunique()
 wk = fc.groupby(['origin_airport_iata', 'destination_airport_iata']).week.nunique()
@@ -251,7 +255,7 @@ GROUND = {('KVK', 'MMK'): 'есть автодорога и железная д�
 GROUND = {tuple(sorted(k)): v for k, v in GROUND.items()}
 NOTES = {('DYR', 'PWE'): 'местные рейсы Чукотавиа между Анадырем и Певеком в выгрузке отсутствуют', ('DYR', 'KPW'): 'местные рейсы Чукотавиа в выгрузке отсутствуют', ('KPW', 'PWE'): 'местные рейсы Чукотавиа в выгрузке отсутствуют'}
 NOTES = {tuple(sorted(k)): v for k, v in NOTES.items()}
-wk_city = f.groupby(['origin_city', 'destination_city']).week.nunique()
+wk_city = f_all.groupby(['origin_city', 'destination_city']).week.nunique()
 def build(min_weeks):
     G = {}
     for (a, b), w in wk_city.items():
@@ -335,9 +339,9 @@ for c in set(f.origin_city) | set(f.destination_city):
 report['ext_nodes'] = ext_nodes
 
 # ---------- 10. сводка ----------
-report['totals'] = {'period': [str(W0.date()), str(W1.date())], 'flights': int(len(f)), 'seats': int(f.seats.sum()), 'airports': int(len(set(f.origin_airport_iata) | set(f.destination_airport_iata))),
-                    'arctic_airports': len(arctic), 'routes': int(f.groupby(['origin_airport_iata', 'destination_airport_iata']).ngroups),
-                    'routes_all': int(fl.groupby(['origin_airport_iata', 'destination_airport_iata']).ngroups), 'airports_all': int(len(set(fl.origin_airport_iata) | set(fl.destination_airport_iata))),
+report['totals'] = {'period': [str(W0.date()), str(W1.date())], 'flights': int(len(f)), 'seats': int(f.seats.sum()), 'airports': int(len(set(f_all.origin_airport_iata) | set(f_all.destination_airport_iata))),
+                    'arctic_airports': len(arctic), 'routes': int(f_all.groupby(['origin_airport_iata', 'destination_airport_iata']).ngroups),
+                    'routes_all': int(fl_all.groupby(['origin_airport_iata', 'destination_airport_iata']).ngroups), 'airports_all': int(len(set(fl_all.origin_airport_iata) | set(fl_all.destination_airport_iata))),
                     'weeks': int(weeks_total), 'airlines': int(f.airline_iata.nunique()),
                     'seat_km': int(f.seat_km.sum()), 'mean_dist_km': round(float(f.dist_km.mean())),
                     'peak_month': int(f.groupby('month').seats.sum().div(pd.Series(days)).idxmax())}

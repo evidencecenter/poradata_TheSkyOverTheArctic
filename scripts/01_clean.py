@@ -138,6 +138,44 @@ n_bad = int(bad.sum())
 fl = fl[~bad.to_numpy()].drop(columns=['dur_min']).copy()
 fl['arr_imputed'] = False   # столбец оставлен для совместимости со следующими шагами
 
+# Рейс с промежуточной посадкой выгрузка записывает дважды. Нарьян-Мар → Махачкала → Сочи — это записи
+# Нарьян-Мар → Махачкала и Нарьян-Мар → Сочи с одним номером и временем вылета. Обратный рейс — записи Сочи → Нарьян-Мар
+# и Махачкала → Нарьян-Мар с одним номером и временем прилёта. Самолёт один, поэтому в подсчётах рейсов и мест
+# такой рейс идёт одной записью — до конечного пункта (stop_dup = True у остальных записей). Для связности и времени
+# в пути нужны все записи: билет продают на каждую. Роли: through — запись от начального до конечного пункта,
+# stage — участок до посадки или после неё, dup — ещё одна запись того же рейса (тот же рейс в двух аэропортах
+# одного города, например Емельяново и Черемшанка в Красноярске, или две версии времени вылета).
+fl = fl.reset_index(drop=True)
+_x = fl[['all_numbers', 'origin_airport_iata', 'destination_airport_iata', 'scheduled_departure_local', 'scheduled_arrival_local',
+         'scheduled_departure_utc', 'scheduled_arrival_utc']].copy()
+_x['rid'] = _x.index
+_x['num'] = _x.all_numbers.str.split('|'); _x = _x.explode('num')
+_roles = {}
+for _key, _other, _t, _stage_last in [(['num', 'origin_airport_iata', 'scheduled_departure_local'], 'destination_airport_iata', 'scheduled_arrival_utc', False),
+                                       (['num', 'destination_airport_iata', 'scheduled_arrival_local'], 'origin_airport_iata', 'scheduled_departure_utc', True)]:
+    _g = _x[_x.groupby(_key)[_other].transform('nunique') > 1]
+    _freq = _x.groupby(_key[:2] + [_other]).size()
+    for _k, _d in _g.groupby(_key):
+        _d = _d.assign(_n=[_freq.get((_k[0], _k[1], o), 0) for o in _d[_other]]).sort_values([_t, '_n', _other], ascending=[True, False, True])
+        if _d[_other].map(ap.city_key).nunique() == 1 or _d[_t].nunique() == 1:
+            # дубль: оставляем аэропорт, который чаще встречается у этого номера
+            _keep = {_d.sort_values(['_n', _t, _other], ascending=[False, True, True]).rid.iloc[0]: 'keep'}
+        else:
+            _first, _last = _d[_d[_t] == _d[_t].iloc[0]].rid.iloc[0], _d[_d[_t] == _d[_t].iloc[-1]].rid.iloc[0]
+            # вылеты: раньше всех прилетает участок до посадки; прилёты: позже всех вылетает участок после посадки
+            _keep = {_first: 'stage', _last: 'through'} if not _stage_last else {_first: 'through', _last: 'stage'}
+        for _r in _d.rid: _roles.setdefault(_r, set()).add(_keep.get(_r, 'dup'))
+def _role(s):
+    if 'dup' in s: return 'dup'
+    s = s - {'keep'}
+    if not s: return ''
+    if s == {'stage', 'through'}: return 'conflict'
+    return next(iter(s))
+fl['stop_role'] = pd.Series({r: _role(s) for r, s in _roles.items()}, dtype=object).reindex(fl.index).fillna('')
+assert not (fl.stop_role == 'conflict').any()
+fl['stop_dup'] = fl.stop_role.isin(['stage', 'dup'])
+n_stop = int((fl.stop_role == 'through').sum()); n_stop_dup = int(fl.stop_dup.sum())
+
 # разметка аэропортов
 for side in ['origin','destination']:
     fl[f'{side}_azrf'] = fl[f'{side}_airport_iata'].map(ap.azrf).fillna(False).astype(bool)
@@ -148,7 +186,7 @@ fl['week'] = fl.departure_date.dt.isocalendar().week.astype(int)
 fl['month'] = fl.departure_date.dt.month
 keep = ['departure_date','year','month','week','scheduled_departure_local','scheduled_departure_utc','scheduled_arrival_local','scheduled_arrival_utc',
         'origin_airport_iata','origin_city','origin_azrf','origin_marker','destination_airport_iata','destination_city','destination_azrf','destination_marker','both_azrf',
-        'airline_iata','airline_name','flight_number','all_numbers','all_airlines','dup_n','aircraft_code','aircraft_name','family','soviet','unpaved','ac_filled','arr_imputed','seats_capacity_min','seats_capacity_max','seats']
+        'airline_iata','airline_name','flight_number','all_numbers','all_airlines','dup_n','aircraft_code','aircraft_name','family','soviet','unpaved','ac_filled','arr_imputed','seats_capacity_min','seats_capacity_max','seats','stop_role','stop_dup']
 fl = fl[keep].sort_values(['departure_date','scheduled_departure_utc']).reset_index(drop=True)
 fl.to_csv(OUT/'flights_clean.csv.gz', index=False, compression='gzip')
 fl.to_pickle(OUT/'flights_clean.pkl')  # локальный кэш, в репозиторий не попадает
@@ -160,6 +198,7 @@ log = f"""Очистка расписания
 рейсов, у которых дата вылета пересчитана по местному времени: {n_date}
 записей с невозможным временем полёта (стыковки под одним номером, исключены): {n_bad}
 рейсов после исключения: {len(fl)}
+рейсов с промежуточной посадкой: {n_stop}; их повторных записей и дублей одного рейса в двух аэропортах города (в подсчётах не участвуют): {n_stop_dup}
 аэропортов: {len(set(fl.origin_airport_iata)|set(fl.destination_airport_iata))}, из них в АЗРФ: {ap.azrf[list(set(fl.origin_airport_iata)|set(fl.destination_airport_iata))].sum()}
 городов: {len(set(fl.origin_city)|set(fl.destination_city))}
 направленных маршрутов (аэропорт-аэропорт): {fl.groupby(['origin_airport_iata','destination_airport_iata']).ngroups}

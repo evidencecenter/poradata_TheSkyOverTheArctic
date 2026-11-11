@@ -17,11 +17,14 @@ OUT, RAW = ROOT/'data/processed', ROOT/'data/raw'
 def load_flights(OUT):
     if (OUT/'flights_clean.pkl').exists(): return pd.read_pickle(OUT/'flights_clean.pkl')
     fl = pd.read_csv(OUT/'flights_clean.csv.gz', parse_dates=['departure_date', 'scheduled_departure_local', 'scheduled_departure_utc', 'scheduled_arrival_local', 'scheduled_arrival_utc'])
-    for c in ['origin_azrf', 'destination_azrf', 'both_azrf', 'soviet', 'unpaved', 'ac_filled', 'arr_imputed']: fl[c] = fl[c].astype(bool)
+    for c in ['origin_azrf', 'destination_azrf', 'both_azrf', 'soviet', 'unpaved', 'ac_filled', 'arr_imputed', 'stop_dup']: fl[c] = fl[c].astype(bool)
+    fl['stop_role'] = fl.stop_role.fillna('')
     return fl
 
 
-fl = load_flights(OUT)
+fl_all = load_flights(OUT)
+# рейс с промежуточной посадкой в подсчётах рейсов и мест — одна запись (шаг 1); время в пути и связность считаем по всем записям
+fl = fl_all[~fl_all.stop_dup].copy()
 ap = pd.read_csv(OUT/'airports.csv').set_index('iata')
 M = json.load(open(OUT/'metrics.json'))
 cls = M['classification']
@@ -31,6 +34,7 @@ LOCAL = set(cls['local']); ROOT_OUT = set(cls['root_outside'])
 P0, P1 = pd.Timestamp('2025-10-01'), pd.Timestamp('2026-09-30')     # тот же период, что в 02_metrics и 03_prices
 f = fl[(fl.departure_date >= P0) & (fl.departure_date <= P1)].copy()
 f['week'] = ((f.departure_date - P0).dt.days // 7).clip(upper=51)
+f_all = fl_all[(fl_all.departure_date >= P0) & (fl_all.departure_date <= P1)].copy()
 N_DAYS = (P1 - P0).days + 1
 extra = {'period_days': N_DAYS}
 
@@ -43,7 +47,7 @@ def gc_km(a, b):
 
 # ---------------------------------------------------------------- 1. время в пути (CSA)
 # Время вылета и прилёта восстановлено на шаге 1 (местное время в выгрузке записано как московское).
-A = f[['origin_airport_iata', 'destination_airport_iata', 'origin_city', 'destination_city', 'scheduled_departure_utc', 'scheduled_arrival_utc',
+A = f_all[['origin_airport_iata', 'destination_airport_iata', 'origin_city', 'destination_city', 'scheduled_departure_utc', 'scheduled_arrival_utc',
        'scheduled_departure_local', 'scheduled_arrival_local', 'departure_date', 'flight_number']].copy()
 A['dep'] = (A.scheduled_departure_utc - P0).dt.total_seconds().div(60).round().astype(int)
 A['arr'] = (A.scheduled_arrival_utc - P0).dt.total_seconds().div(60).round().astype(int)
@@ -138,8 +142,10 @@ def via_of(path, kinds):
     return tuple(A.origin_city.iat[path[n]] for n in range(1, len(path)) if kinds[n] == 'board')
 
 
-# оценка прямого рейса: время в пути по расписанию на турбовинтовых бортах в зависимости от расстояния (медианы маршрутов за период)
-_g = f[~f.arr_imputed].assign(dur=(f.scheduled_arrival_utc - f.scheduled_departure_utc).dt.total_seconds() / 60)
+# оценка прямого рейса: время в пути по расписанию на турбовинтовых бортах в зависимости от расстояния (медианы маршрутов за период);
+# только беспосадочные записи: у записи рейса с промежуточной посадкой до конечного пункта (through) время включает стоянку
+_p = f_all[~f_all.arr_imputed & ~f_all.stop_role.isin(['through', 'dup'])]
+_g = _p.assign(dur=(_p.scheduled_arrival_utc - _p.scheduled_departure_utc).dt.total_seconds() / 60)
 _r = _g.groupby(['origin_airport_iata', 'destination_airport_iata']).agg(dur=('dur', 'median'), fam=('family', lambda s: s.mode().iat[0] if s.notna().any() else None)).reset_index()
 _r = _r[_r.fam.isin(['Ан-24', 'Ан-26', 'ATR 42/72', 'DHC-8'])]
 _r['km'] = [gc_km(a, b) for a, b in zip(_r.origin_airport_iata, _r.destination_airport_iata)]
@@ -198,7 +204,7 @@ print('дни без вылетов (топ):', sorted(((v['days_none'], a) for 
 # ---------------------------------------------------------------- 3. чувствительность порога регулярности
 # окно связности — как в шаге 2: сентябрь 2025 — август 2026 (сентябрь 2026 в выгрузке — прогноз расписания)
 C0, C1 = pd.Timestamp('2025-09-01'), pd.Timestamp('2026-08-31')
-fc = fl[(fl.departure_date >= C0) & (fl.departure_date <= C1)].copy()
+fc = fl_all[(fl_all.departure_date >= C0) & (fl_all.departure_date <= C1)].copy()
 fc['week'] = ((fc.departure_date - C0).dt.days // 7).clip(upper=51)
 wk = fc.groupby(['origin_airport_iata', 'destination_airport_iata']).week.nunique()
 fx = fc[['origin_airport_iata', 'destination_airport_iata', 'scheduled_departure_utc', 'scheduled_arrival_utc', 'week']].copy()
