@@ -189,13 +189,17 @@ gal['share_flights'] = (gal.flights / gal.flights.sum()).round(4)
 report['fleet_all'] = gal.sort_values('flights', ascending=False).reset_index().to_dict('records')
 
 # ---------- 6. регулярность и связность корневых аэропортов АЗРФ ----------
-weeks_total = f.week.nunique()
-wk = f.groupby(['origin_airport_iata', 'destination_airport_iata']).week.nunique()
+# окно связности сдвинуто на месяц назад: выгрузка сделана в начале сентября 2026 года, сентябрь — ещё прогноз расписания
+C0, C1 = pd.Timestamp('2025-09-01'), pd.Timestamp('2026-08-31')
+fc = fl[(fl.departure_date >= C0) & (fl.departure_date <= C1)].copy()
+fc['week'] = ((fc.departure_date - C0).dt.days // 7).clip(upper=51)
+weeks_total = fc.week.nunique()
+wk = fc.groupby(['origin_airport_iata', 'destination_airport_iata']).week.nunique()
 REG_W = 47
 regular_direct = {k for k, v in wk.items() if v >= REG_W}
 ra = sorted(root_arctic)
 # транзит с одной пересадкой: вылет из X не раньше чем через 1 ч и не позже чем через 12 ч после прилёта
-fx = f[['origin_airport_iata', 'destination_airport_iata', 'scheduled_departure_utc', 'scheduled_arrival_utc', 'week', 'airline_iata']].copy()
+fx = fc[['origin_airport_iata', 'destination_airport_iata', 'scheduled_departure_utc', 'scheduled_arrival_utc', 'week', 'airline_iata']].copy()
 conn = {}
 for a, b in itertools.permutations(ra, 2):
     if (a, b) in regular_direct:
@@ -232,7 +236,7 @@ print('  вариант «хотя бы в одну сторону»:', sum(1 fo
 best_w = {p: max(conn[p][1], conn[(p[1], p[0])][1]) for p in pairs}
 for thr in [47, 45, 40]:
     print(f'  недель >= {thr}:', sum(1 for p in pairs if best_w[p] >= thr or st[p]=='direct'), 'из', len(pairs))
-report['root_connectivity'] = {'n_pairs': len(pairs), 'connected': n_conn, 'share': round(n_conn / len(pairs), 3),
+report['root_connectivity'] = {'period': [str(C0.date()), str(C1.date())], 'n_pairs': len(pairs), 'connected': n_conn, 'share': round(n_conn / len(pairs), 3),
                                'direct': sum(1 for v in st.values() if v == 'direct'), 'roots': ra,
                                'matrix': {f'{a}-{b}': v for (a, b), v in st.items()},
                                'isolated': sorted(a for a in ra if all(st[tuple(sorted([a, b]))] == 'none' for b in ra if b != a))}

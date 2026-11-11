@@ -39,7 +39,7 @@ for k, v in m['detour'].items():
     if 'note' in v: rec['n'] = v['note']
     detour[k] = rec
 prices_routes = [{'o': r['origin'], 'd': r['destination'], 'on': r['origin_name'], 'dn': r['destination_name'], 'km': r['dist_km'], 'p30': r['p30'], 'p14': r['p14'], 'p3': r['p3'],
-                  'n30': r['n30'], 'fl': r['flights'], 'fam': r['family'], 'small': bool(r['small']), 'rk': r['rub_km'], 'el': bool(r['eligible']),
+                  'n30': r['n30'], 'fl': r['flights'], 'spf': r.get('seats_per_flight'), 'fam': r['family'], 'small': bool(r['small']), 'rk': r['rub_km'], 'el': bool(r['eligible']),
                   'oa': bool(r['origin_azrf']), 'da': bool(r['destination_azrf'])} for r in pr['routes']]
 subsidies = {  # расчёты ПОРА по перечню Росавиации на 2026 год (из презентации)
     'directions': 58, 'rows': 69, 'pair_flights': 4870, 'inside_azrf': 1, 'inside_route': 'Нарьян-Мар — Архангельск', 'inside_pair_flights': 105,

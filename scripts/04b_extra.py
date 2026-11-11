@@ -196,8 +196,12 @@ extra['isolation'] = iso
 print('дни без вылетов (топ):', sorted(((v['days_none'], a) for a, v in iso.items()), reverse=True)[:8])
 
 # ---------------------------------------------------------------- 3. чувствительность порога регулярности
-wk = f.groupby(['origin_airport_iata', 'destination_airport_iata']).week.nunique()
-fx = f[['origin_airport_iata', 'destination_airport_iata', 'scheduled_departure_utc', 'scheduled_arrival_utc', 'week']].copy()
+# окно связности — как в шаге 2: сентябрь 2025 — август 2026 (сентябрь 2026 в выгрузке — прогноз расписания)
+C0, C1 = pd.Timestamp('2025-09-01'), pd.Timestamp('2026-08-31')
+fc = fl[(fl.departure_date >= C0) & (fl.departure_date <= C1)].copy()
+fc['week'] = ((fc.departure_date - C0).dt.days // 7).clip(upper=51)
+wk = fc.groupby(['origin_airport_iata', 'destination_airport_iata']).week.nunique()
+fx = fc[['origin_airport_iata', 'destination_airport_iata', 'scheduled_departure_utc', 'scheduled_arrival_utc', 'week']].copy()
 dirw = {}
 for a, b in itertools.permutations(ROOTS, 2):
     direct_w = int(wk.get((a, b), 0))

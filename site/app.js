@@ -44,7 +44,7 @@ const nLocalDirs=FL.n_directions, nTrunkDirs=D.fleet.n_directions-FL.n_direction
 const outCenters=new Set(D.classification.root_outside.map(c=>c==='KCY'?'KJA':c)); const nOut=outCenters.size;
 const NUMW={1:'Один',2:'Два',3:'Три',4:'Четыре',5:'Пять',6:'Шесть',7:'Семь'};
 const nLocal=D.classification.local.length;
-const imputed=((D.meta.clean_log||'').match(/прилёт пересчитан\): (\d+)/)||[])[1];
+const imputed=((D.meta.clean_log||'').match(/исключены\): (\d+)/)||[])[1];
 const tzShift=((D.meta.clean_log||'').match(/пересчитано по поясам\): (\d+)/)||[])[1];
 const insidePct=Math.round(SH.seats['АЗРФ']*100);
 const comp=X.competition||{}; const BF=X.block_fit||{};

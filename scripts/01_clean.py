@@ -23,6 +23,7 @@ ll = reg['Координаты'].astype(str).str.split(',', expand=True)
 reg['lat'] = pd.to_numeric(ll[0], errors='coerce'); reg['lon'] = pd.to_numeric(ll[1], errors='coerce')
 reg['azrf'] = reg['АЗРФ'].astype(str).str.strip().str.lower().eq('да')
 reg['marker'] = reg['Маркер'].fillna('')
+reg.loc[reg['IATA'] == 'MSQ', 'marker'] = ''   # Минск не входит в группу «Москва и Петербург»
 reg['klass'] = reg['Класс'].astype(str).str.strip().replace({'nan': ''})
 reg['name_ru'] = reg['Наименование'].map(norm)
 reg['city_ru'] = reg['name_ru'].str.replace(r'\s*\(.*\)\s*', '', regex=True).str.strip()
@@ -91,15 +92,15 @@ fl['soviet'] = fl.family.isin(SOVIET); fl['unpaved'] = fl.family.isin(UNPAVED)
 fl['seats'] = fl['seats_capacity_max']
 
 # ---------- время вылета и прилёта ----------
-# В выгрузке местное время во всех аэропортах записано как московское: столбцы UTC = местное время − 3 часа,
-# а столбцы «местное время» получены из них прибавлением пояса аэропорта. Поэтому рейс Норильск → Москва
-# по выгрузке длится 30 минут, а Москва → Норильск — 8 часов. Признаки ошибки:
-#  - дата вылета (departure_date) во всех записях совпадает с датой «UTC + 3 часа», а не с датой «местного времени»;
-#  - на табло Яндекса в Архангельске, Мурманске и Нарьян-Маре время рейсов в Екатеринбург, Уфу, Пермь и Калининград
-#    и обратно совпадает с выгрузкой в обе стороны: верно время в аэропортах московского пояса;
+# В столбцах «UTC» выгрузки на самом деле местное время по расписанию, а столбцы «местное время» получены из них
+# прибавлением пояса аэропорта. Поэтому рейс Норильск → Москва по выгрузке длится 30 минут, а Москва → Норильск —
+# больше 8 часов: длительность считается как разность местных времён. Признаки:
+#  - на табло Яндекса в Архангельске, Мурманске и Нарьян-Маре местное время рейсов совпадает со столбцом «UTC»;
 #  - у рейсов туда-обратно разница длительностей равна двойной разнице поясов, а разворот самолёта
-#    в аэропорту назначения по выгрузке занимает обычные 40–100 минут.
-# Восстанавливаем: местное время = UTC выгрузки + 3 часа; UTC = местное время − пояс аэропорта.
+#    в аэропорту назначения по этим часам занимает обычные 40–100 минут;
+#  - вылеты из Москвы и Петербурга в столбце «UTC» затихают в 4–5 часов — это ночное затишье по местному времени.
+# Дата вылета в выгрузке — дата «UTC + 3 часа», то есть у поздних вечерних рейсов она уже следующая; пересчитываем по местному времени.
+# Восстанавливаем: местное время = столбец «UTC»; UTC = местное время − пояс аэропорта.
 ap = airports.set_index('iata')
 off_dep = (fl.scheduled_departure_local - fl.scheduled_departure_utc).dt.total_seconds().div(60).round()
 off_arr = (fl.scheduled_arrival_local - fl.scheduled_arrival_utc).dt.total_seconds().div(60).round()
@@ -112,15 +113,20 @@ TZ.update(pd.Series(TZ_FIX, dtype=float))
 assert (fl.departure_date.dt.normalize() == (fl.scheduled_departure_utc + pd.Timedelta(hours=3)).dt.normalize()).all()
 assert fl.origin_airport_iata.map(TZ).notna().all() and fl.destination_airport_iata.map(TZ).notna().all()
 n_shift = int(((fl.origin_airport_iata.map(TZ) != 180) | (fl.destination_airport_iata.map(TZ) != 180)).sum())
-fl['scheduled_departure_local'] = fl.scheduled_departure_utc + pd.Timedelta(hours=3)
-fl['scheduled_arrival_local'] = fl.scheduled_arrival_utc + pd.Timedelta(hours=3)
+fl['scheduled_departure_local'] = fl.scheduled_departure_utc
+fl['scheduled_arrival_local'] = fl.scheduled_arrival_utc
 fl['scheduled_departure_utc'] = fl.scheduled_departure_local - pd.to_timedelta(fl.origin_airport_iata.map(TZ), unit='m')
 fl['scheduled_arrival_utc'] = fl.scheduled_arrival_local - pd.to_timedelta(fl.destination_airport_iata.map(TZ), unit='m')
+n_date = int((fl.departure_date.dt.normalize() != fl.scheduled_departure_local.dt.normalize()).sum())
+fl['departure_date'] = fl.scheduled_departure_local.dt.normalize()
+fl['year'] = fl.departure_date.dt.year
 airports['tz_utc_min'] = airports.iata.map(TZ)
 airports.to_csv(OUT/'airports.csv', index=False)
 
-# оставшееся неправдоподобное время полёта (прилёт раньше вылета, дольше 16 часов или быстрее 950 км/ч с учётом 15 минут
-# на взлёт и посадку): прилёт пересчитываем по медиане того же маршрута, затем обратного, иначе по расстоянию
+# оставшееся невозможное время полёта (прилёт раньше вылета, дольше 16 часов или быстрее 950 км/ч с учётом 15 минут
+# на взлёт и посадку). Это не физические рейсы: выгрузка показывает то, на что продают билеты, и стыковку под одним номером
+# (например, Казань — Норильск через Петербург двумя самолётами разных авиакомпаний) записывает как один рейс.
+# Такие записи исключаем.
 def _km(a, b):
     la1, lo1, la2, lo2 = map(np.radians, [ap.lat.get(a, np.nan), ap.lon.get(a, np.nan), ap.lat.get(b, np.nan), ap.lon.get(b, np.nan)])
     h = np.sin((la2-la1)/2)**2 + np.cos(la1)*np.cos(la2)*np.sin((lo2-lo1)/2)**2
@@ -128,20 +134,9 @@ def _km(a, b):
 fl['dur_min'] = (fl.scheduled_arrival_utc - fl.scheduled_departure_utc).dt.total_seconds() / 60
 km_all = np.array([_km(a, b) for a, b in zip(fl.origin_airport_iata, fl.destination_airport_iata)])
 bad = (fl.dur_min <= 0) | (fl.dur_min > 16*60) | (fl.dur_min < 15 + km_all*60/950)
-good = fl[~bad]
-route_med = good.groupby(['origin_airport_iata', 'destination_airport_iata']).dur_min.median()
-ok = np.isfinite(km_all) & ~bad.to_numpy()
-b_km, a_km = np.polyfit(km_all[ok], fl.dur_min.to_numpy()[ok], 1)
-def _est(o, d):
-    if (o, d) in route_med.index: return route_med[(o, d)]
-    if (d, o) in route_med.index: return route_med[(d, o)]
-    return a_km + b_km * _km(o, d)
-est = [_est(o, d) for o, d in zip(fl.loc[bad, 'origin_airport_iata'], fl.loc[bad, 'destination_airport_iata'])]
-fl['arr_imputed'] = bad
-fl.loc[bad, 'scheduled_arrival_utc'] = fl.loc[bad, 'scheduled_departure_utc'] + pd.to_timedelta(np.round(est), unit='min')
-fl.loc[bad, 'scheduled_arrival_local'] = fl.loc[bad, 'scheduled_arrival_utc'] + pd.to_timedelta(fl.loc[bad, 'destination_airport_iata'].map(TZ), unit='m')
-n_imputed = int(bad.sum())
-fl = fl.drop(columns=['dur_min'])
+n_bad = int(bad.sum())
+fl = fl[~bad.to_numpy()].drop(columns=['dur_min']).copy()
+fl['arr_imputed'] = False   # столбец оставлен для совместимости со следующими шагами
 
 # разметка аэропортов
 for side in ['origin','destination']:
@@ -161,8 +156,10 @@ log = f"""Очистка расписания
 записей в выгрузке: {n_raw}
 физических рейсов после дедупликации: {n_dedup} (удалено дублей: {n_raw-n_dedup})
 пропусков по типу ВС до заполнения: {miss0}, после заполнения по номеру рейса и авиакомпании: {miss1}
-рейсов с аэропортами вне московского пояса (время пересчитано из московского в местное): {n_shift}
-рейсов с неправдоподобным временем полёта (прилёт пересчитан): {n_imputed}
+рейсов с аэропортами вне московского пояса (UTC пересчитано по поясам): {n_shift}
+рейсов, у которых дата вылета пересчитана по местному времени: {n_date}
+записей с невозможным временем полёта (стыковки под одним номером, исключены): {n_bad}
+рейсов после исключения: {len(fl)}
 аэропортов: {len(set(fl.origin_airport_iata)|set(fl.destination_airport_iata))}, из них в АЗРФ: {ap.azrf[list(set(fl.origin_airport_iata)|set(fl.destination_airport_iata))].sum()}
 городов: {len(set(fl.origin_city)|set(fl.destination_city))}
 направленных маршрутов (аэропорт-аэропорт): {fl.groupby(['origin_airport_iata','destination_airport_iata']).ngroups}

@@ -34,7 +34,7 @@ def is_small(a, b):
 
 # рейсы по расписанию в том же окне (для счётчика вылетов и типа ВС)
 fw = fl[(fl.departure_date >= W0) & (fl.departure_date <= W1)]
-sched = fw.groupby(['origin_airport_iata', 'destination_airport_iata']).agg(flights=('seats', 'size'), seats=('seats', 'sum'))
+sched = fw.groupby(['origin_airport_iata', 'destination_airport_iata']).agg(flights=('seats', 'size'), seats=('seats', 'sum'), spf=('seats', 'median'))
 fam = fw[fw.family.notna()].groupby(['origin_airport_iata', 'destination_airport_iata', 'family']).size().reset_index(name='n')
 fam = fam.sort_values('n', ascending=False).drop_duplicates(['origin_airport_iata', 'destination_airport_iata']).set_index(['origin_airport_iata', 'destination_airport_iata']).family
 
@@ -47,14 +47,15 @@ routes['dist_km'] = [round(gc_km(a, b)) for a, b in zip(routes.origin, routes.de
 routes['small'] = [is_small(a, b) for a, b in zip(routes.origin, routes.destination)]
 routes['flights'] = [int(sched.flights.get((a, b), 0)) for a, b in zip(routes.origin, routes.destination)]
 routes['family'] = [fam.get((a, b), None) for a, b in zip(routes.origin, routes.destination)]
+routes['seats_per_flight'] = [int(sched.spf.get((a, b), 0)) for a, b in zip(routes.origin, routes.destination)]   # мест в рейсе (медиана)
 routes['rub_km'] = (routes.p30 / routes.dist_km).round(2)
 routes['rub_km3'] = (routes.p3 / routes.dist_km).round(2)
 routes['origin_azrf'] = routes.origin.map(ap.azrf); routes['destination_azrf'] = routes.destination.map(ap.azrf)
 routes['origin_name'] = routes.origin.map(ap.city_ru); routes['destination_name'] = routes.destination.map(ap.city_ru)
 routes['ratio_3_30'] = (routes.p3 / routes.p30).round(3)
 routes['ratio_14_30'] = (routes.p14 / routes.p30).round(3)
-# отбор: больше 10 вылетов за год (по расписанию, либо по датам с ценой для маршрутов вне расписания)
-routes['eligible'] = ((routes.flights > 10) | ((routes.flights == 0) & (routes.n_dates > 10))) & routes.p30.notna()
+# отбор: только маршруты, которые покрываются рейсами расписания, — больше 10 вылетов за год
+routes['eligible'] = (routes.flights > 10) & routes.p30.notna()
 el = routes[routes.eligible]
 summary = {}
 for name, sub in [('small', el[el.small]), ('trunk', el[~el.small])]:
