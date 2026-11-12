@@ -202,6 +202,14 @@ for(const c of arcticCodes){ for(const s of [selFrom,selTo,...mineSels]) s.appen
 selFrom.value=D.profiles.NNM?'NNM':arcticCodes[0]; selTo.value=D.profiles.SLY?'SLY':arcticCodes[1];
 const detMap=makeMap($('#map-detour'),{id:'d',noTech:true}); detMap.setMode('all'); detMap.routeEls.forEach(p=>{ p.style.strokeOpacity=0.12; });
 function cap1(s){ return s?s[0].toUpperCase()+s.slice(1):s; }
+// предложный падеж для городов пересадки: «ожидание в Якутске»
+const IN_CITY={'Архангельск':'в Архангельске','Екатеринбург':'в Екатеринбурге','Красноярск':'в Красноярске','Магадан':'в Магадане','Москва':'в Москве','Надым':'в Надыме','Новосибирск':'в Новосибирске','Новый Уренгой':'в Новом Уренгое','Норильск':'в Норильске','Самара':'в Самаре','Санкт-Петербург':'в Санкт-Петербурге','Тюмень':'в Тюмени','Уфа':'в Уфе','Якутск':'в Якутске'};
+// подпись к примеру поездки: дата первого вылета и длительность именно этой поездки
+const MON_GEN=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+function exCaption(t){ const [y,m,d]=t.ex_date.split('-').map(Number); const h=t.ex_h!=null?t.ex_h:t.med; const same=fmtH(h,true)===fmtH(t.med,true); return `Пример из расписания: с вылетом ${d} ${MON_GEN[m-1]} дорога заняла ${fmtH(h,true)}${same?' — столько же, сколько обычно':''}.`; }
+function inCity(s){ return IN_CITY[s]||(/[бвгджзклмнпрстфхцчшщ]$/.test(s)?'в '+s+'е':(/[^и]а$/.test(s)?'в '+s.slice(0,-1)+'е':'на пересадке ('+s+')')); }
+// ожидание между рейсами: прилёт и вылет в одном городе, поэтому местное время вычитается напрямую
+function legWait(l0,l1,exDate){ const by=+exDate.slice(0,4), bm=+exDate.slice(5,7); const t=(dm,hm)=>{ const [d,m]=dm.split('.').map(Number), [H,M]=hm.split(':').map(Number); return Date.UTC(m<bm?by+1:by,m-1,d,H,M)/60000; }; return t(l1[5],l1[2])-t(l0[6]||l0[5],l0[3]); }
 // время прямого рейса по расписанию турбовинтовых самолётов (та же оценка, что в сноске и методике), часы
 function directH(a,b){ const rec=D.detour[a+'-'+b]||D.detour[b+'-'+a]||{}; const km=rec.d||gcKm(NODES[a]||D.profiles[a],NODES[b]||D.profiles[b]); return (BF.a_min+BF.b_min_per_km*km)/60; }
 // лишние часы для таблицы: от показанного (округлённого) времени в пути, чтобы разность сходилась
@@ -214,7 +222,7 @@ function renderDetour(){ const a=selFrom.value,b=selTo.value; const box=$('#deto
   else { const days=X.period_days||365; const legs=t.ex; const cities=[legs[0][0],...legs.map(l=>l[1])]; const noDirect=t.via.length>0; const dir=directH(a,b); const ext=Math.max(0,t.med-dir);
     html+=`<div class="big"><div class="stat"><div class="v num"><span class="hv" tabindex="0" data-tip="Медиана самого быстрого варианта по дням вылета. Самый быстрый за год — ${fmtH(t.min,true)}. Вылететь с прибытием в пределах трёх суток можно ${t.days} ${pl(t.days,'день','дня','дней')} из ${days}.">${fmtHb(t.med)}</span></div><div class="l">обычно в пути</div></div><div class="stat"><div class="v num">≈${fmtHb(dir)}</div><div class="l">занял бы прямой рейс</div></div><div class="stat${noDirect&&ext>=3?' hi':''}"><div class="v num">${noDirect?'+'+fmtHb(ext):'0'}</div><div class="l">${noDirect?'лишних часов':'прямой рейс есть'}</div></div></div>`;
     html+=`<p class="route-line">${noDirect?'Обычно так':'Прямой рейс'}: ${cities.map((c,i)=>i===0||i===cities.length-1?'<b>'+nm(c)+'</b>':nm(c)).join(' → ')}${noDirect?` — в ${pct(t.via_share)} % дней`:''}. <span class="hv" tabindex="0" data-tip="${kmTip}">${fmt(direct)} км по прямой</span>.</p>`;
-    html+=`<ul class="legs">${legs.map(l=>`<li>${l[6]&&l[6]!==l[5]?`${l[5]} ${l[2]} → ${l[6]} ${l[3]}`:`${l[5]} · ${l[2]}–${l[3]}`} · ${nm(l[0])} → ${nm(l[1])} · рейс ${l[4]}</li>`).join('')}</ul><p class="note" style="margin-top:6px">Пример — день, когда дорога заняла обычное время. Время местное.</p>`;
+    html+=`<ul class="legs">${legs.map((l,i)=>{ const w=i?legWait(legs[i-1],l,t.ex_date):null; return (w!=null&&w>0?`<li style="color:var(--muted)">ожидание ${inCity(nm(l[0]))} — ${fmtH(w/60,true)}</li>`:'')+`<li>${l[6]&&l[6]!==l[5]?`${l[5]} ${l[2]} → ${l[6]} ${l[3]}`:`${l[5]} · ${l[2]}–${l[3]}`} · ${nm(l[0])} → ${nm(l[1])} · рейс ${l[4]}</li>`; }).join('')}</ul><p class="note" style="margin-top:6px">${exCaption(t)} Время вылета и прилёта местное, у каждого аэропорта своё.</p>`;
     if(rec.g) html+=`<p class="note" style="margin-top:8px">${cap1(rec.g)}, поэтому крюк по воздуху здесь не показатель доступности.</p>`;
     if(rec.n) html+=`<p class="note" style="margin-top:8px">${cap1(rec.n)}.</p>`;
     box.innerHTML=html; detMap.showPath(cities,[a,b]); }

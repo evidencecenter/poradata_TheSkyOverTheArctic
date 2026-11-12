@@ -21,8 +21,8 @@ import tempfile
 
 
 IMMUTABLE_SOURCES = {
-    "site/data.js": "756bdb445df5ec4a852bdc155b48117840e5aba9eab7b4b0048749a0a1f74194",
-    "site/app.js": "6b6cd6df7e13c0bb83261730a55c0ac139c3af8e90fdaa69a7a20e03fd72e5ff",
+    "site/data.js": "3a060b0ddc32d5cbce674bf00bcbb789376e617730070d43f669c0229bd28453",
+    "site/app.js": "e4e6b8977caf5a39a2aa61af84724737eb5d60e92d16a0c9bf3df06eeda85627",
 }
 
 

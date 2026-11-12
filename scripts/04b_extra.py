@@ -164,7 +164,7 @@ for (o, t), dd in daily.items():
     km = gc_km(o, t)
     direct_h = (BT_A + BT_B * km) / 60
     tt[f'{o}-{t}'] = {'days': len(dd), 'med': round(med, 1), 'min': round(float(durs.min()), 1), 'via': list(top_via), 'via_share': round(vias[top_via] / len(dd), 2),
-                      'ex': [leg(i) for i in vex[1]], 'ex_date': dex, 'direct_h': round(direct_h, 1), 'extra': round(max(0.0, med - direct_h), 1)}
+                      'ex': [leg(i) for i in vex[1]], 'ex_date': dex, 'ex_h': round(vex[0] / 60, 2), 'direct_h': round(direct_h, 1), 'extra': round(max(0.0, med - direct_h), 1)}
 extra['travel'] = tt
 print('пар с маршрутом по расписанию:', len(tt), 'из', len(ARCTIC) * (len(ARCTIC) - 1))
 for k in ['NNM-SLY', 'SLY-NNM', 'NSK-NUX', 'NNM-USK', 'MMK-ARH']:
