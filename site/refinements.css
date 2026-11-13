@@ -185,3 +185,19 @@
  .result .big .stat .v{font-size:33px}.result .big .stat .l{font-size:12px}
 }
 @media print{.editorial-nav-shell{display:none}.key .key-intro,.key .eyebrow,.key h2,.key .kf .v,.key .kf.hi .v,.key .kf .v small,.key .kf .l{color:#08182c}.key .keys{border-top:0}}
+/* Сноска о пассажиропотоке: звёздочка вместо номера */
+.fn[data-pax]{display:inline;background:transparent;min-width:0;height:auto;padding:0 .12em 0 .05em;margin-left:0;color:inherit;font-size:.8em}
+h2 .fn[data-pax]{font-size:.7em}
+.notes .star{margin:0 0 6px;font-size:12px;line-height:1.8;color:var(--ink-2)}
+/* Две Арктики: пояснение к подписи зоны */
+.chart .zone-sub{font-family:var(--font-b);font-size:12px;fill:var(--muted)}
+/* Источники, методология и ограничения: связный текст и авторы */
+.method p{margin:0;color:var(--ink-2);font-size:15px;line-height:1.8}
+.method p+p{margin-top:12px}
+.credits{border-top:1px solid var(--line-2);margin-top:44px;padding-top:30px}
+.credits h3{font-size:25px;margin:0 0 18px}
+.credits ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px 40px}
+.credits li{display:flex;flex-direction:column;gap:3px;font-size:15px;line-height:1.5}
+.credits .nm{font-weight:600;color:var(--ink)}
+.credits .role{color:var(--muted)}
+@media(max-width:700px){.method p{font-size:13px}.credits{margin-top:32px;padding-top:24px}.credits h3{font-size:22px}.credits li{font-size:14px}}

@@ -82,7 +82,7 @@ dep_idx = collections.defaultdict(list)
 for j in range(N): dep_idx[O[j]].append(j)
 for o in ARCTIC:
     if o not in AI: continue
-    oi = AI[o]
+    oi = AI[o]; sib_o = set(sib[oi])
     for i0 in dep_idx[oi]:
         t0 = DEP[i0]
         lab = [dict(), dict(), dict()]             # k пересадок -> {аэропорт: (прилёт, рейс)}
@@ -93,6 +93,7 @@ for o in ARCTIC:
         while j < N and DEP[j] <= t0 + HORIZON:
             u = O[j]; p = pred[j]
             cont = p >= 0 and p in taken
+            if not cont and (u == oi or u in sib_o): j += 1; continue   # не возвращаемся в город вылета, чтобы снова улететь
             if not cont and u not in labeled and not any(s in labeled for s in sib[u]):
                 j += 1; continue
             best = None
@@ -157,14 +158,15 @@ for (o, t), dd in daily.items():
     durs = np.array([v[0] for v in dd.values()]) / 60
     vias = collections.Counter(via_of(v[1], v[2]) for v in dd.values())
     med = float(np.median(durs))
-    # пример — день, где время ближе всего к медиане (из самых частых вариантов пересадки)
+    # пример — самая быстрая поездка за год; при равном времени — по самому частому маршруту, затем самая ранняя дата
     top_via = vias.most_common(1)[0][0]
-    cand = [(abs(v[0]/60 - med), d, v) for d, v in dd.items() if via_of(v[1], v[2]) == top_via]
-    _, dex, vex = min(cand)
+    dex, vex = min(dd.items(), key=lambda kv: (kv[1][0], via_of(kv[1][1], kv[1][2]) != top_via, kv[0]))
+    ex_via = via_of(vex[1], vex[2])
     km = gc_km(o, t)
     direct_h = (BT_A + BT_B * km) / 60
     tt[f'{o}-{t}'] = {'days': len(dd), 'med': round(med, 1), 'min': round(float(durs.min()), 1), 'via': list(top_via), 'via_share': round(vias[top_via] / len(dd), 2),
-                      'ex': [leg(i) for i in vex[1]], 'ex_date': dex, 'ex_h': round(vex[0] / 60, 2), 'direct_h': round(direct_h, 1), 'extra': round(max(0.0, med - direct_h), 1)}
+                      'ex': [leg(i) for i in vex[1]], 'ex_date': dex, 'ex_h': round(vex[0] / 60, 2),
+                      'ex_via': list(ex_via), 'ex_days': vias[ex_via], 'direct_h': round(direct_h, 1), 'extra': round(max(0.0, med - direct_h), 1)}
 extra['travel'] = tt
 print('пар с маршрутом по расписанию:', len(tt), 'из', len(ARCTIC) * (len(ARCTIC) - 1))
 for k in ['NNM-SLY', 'SLY-NNM', 'NSK-NUX', 'NNM-USK', 'MMK-ARH']:
