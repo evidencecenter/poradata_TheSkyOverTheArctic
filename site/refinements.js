@@ -66,37 +66,5 @@
   const total=parts.reduce((sum,p)=>sum+parseFloat(p.style.flexGrow||p.style.flex||'0'),0);
   parts.forEach(p=>p.style.setProperty('--share',(total?100*parseFloat(p.style.flexGrow||p.style.flex||'0')/total:0)+'%'));
 
-  // The original app continues to own the airport, map and synchronized selects.
-  // Only a user change collapses this control; returning up the story reveals it.
-  const select=document.getElementById('mine-network-select');
-  const firstStep=select&&select.closest('.step');
-  const picker=select&&select.closest('.step-picker');
-  if(picker&&firstStep){
-    let chosen=false,lastY=window.scrollY,scrollFrame=0;
-    function showPicker(){
-      chosen=false;
-      picker.classList.remove('is-chosen');
-      picker.removeAttribute('aria-hidden');
-      picker.inert=false;
-    }
-    select.addEventListener('change',()=>{
-      if(!select.value){showPicker();return;}
-      if(document.activeElement===select)firstStep.querySelector('h3').focus({preventScroll:true});
-      chosen=true;
-      picker.classList.add('is-chosen');
-      picker.setAttribute('aria-hidden','true');
-      picker.inert=true;
-      lastY=window.scrollY;
-    });
-    addEventListener('scroll',()=>{
-      if(scrollFrame)return;
-      scrollFrame=requestAnimationFrame(()=>{
-        const y=window.scrollY;
-        const bounds=firstStep.getBoundingClientRect();
-        if(chosen&&y<lastY&&bounds.top<innerHeight&&bounds.bottom>60)showPicker();
-        lastY=y;
-        scrollFrame=0;
-      });
-    },{passive:true});
-  }
+  // The airport picker stays visible after a choice so the reader can switch airports at any time.
 })();

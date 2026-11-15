@@ -34,6 +34,17 @@ const tip=$('#tip'); let tipOn=false;
 function showTip(html,x,y){ tip.innerHTML=html; tip.classList.add('on'); tipOn=true; moveTip(x,y); }
 function moveTip(x,y){ const w=tip.offsetWidth,hh=tip.offsetHeight; let left=x+14, top=y+14; if(left+w>window.innerWidth-10) left=Math.max(10,x-w-14); if(top+hh>window.innerHeight-10) top=Math.max(10,y-hh-14); tip.style.left=left+'px'; tip.style.top=top+'px'; }
 function hideTip(){ tip.classList.remove('on'); tipOn=false; }
+const backBtn=document.createElement('button'); backBtn.type='button'; backBtn.className='back-to-text'; backBtn.hidden=true; backBtn.textContent='↑ Вернуться к тексту'; document.body.appendChild(backBtn);
+let backY=null, backFrom=null, backAway=false;
+const smooth=()=>matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth';
+function flash(el){ el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); clearTimeout(el._flashT); el._flashT=setTimeout(()=>el.classList.remove('flash'),1900); }
+function jumpTo(target,from){ const d=target.closest('details'); if(d) d.open=true; backY=scrollY; backAway=false; backFrom=from||null; hideTip();
+  const small=target.matches('li,p'); target.scrollIntoView({behavior:smooth(),block:small?'center':'start'});
+  if(small) flash(target); backBtn.hidden=false; }
+backBtn.addEventListener('click',()=>{ if(backY===null) return; const y=backY, from=backFrom; backY=null; backFrom=null; backBtn.hidden=true; scrollTo({top:y,behavior:smooth()});
+  if(from){ flash(from); setTimeout(()=>{ try{ from.focus({preventScroll:true}); }catch(e){} },400); } });
+// читатель сам вернулся к месту, откуда ушёл, — кнопка больше не нужна
+addEventListener('scroll',()=>{ if(backY===null) return; const dy=Math.abs(scrollY-backY); if(dy>300) backAway=true; else if(backAway&&dy<60){ backBtn.hidden=true; backY=null; backFrom=null; } },{passive:true});
 function bindTip(el,fn){ el.addEventListener('pointerenter',e=>showTip(fn(),e.clientX,e.clientY)); el.addEventListener('pointermove',e=>{ if(tipOn) moveTip(e.clientX,e.clientY); }); el.addEventListener('pointerleave',hideTip); el.addEventListener('focus',()=>{ const r=el.getBoundingClientRect(); showTip(fn(),r.left+r.width/2,r.top); }); el.addEventListener('blur',hideTip); }
 document.addEventListener('scroll',()=>{ if(tipOn) hideTip(); },{passive:true});
 // ---------- numbers for copy ----------
@@ -80,11 +91,16 @@ $$('[data-tipkey]').forEach(e=>{ e.tabIndex=0; bindTip(e,()=>TIPS[e.dataset.tipk
   if(comp.n) $('#fn-mono').dataset.note=`Разница цены при одинаковом расстоянии и классе аэродрома: ${N.mono_effect} %, 95 % интервал от ${fmt(comp.lo*100,0)} до ${comp.hi>0?'+':''}${fmt(comp.hi*100,0)} %. ${comp.n} маршрутов, из них ${comp.n_mono} с одним перевозчиком (доля рейсов от 10 %).`; })();
 // numbered footnotes per chapter with a notes list
 $$('section').forEach(sec=>{ const fns=$$('.fn',sec); if(!fns.length) return; const box=$('.notes',sec); const ol=h('ol'); const seen=new Map(); sec._fn=seen; let star=null;
+  const lis=new Map(); let starEl=null;
   fns.forEach(f=>{ const note=f.dataset.note; f.tabIndex=0; f.setAttribute('role','note'); bindTip(f,()=>f.dataset.note);
     // сноска о пассажиропотоке обозначается звёздочкой, остальные нумеруются с единицы
     if(f.hasAttribute('data-pax')){ f.textContent='*'; f.setAttribute('aria-label','Примечание: '+note); if(!star) star=note; return; }
-    let n=seen.get(note); if(!n){ n=seen.size+1; seen.set(note,n); ol.appendChild(h('li',null,note)); } f.textContent=n; f.setAttribute('aria-label','Сноска '+n+': '+note); });
-  if(box){ box.hidden=false; box.appendChild(h('h4',null,'Примечания')); if(star) box.appendChild(h('p',{class:'star'},'* '+star)); if(seen.size) box.appendChild(ol); } });
+    let n=seen.get(note); if(!n){ n=seen.size+1; seen.set(note,n); const li=h('li',null,note); lis.set(n,li); ol.appendChild(li); } f.textContent=n; f.setAttribute('aria-label','Сноска '+n+': '+note); });
+  if(box){ box.hidden=false; box.appendChild(h('h4',null,'Примечания')); if(star){ starEl=h('p',{class:'star'},'* '+star); box.appendChild(starEl); } if(seen.size) box.appendChild(ol);
+    // в разделе есть «Примечания»: щелчок по сноске прокручивает к ней, кнопка «Вернуться» ведёт обратно
+    fns.forEach(f=>{ f._noteTarget=f.hasAttribute('data-pax')?starEl:lis.get(seen.get(f.dataset.note)); if(f._noteTarget) f.classList.add('fn-link'); }); } });
+document.addEventListener('click',e=>{ const f=e.target.closest&&e.target.closest('.fn-link'); if(!f||!f._noteTarget) return; e.preventDefault(); jumpTo(f._noteTarget,f); });
+document.addEventListener('keydown',e=>{ if(e.key!=='Enter') return; const f=e.target.closest&&e.target.closest('.fn-link'); if(!f||!f._noteTarget) return; e.preventDefault(); jumpTo(f._noteTarget,f); });
 // ---------- count-up ----------
 (function countUp(){ const els=$$('[data-count]'); if(!els.length||matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const run=el=>{ const final=el.textContent; const dec=(final.split(',')[1]||'').length; const target=parseFloat(final.replace(/[^\d,]/g,'').replace(',','.')); if(isNaN(target)) return; const t0=performance.now(), dur=1100; const tick=now=>{ const f=Math.min(1,(now-t0)/dur); const e=1-Math.pow(1-f,3); el.textContent=fmt(target*e,dec); if(f<1) requestAnimationFrame(tick); else el.textContent=final; }; el.textContent=fmt(0,dec); requestAnimationFrame(tick); };
@@ -123,7 +139,7 @@ function makeMap(container,opts){ opts=opts||{}; const svg=svgEl('svg',{viewBox:
   const order=Object.keys(NODES).sort((x,y)=>NODES[y].seats-NODES[x].seats);
   for(const c of order){ const n=NODES[c]; const [x,y]=XY[c]; const cls='node '+(n.azrf?(n.role==='local'?'az local':'az'):(n.role==='hub'||c==='MOW'?'hub':(n.role==='rootOut'?'rootOut':'ext'))); const el=svgEl('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:4,class:cls,tabindex:opts.interactive?0:null},gNodes); el.__c=c; nodeEls[c]=el;
     if(LABELS.has(c)){ const o=OFF[c]||[6,-4,'start']; const t=svgEl('text',{x:(x+o[0]).toFixed(1),y:(y+o[1]).toFixed(1),'text-anchor':o[2],class:'lbl'+(n.azrf?'':' ext')},gLbl); t.textContent=n.name; lblEls[c]=t; }
-    if(opts.interactive){ bindTip(el,()=>{ const p=D.profiles[c]; if(p) return `<b>${p.name}</b><br>${p.role==='root'?'магистральный аэропорт':'местный аэропорт, '+(p.roots.length>1?'кластеры ':'кластер ')+p.roots.map(nm).join(', ')}<br>${flightsW(p.flights)}, ${seatsW(p.seats)} за год<br>${p.n_dest} ${pl(p.n_dest,'направление','направления','направлений')}, чаще всего — ${p.top.slice(0,3).map(t=>nm(t[0])).join(', ')}`; return `<b>${n.name}</b><br>${n.role==='hub'||c==='MOW'?'узловой аэропорт':(n.role==='rootOut'?'центр кластера вне АЗРФ':'город вне АЗРФ')}<br>${flightsW(n.flights)}, ${seatsW(n.seats)} за год`; }); }
+    if(opts.interactive){ bindTip(el,()=>{ const p=D.profiles[c]; if(p) return `<b>${p.name}</b><br>${p.role==='root'?'магистральный аэропорт':'местный аэропорт, '+clusterPhrase(p.roots,false)}<br>${flightsW(p.flights)}, ${seatsW(p.seats)} за год<br>${p.n_dest} ${pl(p.n_dest,'направление','направления','направлений')}, чаще всего — ${p.top.slice(0,3).map(t=>nm(t[0])).join(', ')}`; return `<b>${n.name}</b><br>${n.role==='hub'||c==='MOW'?'узловой аэропорт':(n.role==='rootOut'?'центр кластера вне АЗРФ':'город вне АЗРФ')}<br>${flightsW(n.flights)}, ${seatsW(n.seats)} за год`; }); }
   }
   const techEls=[]; if(!opts.noTech){ const circ=project(21,66.5622); const t=svgEl('text',{x:(circ[0]+4).toFixed(1),y:(circ[1]-5).toFixed(1),class:'tech'},gTech); t.textContent='66°33′ с. ш. · Северный полярный круг'; techEls.push(t);
     const LAT=55, LON=138; const degPer1000=1000/(111.32*Math.cos(LAT*Math.PI/180)); const p0=project(LON,LAT), p1=project(LON+degPer1000,LAT); const pts=[]; for(let i=0;i<=12;i++) pts.push(project(LON+degPer1000*i/12,LAT));
@@ -184,12 +200,15 @@ const ROOTS=CN.roots.slice().sort((a,b)=>D.profiles[a].lon-D.profiles[b].lon);
 const TT=X.travel||{}; const PW=X.pair_weeks||{};
 function pairKey(a,b){ return a<b?a+'-'+b:b+'-'+a; }
 (function matrix(){ const box=$('#matrix'); if(!box) return;
-  responsive(box,W=>{ box.innerHTML=''; const n=ROOTS.length; const lab=W<480?78:118; const padR=W<480?36:52; const cs=Math.max(14,Math.floor((W-lab-padR)/n)); const top=lab-8; const H=top+cs*n+4; const svg=svgEl('svg',{viewBox:`0 0 ${lab+cs*n+padR} ${H}`,role:'img','aria-label':`Матрица связности ${n} магистральных аэропортов`},box);
+  responsive(box,W=>{ box.innerHTML=''; const n=ROOTS.length; const lab=W<480?78:118; const padR=W<480?36:52; const cs=Math.max(14,Math.floor((W-lab-padR)/n)); const top=lab-8; const H=top+cs*n+4; const svg=svgEl('svg',{viewBox:`0 0 ${lab+cs*n+padR} ${H}`,role:'img','aria-label':`Регулярное авиасообщение между ${n} магистральными аэропортами`},box);
     const short=c=>{ const s=D.profiles[c].city; return W<480?(s.length>9?s.slice(0,8)+'.':s):s; };
     const rowL=[], colL=[];
     ROOTS.forEach((a,i)=>{ const t=svgEl('text',{x:lab-6,y:top+i*cs+cs/2+4,'text-anchor':'end',class:'lab'},svg); t.textContent=short(a); rowL.push(t); const c=svgEl('text',{x:0,y:0,class:'lab',transform:`translate(${lab+i*cs+cs/2+4},${top-6}) rotate(-60)`},svg); c.textContent=short(a); colL.push(c); });
     ROOTS.forEach((a,i)=>ROOTS.forEach((b,j)=>{ if(i===j) return; const k=pairKey(a,b); const st=CN.matrix[k]; const r=svgEl('rect',{x:lab+j*cs,y:top+i*cs,width:cs,height:cs,class:'cell',fill:st==='direct'?'var(--navy)':(st==='transit'?'var(--sky)':'var(--bg-3)'),tabindex:0},svg);
-      bindTip(r,()=>{ const w=PW[k]||[0,0]; const ab=a<b?w[0]:w[1], ba=a<b?w[1]:w[0]; const t1=TT[a+'-'+b], t2=TT[b+'-'+a]; return `<b>${D.profiles[a].city} ↔ ${D.profiles[b].city}</b><br>${st==='direct'?'прямой рейс круглый год':(st==='transit'?'регулярное сообщение с одной пересадкой':'регулярного сообщения нет')}<br>недель с рейсами: туда ${ab}, обратно ${ba} из 52<br>обычное время в пути: ${t1?fmtH(t1.med):'—'} туда, ${t2?fmtH(t2.med):'—'} обратно`; });
+      bindTip(r,()=>{ const w=PW[k]||[0,0]; const ab=a<b?w[0]:w[1], ba=a<b?w[1]:w[0]; const t1=TT[a+'-'+b], t2=TT[b+'-'+a]; const A=D.profiles[a].city, B=D.profiles[b].city;
+        // каждое направление отдельной строкой: сколько недель из 52 выполняются рейсы и сколько обычно занимает дорога
+        const dirLine=(x,y,wk,tt)=>`${x} → ${y}: ${wk?`рейсы выполняются ${wk} ${pl(wk,'неделю','недели','недель')} из 52`:'рейсов нет'}${tt?`, обычное время в пути — ${fmtH(tt.med)}`:''}`;
+        return `<b>${A} ↔ ${B}</b><br>${st==='direct'?'прямой рейс круглый год':(st==='transit'?'регулярное сообщение с одной пересадкой':'регулярного сообщения нет')}<br>${dirLine(A,B,ab,t1)}<br>${dirLine(B,A,ba,t2)}`; });
       r.addEventListener('pointerenter',()=>{ rowL[i].classList.add('on'); colL[j].classList.add('on'); }); r.addEventListener('pointerleave',()=>{ rowL[i].classList.remove('on'); colL[j].classList.remove('on'); }); })); });
  })();
 // ---------- sensitivity of the regularity threshold ----------
@@ -224,8 +243,6 @@ function renderDetour(){ const a=selFrom.value,b=selTo.value; const box=$('#deto
   const kmTip=`По прямой ${fmt(direct)} км.`+(km?` Кратчайший путь по ${rec.reg?'круглогодичным':'всем'} рейсам — ${fmt(km[0])} км (×${fmt(km[2],1)}): ${km[1].map(nm).join(' → ')}.`:'');
   let html=`<h3>${nm(a)} → ${nm(b)}</h3>`;
   if(!t){ html+=`<p class="prose" style="margin-top:8px">Добраться с двумя пересадками в течение трёх суток нельзя ни в один день года. <span class="hv" tabindex="0" data-tip="${kmTip}">${fmt(direct)} км по прямой</span>.</p>`;
-    if(rec.g) html+=`<p class="note" style="margin-top:8px">${cap1(rec.g)}.</p>`;
-    if(rec.n) html+=`<p class="note" style="margin-top:8px">${cap1(rec.n)}.</p>`;
     box.innerHTML=html; detMap.showPath(km?km[1]:null,[a,b]); }
   else { const days=X.period_days||365; const legs=t.ex; const cities=[legs[0][0],...legs.map(l=>l[1])]; const noDirect=t.via.length>0; const dir=directH(a,b); const ext=Math.max(0,t.med-dir);
     html+=`<div class="big"><div class="stat"><div class="v num"><span class="hv" tabindex="0" data-tip="Медиана самого быстрого варианта по дням вылета. Самый быстрый вариант — ${fmtH(t.min,true)}. Вылететь с прибытием в пределах трёх суток можно в течение ${t.days} ${pl(t.days,'дня','дней','дней')} из ${days}.">${fmtHb(t.med)}</span></div><div class="l">обычное время в пути</div></div><div class="stat"><div class="v num">≈${fmtHb(dir)}</div><div class="l">занял бы прямой рейс</div></div><div class="stat${noDirect&&ext>=3?' hi':''}"><div class="v num">${noDirect?'+'+fmtHb(ext):'0'}</div><div class="l">${noDirect?'лишних часов':'прямой рейс есть'}</div></div></div>`;
@@ -234,8 +251,6 @@ function renderDetour(){ const a=selFrom.value,b=selTo.value; const box=$('#deto
     const lead=exVia.length?(exVia.length>1?'Рейс с двумя пересадками':'Рейс с пересадкой'):'Прямой рейс';
     html+=`<p class="route-line">${lead} (${rc.map((c,i)=>i===0||i===rc.length-1?'<b>'+nm(c)+'</b>':nm(c)).join(' → ')})${exVia.length||exDays<days?` был самым быстрым вариантом в течение ${exDays} ${pl(exDays,'дня','дней','дней')} из ${days}`:''}. <span class="hv" tabindex="0" data-tip="${kmTip}">${fmt(direct)} км по прямой</span>.</p>`;
     html+=`<ul class="legs">${legs.map((l,i)=>{ const w=i?legWait(legs[i-1],l,t.ex_date):null; return (w!=null&&w>0?`<li style="color:var(--muted)">ожидание ${inCity(nm(l[0]))} — ${fmtH(w/60,true)}</li>`:'')+`<li>${l[6]&&l[6]!==l[5]?`${l[5]} ${l[2]} → ${l[6]} ${l[3]}`:`${l[5]} · ${l[2]}–${l[3]}`} · ${nm(l[0])} → ${nm(l[1])} · рейс ${l[4]}</li>`; }).join('')}</ul><p class="note" style="margin-top:6px">Самый быстрый вариант: в пути ${fmtH(t.ex_h!=null?t.ex_h:t.min,true)}. Время вылета и прилёта местное.</p>`;
-    if(rec.g) html+=`<p class="note" style="margin-top:8px">${cap1(rec.g)}, поэтому крюк по воздуху здесь не показатель доступности.</p>`;
-    if(rec.n) html+=`<p class="note" style="margin-top:8px">${cap1(rec.n)}.</p>`;
     box.innerHTML=html; detMap.showPath(cities,[a,b]); }
   $$('[data-tip]',box).forEach(e=>bindTip(e,()=>e.dataset.tip)); }
 selFrom.addEventListener('change',renderDetour); selTo.addEventListener('change',renderDetour); renderDetour();
@@ -333,16 +348,22 @@ let priceDots=[]; let mineApply=null;
 // ---------- subsidies ----------
 (function dots(){ const d=$('#dots'); const S=D.subsidies||{}; const inside=S.inside_route||'Нарьян-Мар — Архангельск'; for(let i=0;i<58;i++){ const s=h('i',{tabindex:'0'}); const last=i===57; if(last) s.className='in'; bindTip(s,()=>last?`<b>${inside}</b><br>единственное субсидируемое направление между двумя аэропортами АЗРФ, ${fmt(S.inside_pair_flights||105)} парных рейсов в 2026 году`:'Субсидируемый рейс за пределы Арктической зоны'); d.appendChild(s); } })();
 // ---------- ссылка на ограничения данных ----------
-$$('a[href="#limits"]').forEach(a=>a.addEventListener('click',e=>{ const d=$('#limits'); if(!d) return; e.preventDefault(); d.open=true; d.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'}); }));
-if(location.hash==='#limits'){ const d=$('#limits'); if(d) d.open=true; }
+// ссылки в тексте и сноски прокручивают страницу; кнопка «Вернуться» возвращает туда, откуда читатель ушёл
+$$('main a[href^="#"], section a[href^="#"]').forEach(a=>{ if(a.closest('.editorial-nav')) return; a.addEventListener('click',e=>{ const t=document.getElementById(decodeURIComponent(a.hash.slice(1))); if(!t) return; e.preventDefault(); jumpTo(t,a); }); });
+if(location.hash){ const t=document.getElementById(decodeURIComponent(location.hash.slice(1))); const d=t&&t.closest('details'); if(d) d.open=true; }
 // ---------- my airport ----------
+// центр кластера: аэропорты одного города (Емельяново и Черемшанка) — один центр
+const CENTER_LOC={'Якутск':'Якутске','Красноярск':'Красноярске','Норильск':'Норильске','Полярный':'Полярном','Магадан':'Магадане'};
+function centers(roots){ return [...new Set((roots||[]).map(r=>nm(r==='KCY'?'KJA':r)))]; }
+function clusterPhrase(roots,gen){ const cs=centers(roots); const loc=cs.map(c=>CENTER_LOC[c]||c); const list=loc.length>1?loc.slice(0,-1).join(', ')+' и '+loc[loc.length-1]:loc.join('');
+  return (gen?(cs.length>1?'кластеров':'кластера'):(cs.length>1?'кластеры':'кластер'))+(cs.length>1?' с центрами в ':' с центром в ')+list; }
 function setMine(code){ mineCode=code||null; try{ localStorage.setItem('skyarctic-mine',mineCode||''); }catch(e){}
   const blocks={network:$('#mine-network'),fleet:$('#mine-fleet'),season:$('#mine-season'),prices:$('#mine-prices')};
   mineApply=()=>{ priceDots.forEach(d=>{ const m=!!mineCode&&(d.__r.o===mineCode||d.__r.d===mineCode); d.classList.toggle('dim',!!mineCode&&!m); d.classList.toggle('hl',m); }); };
   mineApply();
   if(!mineCode){ for(const b of Object.values(blocks)) b.hidden=true; const on=$('.step.on'); mainMap.setMode(on?on.dataset.mode:'all'); seasonRows.forEach(r=>r.classList.remove('mine')); return; }
-  const p=D.profiles[mineCode]; const top=p.top.slice(0,3).map(t=>`${acc(nm(t[0]))} (${pct(t[2])} %)`).join(', '); const iso=(X.isolation||{})[mineCode];
-  blocks.network.hidden=false; { const tx=$('.txt',blocks.network); tx.textContent=`${p.name}: ${p.role==='root'?'магистральный аэропорт':'местный аэропорт '+(p.roots.length>1?'кластеров ':'кластера ')+p.roots.map(nm).join(' и ')}, ${flightsW(p.flights)}, ${seatsW(p.seats)} за год, ${p.n_dest} ${pl(p.n_dest,'направление','направления','направлений')}. Внутриарктические и внутрирегиональные рейсы — ${pct(p.share_azrf_seats)} % пассажиропотока`; const pf=$('.fn[data-pax]',blocks.network.closest('section')||document); if(pf){ const f=h('span',{class:'fn',tabindex:'0',role:'note','aria-label':pf.getAttribute('aria-label')||''},pf.textContent); f.dataset.note=pf.dataset.note; bindTip(f,()=>f.dataset.note); tx.appendChild(f); } tx.appendChild(document.createTextNode(`. Чаще всего летают в ${top}.`)); }
+  const p=D.profiles[mineCode]; const top=p.top.slice(0,3).filter((t,i)=>i===0||pct(t[2])>=1).map(t=>`${acc(nm(t[0]))} (${pct(t[2])} %)`).join(', '); const iso=(X.isolation||{})[mineCode];
+  blocks.network.hidden=false; { const tx=$('.txt',blocks.network); tx.textContent=`${p.name}: ${p.role==='root'?'магистральный аэропорт':'местный аэропорт '+clusterPhrase(p.roots,true)}, ${flightsW(p.flights)}, ${seatsW(p.seats)} за год, ${p.n_dest} ${pl(p.n_dest,'направление','направления','направлений')}. Внутриарктические и внутрирегиональные рейсы — ${pct(p.share_azrf_seats)} % пассажиропотока`; const pf=$('.fn[data-pax]',blocks.network.closest('section')||document); if(pf){ const f=h('span',{class:'fn','data-pax':'',tabindex:'0',role:'note','aria-label':pf.getAttribute('aria-label')||''},pf.textContent); f.dataset.note=pf.dataset.note; bindTip(f,()=>f.dataset.note); if(pf._noteTarget){ f._noteTarget=pf._noteTarget; f.classList.add('fn-link'); } tx.appendChild(f); } tx.appendChild(document.createTextNode(`. Чаще всего летают в ${top}.`)); }
   const on=$('.step.on'); if(on&&on.dataset.mode==='all') mainMap.setMode('mine',mineCode);
   blocks.fleet.hidden=false; { const fam=p.families.slice(0,3).map(f=>f[0]+' ('+fmt(f[1])+' '+pl(f[1],'рейс','рейса','рейсов')+')'); const famTxt=fam.length>1?fam.slice(0,-1).join(', ')+' и '+fam[fam.length-1]:fam.join('');
     $('.txt',blocks.fleet).textContent=`${p.name}: чаще всего туда летают ${famTxt}.`+(iso?` Рейсы выполнялись в течение ${iso.days_dep} ${pl(iso.days_dep,'дня','дней','дней')} из ${X.period_days||365}, самый долгий перерыв между вылетами составил ${iso.max_gap} ${pl(iso.max_gap,'день','дня','дней')}.`:''); }
