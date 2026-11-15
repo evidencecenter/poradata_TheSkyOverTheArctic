@@ -100,8 +100,8 @@
   function tri(a,b,c,m,na,nb,nc){const area=cross(sub(b,a),sub(c,a));if(Math.hypot(...area)<1e-10)return;const n=norm(area);vertex(a,na||n,m);vertex(b,nb||n,m);vertex(c,nc||n,m);}
   function quad(a,b,c,d,m,na,nb,nc,nd){tri(a,b,c,m,na,nb,nc);tri(a,c,d,m,na,nc,nd);}
 
-  // Fuselage: smooth cubic loft with an ogive nose and rising tail cone.
-  const profiles=[[-8.6,.026,.20],[-8.25,.16,.18],[-7.6,.34,.14],[-6.7,.56,.08],[-5.6,.72,.025],[-4.4,.79,0],[0,.80,0],[3.65,.79,0],[4.65,.74,-.015],[5.40,.62,-.04],[6.02,.42,-.075],[6.5,.19,-.09],[6.68,.015,-.095]];
+  // Fuselage: smooth cubic loft for the cabin and the rising tail cone.
+  const profiles=[[-8.6,.026,.20],[-8.25,.16,.18],[-7.6,.34,.14],[-6.7,.56,.08],[-5.6,.72,.025],[-4.4,.79,0],[0,.80,0],[4.83,.80,0],[6.68,.80,0]];
   function bodyAt(z){
     let i=0;while(i<profiles.length-2&&z>profiles[i+1][0])i++;
     const a=profiles[Math.max(0,i-1)], b=profiles[i], c=profiles[i+1], d=profiles[Math.min(profiles.length-1,i+2)];
@@ -109,11 +109,26 @@
     const cubic=k=>.5*((2*b[k])+(-a[k]+c[k])*t+(2*a[k]-5*b[k]+4*c[k]-d[k])*t2+(-a[k]+3*b[k]-3*c[k]+d[k])*t3);
     return [Math.max(.01,cubic(1)),cubic(2)];
   }
-  function bodyPoint(z,angle,offset){const r=bodyAt(z);return [(r[0]+(offset||0))*Math.cos(angle),r[1]+(r[0]*.96+(offset||0))*Math.sin(angle),z];}
-  function bodyNormal(z,a){const eps=.008;const p1=bodyPoint(Math.min(6.679,z+eps),a),p0=bodyPoint(Math.max(-8.599,z-eps),a);return norm([Math.cos(a),Math.sin(a)/.96,-(p1[0]-p0[0])*Math.cos(a)/(eps*2)-(p1[1]-p0[1])*Math.sin(a)/(eps*2)]);}
-  const longitudinal=104, radial=64;
-  for(let j=0;j<longitudinal;j++){
-    const z0=mix(-8.6,6.68,j/longitudinal),z1=mix(-8.6,6.68,(j+1)/longitudinal);
+  // The nose follows the proportions of the A320 family: a low, blunt radome, the crown dropping
+  // over the windscreen and a full chin. Lengths are in model units (about 2.5 m each).
+  const TIP=6.68, NOSE_LEN=1.85, NOSE_Y=-.273, RW=.8, RV=.768;
+  const se=(s,m)=>Math.pow(1-Math.pow(1-clamp(s,0,1),m),1/m);
+  const dip=s=>s<.55?.1*Math.pow(Math.sin(Math.PI*s/.55),2):0;
+  function section(z){
+    const zn=TIP-z;
+    if(zn>=NOSE_LEN){const r=bodyAt(z);return {w:r[0],yc:r[1],h:r[0]*.96};}
+    const t=NOSE_Y+(RV-NOSE_Y)*(se(zn/1.82,1.5)-dip(zn/1.82)),b=NOSE_Y-(NOSE_Y+RV)*se(zn/1.38,2.1);
+    return {w:Math.max(.004,RW*se(zn/1.74,1.6)),yc:(t+b)/2,h:Math.max(.004,(t-b)/2)};
+  }
+  function bodyPoint(z,angle,offset){const s=section(z),o=offset||0;return [(s.w+o)*Math.cos(angle),s.yc+(s.h+o)*Math.sin(angle),z];}
+  function bodyNormal(z,a){const e=.004,z0=Math.max(-8.599,z-e),z1=Math.min(TIP-.0005,z+e);
+    return norm(cross(sub(bodyPoint(z,a+e),bodyPoint(z,a-e)),sub(bodyPoint(z1,a),bodyPoint(z0,a))));}
+  // Rings are spaced evenly along the cabin and close together towards the round tip of the nose.
+  const rings=[],zNose=TIP-NOSE_LEN,nBody=Math.round((zNose+8.6)/.147),radial=64;
+  for(let j=0;j<=nBody;j++)rings.push(mix(-8.6,zNose,j/nBody));
+  for(let j=1;j<=30;j++)rings.push(TIP-NOSE_LEN*Math.pow(1-j/30,1.8));
+  for(let j=0;j<rings.length-1;j++){
+    const z0=rings[j],z1=rings[j+1];
     for(let i=0;i<radial;i++){
       const a0=i*Math.PI*2/radial,a1=(i+1)*Math.PI*2/radial;
       const material=Math.sin((a0+a1)/2)<-.53?belly:paint;
@@ -163,15 +178,49 @@
       surfacePolygon(roundRect(z,angle,.157,.26,.05),glass,.017);
     }
   }
-  // Cockpit windscreen facets, arranged around the upper nose, with narrow frames.
-  const screens=[
-    [[5.07,.57],[5.80,.68],[5.98,1.17],[5.16,1.34]],
-    [[5.16,1.42],[5.98,1.32],[5.98,1.82],[5.16,1.72]],
-    [[5.16,1.82],[5.98,1.98],[5.80,2.46],[5.07,2.57]]
-  ];
-  screens.forEach(p=>surfacePolygon(p,glass,.022,9));
-  // Radome separation follows the nose curvature.
-  for(let i=0;i<64;i++){const a=i*Math.PI/32,b=(i+1)*Math.PI/32;quad(bodyPoint(6.07,a,.003),bodyPoint(6.081,a,.003),bodyPoint(6.081,b,.003),bodyPoint(6.07,b,.003),edge);}
+  // Flight deck glazing as on an airliner: two windscreen panes split by a narrow centre post,
+  // then a sliding window and a rear side window on each side. The row sits just above the cabin
+  // windows, with plain skin up to the crown. Windscreen panes are outlined in the front view and
+  // dropped onto the nose; side windows are outlined in the side view (distance from the tip, height).
+  function angleAt(z,y,side){const s=section(z),a=Math.asin(clamp((y-s.yc)/s.h,-1,1));return side>0?a:Math.PI-a;}
+  function frontHit(x,y){
+    const inside=z=>{const s=section(z);return (x/s.w)*(x/s.w)+((y-s.yc)/s.h)*((y-s.yc)/s.h)<=1;};
+    let lo=zNose-.2,hi=TIP-1e-4;if(!inside(lo))return null;
+    for(let i=0;i<26;i++){const m=(lo+hi)/2;if(inside(m))lo=m;else hi=m;}
+    const s=section(lo);return [lo,Math.atan2((y-s.yc)/s.h,x/s.w)];
+  }
+  function roundPoly(poly,r,k){
+    const out=[],n=poly.length;
+    for(let i=0;i<n;i++){
+      const p=poly[(i+n-1)%n],c=poly[i],q=poly[(i+1)%n];
+      const l1=Math.hypot(p[0]-c[0],p[1]-c[1]),l2=Math.hypot(q[0]-c[0],q[1]-c[1]),rr=Math.min(r,l1*.45,l2*.45);
+      if(rr<1e-5){out.push(c);continue;}
+      const a=[c[0]+(p[0]-c[0])*rr/l1,c[1]+(p[1]-c[1])*rr/l1],b=[c[0]+(q[0]-c[0])*rr/l2,c[1]+(q[1]-c[1])*rr/l2];
+      for(let j=0;j<=k;j++){const t=j/k,u=1-t;out.push([u*u*a[0]+2*u*t*c[0]+t*t*b[0],u*u*a[1]+2*u*t*c[1]+t*t*b[1]]);}
+    }
+    return out;
+  }
+  {
+    const sill=.135,head=.386,post=.024,w1=[.70,.91],corner=.028;
+    const zEdge=y=>TIP-(w1[0]+(w1[1]-w1[0])*(y-sill)/(head-sill)),xEdge=y=>{const z=zEdge(y);return bodyPoint(z,angleAt(z,y,1))[0];};
+    const pane=[];
+    for(let i=0;i<=4;i++)pane.push([mix(post,xEdge(sill),i/4),sill]);
+    for(let i=1;i<4;i++){const y=mix(sill,head,i/4);pane.push([xEdge(y),y]);}
+    for(let i=4;i>=0;i--)pane.push([mix(post,xEdge(head),i/4),head]);
+    const outline=roundPoly(pane,corner,3);
+    for(const side of [-1,1]){
+      surfacePolygon(outline.map(([x,y])=>frontHit(side*x,y)),glass,.022,6);
+      let zLo=w1[0],zHi=w1[1];
+      for(const [gap,ln,lean] of [[.077,.35,0],[.065,.19,-.05]]){
+        const a=zLo+gap,b=zHi+gap,win=roundPoly([[a,sill],[a+ln,sill],[a+ln+lean,head],[b,head]],corner,3);
+        surfacePolygon(win.map(([d,y])=>[TIP-d,angleAt(TIP-d,y,side)]),glass,.022,4);
+        zLo=a+ln;zHi=a+ln+lean;
+      }
+    }
+  }
+  // Radome joint, slightly raked, close behind the tip.
+  for(let i=0;i<64;i++){const a=i*Math.PI/32,b=(i+1)*Math.PI/32,za=TIP-.31+.04*Math.sin(a),zb=TIP-.31+.04*Math.sin(b);
+    quad(bodyPoint(za,a,.003),bodyPoint(za-.011,a,.003),bodyPoint(zb-.011,b,.003),bodyPoint(zb,b,.003),edge);}
 
   // Swept wings: a real closed airfoil volume, washout, dihedral and raked tips.
   function airfoil(u,t){return 5*t*(.2969*Math.sqrt(Math.max(0,u))-.126*u-.3516*u*u+.2843*u*u*u-.1036*u*u*u*u);}

@@ -40,17 +40,21 @@
   }
 
   /* z is measured from the nose rearwards; x is the span (left wing positive), y is up.
+     body.nose: lengths over which the crown, the keel and the width of the nose reach the full section,
+     body.shape: the exponents of those three profiles, body.noseY: height of the tip, body.dip: how much
+     the crown drops over the windscreen; the values follow side and plan views of each type.
+     body.cockpit: flight deck glazing, heights in metres from the centre of the cabin windows.
      wing.plan: [span station, leading edge, chord]; engines: x, y of the axis, z of the intake lip. */
   const catalog=[
     {id:'ssj100',name:'Sukhoi Superjet 100',family:'SSJ 100',length:29.94,span:27.8,
-      body:{d:3.46,top:1.02,nose:[5.0,6.6,5.6],noseY:-.3,shape:[1.6,2.3,2.1],tail:8.6,tailY:.5,tailR:.09,cockpit:'jet'},
+      body:{d:3.46,top:1.02,nose:[4.1,3.1,3.9],noseY:-.34,shape:[1.5,2.1,1.6],tail:8.6,tailY:.5,tailR:.09,dip:[.1,.55],cockpit:{sill:-.17,head:.45,w1:[1.6,2.08],front:[[.06,'e']],side:[[.17,.75,0],[.14,.42,-.1]],arch:0,r:.07}},
       windows:{n:23,from:6.2,to:24.0,y:.25,w:.26,h:.37},doors:[[4.6,.82],[24.5,.78]],
       wing:{y:-.55,dihedral:[5],tc:[.14,.12,.1],plan:[[1.73,11.5,4.9],[5,13.17,3.23],[13.9,17.7,1.2]],canoes:[3.7,6.8,9.8]},
       engine:{type:'fan',x:4.3,y:-2.05,z:9.8,r:.86,len:3.7},
       htail:{span:10.6,root:3.1,tip:1.05,sweep:33,dihedral:6,z:25.4,y:.24},
       vtail:{h:5.0,root:4.8,tip:1.55,sweep:40,z:23.4,fillet:[20.8,.52]}},
     {id:'boeing737',name:'Boeing 737',family:'Boeing 737',length:39.47,span:35.79,
-      body:{d:3.76,top:1.13,nose:[5.4,8.0,6.6],noseY:-.38,shape:[1.5,2.2,2.0],tail:10.8,tailY:.44,tailR:.1,cockpit:'jet'},
+      body:{d:3.76,top:1.13,nose:[5.4,4.6,5.0],noseY:-.38,shape:[1.4,1.9,1.55],tail:10.8,tailY:.44,tailR:.1,dip:[.08,.5],cockpit:{sill:-.05,head:.5,w1:[2.3,2.8],front:[[.07,'e']],side:[[.2,.85,0],[.16,.5,-.14]],arch:.04,r:.06}},
       windows:{n:34,from:6.4,to:33.4,y:.27,w:.25,h:.36},doors:[[5.0,.86],[33.8,.86]],
       wing:{y:-.58,dihedral:[6],tc:[.15,.125,.105],plan:[[1.88,14.9,6.1],[5.6,16.88,4.12],[17.16,23.03,1.3]],canoes:[6.9,10.2,13.3],
         tip:{h:2.44,cant:16,sweep:44,chord:.6,r:.75}},
@@ -58,7 +62,7 @@
       htail:{span:14.35,root:3.9,tip:1.25,sweep:35,dihedral:7,z:33.7,y:.2},
       vtail:{h:6.5,root:5.9,tip:1.65,sweep:39,z:31.1,fillet:[26.0,.64]}},
     {id:'a320',name:'Airbus A320',family:'Airbus A320',length:37.57,span:35.8,
-      body:{d:3.95,top:1.09,nose:[5.3,7.4,6.2],noseY:-.27,shape:[1.65,2.3,2.15],tail:10.4,tailY:.48,tailR:.1,cockpit:'jet'},
+      body:{d:3.95,top:1.09,nose:[4.5,3.4,4.3],noseY:-.355,shape:[1.5,2.1,1.6],tail:10.4,tailY:.48,tailR:.1,dip:[.1,.55],cockpit:{sill:-.19,head:.43,w1:[1.74,2.24],front:[[.06,'e']],side:[[.19,.87,0],[.16,.47,-.12]],arch:0,r:.07}},
       windows:{n:30,from:6.9,to:32.4,y:.25,w:.25,h:.37},doors:[[5.0,.86],[33.0,.86]],
       wing:{y:-.5,dihedral:[5.1],tc:[.155,.125,.108],plan:[[1.975,13.7,6],[6.3,15.9,3.8],[17.05,21.38,1.5]],canoes:[7.3,10.4,13.4],
         tip:{h:2.43,cant:12,sweep:52,chord:.45,r:.95}},
@@ -66,7 +70,7 @@
       htail:{span:12.45,root:3.7,tip:1.25,sweep:32,dihedral:6,z:32.4,y:.22},
       vtail:{h:5.87,root:5.6,tip:1.95,sweep:37,z:30.2,fillet:[28.2,.38]}},
     {id:'crj',name:'Bombardier CRJ 100/200',family:'CRJ 100/200',length:26.77,span:21.21,
-      body:{d:2.69,top:1,nose:[4.9,6.6,5.5],noseY:-.24,shape:[1.5,2.2,2.0],tail:7.9,tailY:.45,tailR:.09,cockpit:'jet'},
+      body:{d:2.69,top:1,nose:[4.4,3.6,4.0],noseY:-.3,shape:[1.4,1.95,1.5],tail:7.9,tailY:.45,tailR:.09,dip:[.07,.5],cockpit:{sill:-.02,head:.45,w1:[2.0,2.4],front:[[.06,'e']],side:[[.15,.6,0],[.12,.36,-.1]],arch:.03,r:.06}},
       windows:{n:14,from:5.4,to:17.4,y:.24,w:.28,h:.4},doors:[[3.9,.82]],
       wing:{y:-.58,dihedral:[3],tc:[.14,.12,.1],plan:[[1.345,12.2,4],[3.9,13.67,2.53],[10,17.2,.95]],
         tip:{h:1.1,cant:22,sweep:50,chord:.42,r:.25}},
@@ -74,15 +78,15 @@
       htail:{tee:true,span:6.35,root:2.1,tip:.95,sweep:35,dihedral:-2},
       vtail:{h:2.85,root:3.9,tip:2.25,sweep:45,z:20.4,fillet:[18.9,.32]}},
     {id:'an24',name:'Ан-24',family:'Ан-24',length:23.53,span:29.2,
-      body:{d:2.9,top:1,nose:[3.9,5.4,4.6],noseY:-.14,shape:[1.9,2.4,2.2],tail:7.0,tailY:.62,tailR:.1,cockpit:'soviet'},
+      body:{d:2.9,top:1,nose:[4.0,2.6,3.2],noseY:-.28,shape:[1.5,1.9,1.7],tail:7.0,tailY:.62,tailR:.1,dip:[.125,.68],cockpit:{sill:.22,head:.76,w1:[2.75,2.97],front:[[-.27,.27],[.39,'e']],side:[[.09,.38,0],[.09,.54,0]],arch:.02,r:.07}},
       windows:{n:13,from:4.9,to:15.6,y:.22,w:.38,h:.38,round:true},doors:[[16.9,.75]],
       wing:{high:true,y:1.51,dihedral:[.5,-2],tc:[.18,.16,.13],plan:[[0,9.2,3.5],[4.6,9.2,3.4],[14.6,10.39,1.25]]},
-      engine:{type:'prop',x:3.95,blades:4,radius:1.95,spinner:.36,axis:1.24,
-        nacelle:[[6.15,1.62,.86,.36],[6.9,1.86,.6,.56],[8.0,1.99,.32,.62],[10.6,1.99,.22,.62],[12.6,1.88,.28,.57],[14.5,1.55,.62,.38],[15.9,1.3,1.06,.1]]},
+      engine:{type:'prop',x:3.95,blades:4,radius:1.95,spinner:.32,axis:1.24,
+        nacelle:[[6.15,1.56,.92,.31],[7.0,1.65,.8,.36],[8.2,1.76,.62,.41],[9.6,1.83,.44,.43],[11.2,1.83,.36,.43],[13.0,1.76,.44,.38],[14.7,1.53,.72,.26],[15.9,1.32,1.04,.08]]},
       htail:{span:9.08,root:2.7,tip:1.15,sweep:12,dihedral:9,z:19.7,y:.3},
       vtail:{h:4.2,root:4.4,tip:1.55,sweep:33,z:17.9,fillet:[13.7,.8]}},
     {id:'embraer',name:'Embraer 170/190',family:'Embraer E-Jet',length:31.68,span:26,
-      body:{d:3.01,top:1.18,nose:[3.9,5.4,4.6],noseY:-.22,shape:[1.75,2.3,2.1],tail:7.9,tailY:.48,tailR:.1,cockpit:'jet'},
+      body:{d:3.01,top:1.18,nose:[3.4,2.5,3.2],noseY:-.3,shape:[1.6,2.2,1.75],tail:7.9,tailY:.48,tailR:.1,dip:[.1,.55],cockpit:{sill:-.06,head:.55,w1:[1.45,1.9],front:[[.06,'e']],side:[[.16,.7,0],[.13,.42,-.12]],arch:.03,r:.08}},
       windows:{n:22,from:5.4,to:24.6,y:.3,w:.26,h:.38},doors:[[3.9,.82],[25.7,.78]],
       wing:{y:-.6,dihedral:[5],tc:[.145,.12,.1],plan:[[1.505,12.3,4.7],[4.6,13.88,3.12],[12.2,17.75,1.3]],canoes:[6.1,8.6,10.7],
         tip:{h:1.6,cant:15,sweep:42,chord:.55,r:.4}},
@@ -90,24 +94,24 @@
       htail:{span:10,root:2.9,tip:1.1,sweep:33,dihedral:7,z:26.6,y:.26},
       vtail:{h:5,root:4.9,tip:1.6,sweep:42,z:24.6,fillet:[20.8,.58]}},
     {id:'dhc8',name:'De Havilland DHC-8-300',family:'DHC-8',length:25.68,span:27.43,
-      body:{d:2.69,top:1,nose:[4.6,6.2,5.2],noseY:-.28,shape:[1.55,2.3,2.0],tail:8.2,tailY:.6,tailR:.09,cockpit:'turbo'},
+      body:{d:2.69,top:1,nose:[4.2,3.4,3.9],noseY:-.3,shape:[1.45,2.0,1.55],tail:8.2,tailY:.6,tailR:.09,dip:[.08,.5],cockpit:{sill:0,head:.48,w1:[1.85,2.25],front:[[.07,'e']],side:[[.16,.55,0],[.12,.36,-.1]],arch:.03,r:.07}},
       windows:{n:15,from:5.0,to:17.6,y:.22,w:.3,h:.42},doors:[[3.6,.78],[18.7,1.25]],
       wing:{high:true,y:1.445,dihedral:[0,2.5],tc:[.18,.17,.135],plan:[[0,10,2.75],[4.2,10,2.7],[13.7,10.5,1.25]]},
-      engine:{type:'prop',x:4.1,blades:4,radius:1.98,spinner:.31,axis:1.12,
-        nacelle:[[7.55,1.43,.81,.31],[8.3,1.77,.5,.47],[9.6,1.86,.26,.5],[12.5,1.81,.22,.5],[14.6,1.63,.42,.4],[16.8,1.32,1.04,.1]]},
+      engine:{type:'prop',x:4.1,blades:4,radius:1.98,spinner:.29,axis:1.12,
+        nacelle:[[7.55,1.4,.84,.28],[8.4,1.56,.65,.32],[9.6,1.76,.42,.355],[12.5,1.75,.3,.355],[14.6,1.58,.47,.3],[16.8,1.32,1.0,.07]]},
       htail:{tee:true,span:7.9,root:2.25,tip:1.2,sweep:20,dihedral:0},
       vtail:{h:3.75,root:4.6,tip:2.6,sweep:35,z:19.1,fillet:[15.6,.62]}},
     {id:'atr',name:'ATR 42/72',family:'ATR 42/72',length:22.67,span:24.57,
-      body:{d:2.865,top:1,nose:[3.8,5.4,4.5],noseY:-.22,shape:[1.7,2.4,2.1],tail:8.0,tailY:.7,tailR:.08,flat:2.35,cockpit:'turbo'},
+      body:{d:2.865,top:1,nose:[3.4,2.6,3.2],noseY:-.22,shape:[1.6,2.2,1.75],tail:8.0,tailY:.7,tailR:.08,flat:2.35,dip:[.1,.55],cockpit:{sill:0,head:.5,w1:[1.6,2.0],front:[[.07,'e']],side:[[.16,.62,0],[.13,.4,-.12]],arch:.03,r:.08}},
       windows:{n:13,from:4.9,to:14.9,y:.22,w:.3,h:.42},doors:[[3.8,1.4],[16.0,.8]],
       wing:{high:true,y:1.57,dihedral:[0,2.5],tc:[.18,.165,.13],plan:[[0,8.9,2.6],[4.1,8.9,2.57],[12.3,9.34,1.4]]},
-      engine:{type:'prop',x:4.05,blades:6,radius:1.965,spinner:.32,axis:1.24,scimitar:true,
-        nacelle:[[6.65,1.56,.92,.32],[7.3,1.73,.66,.45],[8.5,1.79,.48,.47],[10.4,1.71,.52,.46],[11.6,1.56,.85,.32],[12.4,1.43,1.22,.1]]},
+      engine:{type:'prop',x:4.05,blades:6,radius:1.965,spinner:.3,axis:1.24,scimitar:true,
+        nacelle:[[6.65,1.52,.96,.28],[7.5,1.63,.83,.31],[8.6,1.75,.68,.34],[10.0,1.75,.64,.345],[11.3,1.6,.76,.29],[12.4,1.44,1.1,.07]]},
       sponson:{x:1.25,from:8.0,to:13.9,knots:[[8.0,-.45,-.7,.05],[8.7,-.16,-.94,.44],[10.2,-.12,-.99,.52],[12.6,-.16,-.97,.5],[13.9,-.42,-.78,.05]]},
       htail:{tee:true,span:7.31,root:2,tip:1.1,sweep:12,dihedral:0},
       vtail:{h:3.9,root:4.5,tip:2.15,sweep:34,z:16.2,fillet:[12.5,.72]}},
     {id:'yak42',name:'Як-42',family:'Як-42',length:36.38,span:34.88,
-      body:{d:3.8,top:1,nose:[5.0,6.8,5.8],noseY:-.2,shape:[1.85,2.3,2.15],tail:9.4,tailY:.28,tailR:.3,tailPowT:2.4,cockpit:'soviet'},
+      body:{d:3.8,top:1,nose:[5.0,4.0,4.6],noseY:-.3,shape:[1.45,2.0,1.6],tail:9.4,tailY:.28,tailR:.3,tailPowT:2.4,dip:[.08,.5],cockpit:{sill:-.04,head:.5,w1:[2.2,2.65],front:[[.07,'e']],side:[[.18,.7,0],[.15,.45,-.1]],arch:.03,r:.06}},
       windows:{n:27,from:6.6,to:24.6,y:.25,w:.26,h:.37},doors:[[5.0,.86]],
       wing:{y:-.55,dihedral:[2.5],tc:[.15,.13,.11],plan:[[1.9,15.4,6.3],[6,17.36,4.7],[17.44,22.81,1.65]]},
       engine:{type:'fan',mount:'rear',x:3.11,y:.45,z:25.0,r:.86,len:4.3,fanExit:.93,
@@ -115,16 +119,17 @@
       htail:{tee:true,span:11.6,root:3.5,tip:1.4,sweep:38,dihedral:0},
       vtail:{h:4.6,root:6.2,tip:3.2,sweep:42,z:27.1}},
     {id:'an26',name:'Ан-26',family:'Ан-26',length:23.8,span:29.2,
-      body:{d:2.9,top:1,nose:[3.9,5.4,4.6],noseY:-.14,shape:[1.9,2.4,2.2],tail:10.5,tailTop:4.6,tailWidth:8.6,tailY:.8,tailR:.12,tailPowB:1.05,ramp:3.2,cockpit:'soviet'},
-      windows:{n:5,from:5.9,to:11.2,y:.22,w:.38,h:.38,round:true},doors:[[15.6,.8]],blister:{z:3.9,y:.28,r:.34},
+      body:{d:2.9,top:1,nose:[4.0,2.6,3.2],noseY:-.28,shape:[1.5,1.9,1.7],tail:10.5,tailTop:4.6,tailWidth:8.6,tailY:.8,tailR:.12,tailPowB:1.05,ramp:3.2,dip:[.125,.68],cockpit:{sill:.22,head:.76,w1:[2.75,2.97],front:[[-.27,.27],[.39,'e']],side:[[.09,.38,0],[.09,.54,0]],arch:.02,r:.07}},
+      windows:{n:5,from:5.9,to:11.2,y:.22,w:.38,h:.38,round:true},doors:[[15.6,.8]],blister:{z:4.55,y:.3,r:.34},
       wing:{high:true,y:1.51,dihedral:[.5,-2],tc:[.18,.16,.13],plan:[[0,9.3,3.5],[4.6,9.3,3.4],[14.6,10.49,1.25]]},
-      engine:{type:'prop',x:3.95,blades:4,radius:1.95,spinner:.36,axis:1.24,jet:true,
-        nacelle:[[6.25,1.62,.86,.36],[7.0,1.86,.6,.56],[8.1,1.99,.32,.62],[10.7,1.99,.22,.62],[12.7,1.88,.28,.57],[14.6,1.55,.62,.38],[16.0,1.3,1.06,.12]]},
+      engine:{type:'prop',x:3.95,blades:4,radius:1.95,spinner:.32,axis:1.24,jet:true,
+        nacelle:[[6.25,1.56,.92,.31],[7.1,1.65,.8,.36],[8.3,1.76,.62,.41],[9.7,1.83,.44,.43],[11.3,1.83,.36,.43],[13.1,1.76,.44,.38],[14.8,1.53,.72,.27],[16.0,1.32,1.04,.12]]},
       strakes:{from:15.9,to:21.6,x:.62,h:.55,cant:40},
       htail:{span:9.97,root:2.8,tip:1.2,sweep:12,dihedral:9,z:20.1,y:.72},
       vtail:{h:4.35,root:4.6,tip:1.55,sweep:33,z:17.6,fillet:[13.1,.84]}}
   ];
   const palette={paint:[234,240,246],wing:[219,231,242],flap:[205,220,234],belly:[160,185,209],edge:[139,169,195],glass:[20,44,65],dark:[18,32,45],metal:[104,133,157],blue:[101,164,217],lip:[196,210,223],prop:[34,48,62],seam:[201,213,226]};
+  for(let q=1;q<8;q++)palette['belly'+q]=palette.paint.map((v,i)=>Math.round(v+(palette.belly[i]-v)*q/8));
   const modelCache=new Map();
   const naca=(x,t)=>5*t*(.2969*Math.sqrt(Math.max(0,x))-.126*x-.3516*x*x+.2843*x*x*x-.1036*x*x*x*x);
 
@@ -186,9 +191,11 @@
     const wingLE=plan[0][1],wingTE=plan[0][1]+plan[0][2];
     /* a high wing sits on a dorsal fairing that reaches its upper surface */
     const fair=W.high?Math.max(0,W.y+.5*W.tc[0]*plan[0][2]+.05*plan[0][2]-TOP-.04):0;
+    /* The crown drops over the windscreen: below it the radome stays low, which sets the panes back from the tip. */
+    const [dipA,dipS]=B.dip||[0,1],dip=s=>s<dipS?dipA*Math.pow(Math.sin(PI*s/dipS),2):0;
     function fusSec(zn){
       let yt=TOP,yb=-R,hw=R;
-      if(zn<nT)yt=y0+(TOP-y0)*se(zn/nT,mT);
+      if(zn<nT)yt=y0+(TOP-y0)*(se(zn/nT,mT)-dip(zn/nT));
       if(zn<nBt)yb=y0-(y0+R)*se(zn/nBt,mB);
       if(zn<nWd)hw=R*se(zn/nWd,mW);
       const sb=(zn-(L-tB))/tB,st=(zn-(L-tT))/tT,sw=(zn-(L-tW))/tW;
@@ -212,14 +219,16 @@
       return norm(cross(sub(fusPoint(zn+e,th),fusPoint(Math.max(0,zn-e),th)),sub(fusPoint(zn,th+e),fusPoint(zn,th-e))));
     }
     const fusTop=zn=>{const s=fusSec(zn);return s.yw+s.bU;};
-    const zs=[];
-    for(let i=0;i<=16;i++)zs.push(nWd*Math.pow(i/16,1.7));
+    const zs=[],noseLen=Math.max(nT,nBt,nWd);
+    for(let i=0;i<=20;i++)zs.push(noseLen*Math.pow(i/20,1.7));
     const tailStart=L-Math.max(tB,tT,tW);
-    for(let z=nWd+.9;z<tailStart;z+=1.15)zs.push(z);
+    for(let z=noseLen+.9;z<tailStart;z+=1.15)zs.push(z);
     for(let i=0;i<=14;i++)zs.push(mix(tailStart,L,Math.pow(i/14,.85)));
     zs.sort((a,b)=>a-b);
     const zsU=zs.filter((z,i)=>i===0||z-zs[i-1]>.05);
-    surface(fusPoint,zsU,lin(0,TAU,36),(zn,th)=>Math.sin(th)<-.5?'belly':'paint',{closed:true,tip:u=>u<L/2?[0,0,1]:[0,0,-1],eps:1e-4});
+    /* the shaded belly fades out on the nose, so it does not draw a keel line to the tip */
+    const bellyTone=(zn,th)=>{if(Math.sin(th)>=-.5)return 'paint';const q=Math.round(8*smooth((zn-.4*nBt)/(1.2*nBt)));return q===0?'paint':q===8?'belly':'belly'+q;};
+    surface(fusPoint,zsU,lin(0,TAU,36),bellyTone,{closed:true,tip:u=>u<L/2?[0,0,1]:[0,0,-1],eps:1e-4});
     {const s=fusSec(L),c=[0,s.yw,Z(L)];
       disk(c,rT,[0,0,-1],B.tailR>.2?'metal':'dark',20);
       if(B.tailR>.2)disk(add(c,[0,0,-.02]),rT*.78,[0,0,-1],'dark',20);}
@@ -238,7 +247,7 @@
     }
     function oval(zn,th,hz,ht,col,off){
       const c=add(fusPoint(zn,th),mul(fusNormal(zn,th),off||.03)),n=fusNormal(zn,th);
-      const k=10,p=i=>{const a=i*TAU/k;return add(fusPoint(zn+hz*Math.cos(a),th+ht*Math.sin(a)),mul(n,off||.03));};
+      const k=14,p=i=>{const a=i*TAU/k;return add(fusPoint(zn+hz*Math.cos(a),th+ht*Math.sin(a)),mul(n,off||.03));};
       for(let i=0;i<k;i++)tri(c,p(i),p(i+1),col,null,n);
     }
     const thAt=(zn,y,side)=>{const s=fusSec(zn),q=(y-s.yw)/(y>=s.yw?s.bU:s.bL),e=y>=s.yw?s.nt:s.nb,a=Math.asin(clamp(spow(q,e/2),-1,1));return side>0?a:PI-a;};
@@ -247,10 +256,11 @@
       const zn=win.n>1?mix(win.from,win.to,k/(win.n-1)):win.from,th=thAt(zn,win.y*R,side);
       if(win.round)oval(zn,th,win.w/2,win.h/2/R,'glass');
       else{
-        const hz=win.w/2,ht=win.h/2/R,cz=hz*.45,ct=ht*.4;
-        const pts=[[zn-hz,th-ht+ct],[zn-hz+cz,th-ht],[zn+hz-cz,th-ht],[zn+hz,th-ht+ct],[zn+hz,th+ht-ct],[zn+hz-cz,th+ht],[zn-hz+cz,th+ht],[zn-hz,th+ht-ct]];
-        const n=fusNormal(zn,th),c=add(fusPoint(zn,th),mul(n,.03)),P=pts.map(p=>add(fusPoint(p[0],p[1]),mul(n,.03)));
-        for(let i=0;i<8;i++)tri(c,P[i],P[(i+1)%8],'glass',null,n);
+        /* cabin window: a rounded rectangle, taller than wide */
+        const hz=win.w/2,hy=win.h/2,y=win.y*R,k=16;
+        const n=fusNormal(zn,th),c=add(fusPoint(zn,th),mul(n,.03));
+        const P=Array.from({length:k},(_,i)=>{const a=i*TAU/k,u=zn+hz*spow(Math.cos(a),.55),v=y+hy*spow(Math.sin(a),.55);return add(fusPoint(u,thAt(u,v,side)),mul(n,.03));});
+        for(let i=0;i<k;i++)tri(c,P[i],P[(i+1)%k],'glass',null,n);
       }
     }
     for(const [zn,wd] of spec.doors||[])for(const side of [1,-1]){
@@ -260,14 +270,71 @@
       decal([[zn,th0],[zn+f,th0],[zn+f,th1],[zn,th1]],'seam',3);
       decal([[zn+wd-f,th0],[zn+wd,th0],[zn+wd,th1],[zn+wd-f,th1]],'seam',3);
     }
-    /* Flight deck glazing: corners in [share of the nose length, angle from the crown]. */
-    const glass={
-      jet:[[[.47,.06],[.58,.98],[.74,.7],[.65,.06]],[[.6,1.06],[.8,1.12],[.81,.64],[.76,.68]],[[.83,1.12],[.98,1.14],[.97,.66],[.84,.64]]],
-      soviet:[[[.42,.06],[.5,.62],[.62,.5],[.58,.06]],[[.52,.7],[.6,1.02],[.7,.86],[.64,.56]],[[.63,1.04],[.82,1.1],[.82,.74],[.72,.86]],[[.85,1.08],[.98,1.1],[.97,.76],[.86,.74]]],
-      turbo:[[[.47,.06],[.57,.98],[.72,.7],[.64,.06]],[[.6,1.06],[.81,1.12],[.82,.66],[.74,.7]],[[.84,1.12],[.98,1.14],[.97,.7],[.85,.68]]]
-    }[B.cockpit||'jet'];
-    for(const pane of glass)for(const side of [1,-1])
-      decal(pane.map(([s,a])=>[s*nT,PI/2-side*a]),'glass',4);
+    /* Flight deck glazing. Windscreen panes are outlined in the front view and dropped onto the nose
+       along its axis; side windows are outlined in the side view and wrapped onto the skin. The posts
+       between panes are bare skin, corners are rounded, and the whole row sits a little above the
+       cabin windows, with plain skin between it and the crown, as on the real aircraft. */
+    const inSec=(zn,x,y)=>{const s=fusSec(zn),dy=y-s.yw;
+      return dy>=0?Math.pow(Math.abs(x)/s.hu,s.nt)+Math.pow(dy/s.bU,s.nt)<=1:Math.pow(Math.abs(x)/s.hl,s.nb)+Math.pow(-dy/s.bL,s.nb)<=1;};
+    function onFront(x,y){
+      let a=0,b=noseLen;if(!inSec(b,x,y))return null;
+      for(let i=0;i<26;i++){const m=(a+b)/2;if(inSec(m,x,y))b=m;else a=m;}
+      const s=fusSec(b),dy=y-s.yw,c=spow(x/s.hu,s.nt/2),si=dy>=0?spow(dy/s.bU,s.nt/2):-Math.pow(-dy/s.bL,s.nb/2);
+      return [b,Math.atan2(si,c)];
+    }
+    function roundPoly(poly,r,k){
+      const out=[],n=poly.length;
+      for(let i=0;i<n;i++){
+        const p=poly[(i+n-1)%n],c=poly[i],q=poly[(i+1)%n];
+        const l1=Math.hypot(p[0]-c[0],p[1]-c[1]),l2=Math.hypot(q[0]-c[0],q[1]-c[1]),rr=Math.min(r,l1*.45,l2*.45);
+        if(rr<1e-4){out.push(c);continue;}
+        const a=[c[0]+(p[0]-c[0])*rr/l1,c[1]+(p[1]-c[1])*rr/l1],b=[c[0]+(q[0]-c[0])*rr/l2,c[1]+(q[1]-c[1])*rr/l2];
+        for(let j=0;j<=k;j++){const t=j/k,u=1-t;out.push([u*u*a[0]+2*u*t*c[0]+t*t*b[0],u*u*a[1]+2*u*t*c[1]+t*t*b[1]]);}
+      }
+      return out;
+    }
+    /* A pane as rings around its centre, so large panes follow the curvature of the nose. */
+    function glaze(poly,map,col,rings){
+      const n=poly.length;let cu=0,cv=0;for(const p of poly){cu+=p[0]/n;cv+=p[1]/n;}
+      const k=rings||3,G=[];
+      for(let r=0;r<=k;r++){const t=r/k;G.push(poly.map(p=>{const zt=map(cu+(p[0]-cu)*t,cv+(p[1]-cv)*t);if(!zt)return null;
+        const nn=fusNormal(zt[0],zt[1]);return [add(fusPoint(zt[0],zt[1]),mul(nn,.025)),nn];}));}
+      for(let r=0;r<k;r++)for(let i=0;i<n;i++){
+        const a=G[r][i],b=G[r][(i+1)%n],c=G[r+1][(i+1)%n],d=G[r+1][i];
+        if(!a||!b||!c||!d)continue;
+        if(r===0)tri(a[0],c[0],d[0],col,[a[1],c[1],d[1]]);else quad(a[0],b[0],c[0],d[0],col,[a[1],b[1],c[1],d[1]]);
+      }
+    }
+    {
+      /* K.w1: where the outer edge of the windscreen meets the side windows, in the side view
+         (z of its lower and upper corner); K.front: panes across the windscreen, x from the centre line,
+         'e' standing for that outer edge. */
+      const K=B.cockpit,wy=spec.windows.y*R,yS=wy+K.sill,yH=wy+K.head,[zA,zB]=K.w1;
+      const zEdge=y=>zA+(zB-zA)*(y-yS)/(yH-yS),xEdge=y=>{const z=zEdge(y);return fusPoint(z,thAt(z,y,1))[0];};
+      const xMax=xEdge(yS),arch=x=>K.arch*(1-Math.pow(Math.min(1,Math.abs(x)/xMax),2));
+      const frontPane=(xa,xb)=>{const pts=[],m=4;
+        if(xb==='e'){
+          for(let i=0;i<=m;i++){const x=mix(xa,xMax,i/m);pts.push([x,yS]);}
+          for(let i=1;i<m;i++){const y=mix(yS,yH,i/m);pts.push([xEdge(y),y]);}
+          const xt=xEdge(yH);for(let i=m;i>=0;i--){const x=mix(xa,xt,i/m);pts.push([x,yH+arch(x)]);}
+        }else{
+          for(let i=0;i<=m;i++){const x=mix(xa,xb,i/m);pts.push([x,yS]);}
+          for(let i=m;i>=0;i--){const x=mix(xa,xb,i/m);pts.push([x,yH+arch(x)]);}
+        }
+        return roundPoly(pts,K.r,3);};
+      for(const [xa,xb] of K.front){
+        if(xa<0){glaze(frontPane(xa,xb),(u,v)=>onFront(u,v),'glass',4);continue;}
+        for(const side of [1,-1])glaze(frontPane(xa,xb),(u,v)=>onFront(side*u,v),'glass',4);
+      }
+      for(const side of [1,-1]){
+        let zLo=zA,zHi=zB;
+        for(const [gap,ln,lean] of K.side){
+          const a=zLo+gap,b=zHi+gap,pts=[[a,yS],[a+ln,yS],[a+ln+lean,yH],[b,yH]];
+          glaze(roundPoly(pts,K.r,3),(u,v)=>[u,thAt(u,v,side)],'glass',2);
+          zLo=a+ln;zHi=a+ln+lean;
+        }
+      }
+    }
     if(spec.blister){const b=spec.blister,th=thAt(b.z,b.y*R,1),n=fusNormal(b.z,th),c=fusPoint(b.z,th);
       const t1=[0,0,1],t2=norm(cross(n,t1));
       surface((u,v)=>add(c,add(mul(n,b.r*.62*Math.cos(u)),add(mul(t1,b.r*Math.sin(u)*Math.cos(v)),mul(t2,b.r*Math.sin(u)*Math.sin(v))))),lin(0,PI/2,5),lin(0,TAU,16),'glass',{closed:true,tip:()=>n});}
@@ -407,7 +474,7 @@
     }
     if(E.type==='prop'){
       const k=E.nacelle,Yt=curve(k.map(q=>[q[0],q[1]])),Yb=curve(k.map(q=>[q[0],q[2]])),Hw=curve(k.map(q=>[q[0],q[3]]));
-      const z0=k[0][0],z1=k[k.length-1][0],ex=2/2.3;
+      const z0=k[0][0],z1=k[k.length-1][0],ex=2/2.1;
       for(const s of [1,-1]){
         const cx=s*E.x;
         const fn=(zn,th)=>{const yt=Yt(zn),yb=Yb(zn),yw=(yt+yb)/2,c=Math.cos(th),si=Math.sin(th);
@@ -588,7 +655,7 @@
     const paths=s.polygons.map(f=>`<path d="M${f.points.map(p=>p.slice(0,2).map(v=>v.toFixed(2)).join(',')).join('L')}Z" fill="${f.color}" stroke="${f.color}" stroke-width=".45" stroke-linejoin="round"/>`).join('');
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${s.width}" height="${s.height}" viewBox="0 0 ${s.width} ${s.height}">${bg&&bg!=='transparent'?`<rect width="100%" height="100%" fill="${bg}"/>`:''}${paths}</svg>`;
   }
-  const api={catalog,createModel,render,rasterize,toSVG,project:projection,view:VIEW,version:'2.0.0'};
+  const api={catalog,createModel,render,rasterize,toSVG,project:projection,view:VIEW,version:'2.1.0'};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   if(root)root.Fleet3D=api;
 })(typeof window!=='undefined'?window:typeof globalThis!=='undefined'?globalThis:this);
