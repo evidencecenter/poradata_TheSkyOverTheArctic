@@ -1755,7 +1755,9 @@ document.addEventListener('keydown',e=>{ if(e.key!=='Enter') return; const f=e.t
 // ---------- map factory ----------
 function makeMap(container,opts){ opts=opts||{}; const svg=svgEl('svg',{viewBox:`0 0 ${BM.W} ${BM.H}`,role:'img','aria-label':opts.label||'Карта авиамаршрутов АЗРФ'},container); const defs=svgEl('defs',null,svg); const pat=svgEl('pattern',{id:'hatch'+(opts.id||''),width:6,height:6,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs); svgEl('rect',{width:6,height:6,fill:'var(--map-part)'},pat); svgEl('line',{x1:0,y1:0,x2:0,y2:6,stroke:'var(--map-full)','stroke-width':2.5},pat);
   svgEl('path',{d:BM.others,class:'oth'},svg); svgEl('path',{d:BM.russia,class:'ru'},svg); svgEl('path',{d:BM.azrf_part,fill:`url(#hatch${opts.id||''})`},svg); svgEl('path',{d:BM.azrf_full,class:'full'},svg); svgEl('path',{d:BM.admin1,class:'a1'},svg); svgEl('path',{d:BM.circle,class:'circle'},svg);
-  const gTech=svgEl('g',null,svg); const gRoutes=svgEl('g',{class:'routes'},svg), gPath=svgEl('g',null,svg), gMiss=svgEl('g',null,svg), gNodes=svgEl('g',null,svg), gLbl=svgEl('g',null,svg), gTop=svgEl('g',null,svg);
+  // линии, точки и самолёты обрезаются по рамке карты: маршрут Архангельск — Анталья уходит за левый край карты, а не на поля страницы
+  const clipId='mapclip'+(opts.id||''); const clip=svgEl('clipPath',{id:clipId},defs); svgEl('rect',{width:BM.W,height:BM.H},clip); const inFrame={'clip-path':`url(#${clipId})`};
+  const gTech=svgEl('g',null,svg); const gRoutes=svgEl('g',{class:'routes',...inFrame},svg), gPath=svgEl('g',inFrame,svg), gMiss=svgEl('g',inFrame,svg), gNodes=svgEl('g',inFrame,svg), gLbl=svgEl('g',null,svg), gTop=svgEl('g',inFrame,svg);
   const maxSeats=Math.max(...ROUTES.map(r=>r.seats));
   const routeEls=ROUTES.map(r=>{ const a=NODES[r.a],b=NODES[r.b]; if(!a||!b) return null; const p=svgEl('path',{d:gcPath(a,b),class:'route'+(r.local?' in':'')},gRoutes); p.__r=r; return p; }).filter(Boolean);
   const XY={}; for(const c in NODES) XY[c]=project(NODES[c].lon,NODES[c].lat);
@@ -1777,8 +1779,12 @@ function makeMap(container,opts){ opts=opts||{}; const svg=svgEl('svg',{viewBox:
   let k=1; function resize(){ const w=container.clientWidth||600; k=BM.W/w; const narrow=w<560; gTech.style.display=narrow?'none':''; for(const t of techEls){ t.setAttribute('font-size',(10*Math.max(1,k)).toFixed(1)); t.style.display=narrow?'none':''; }
     for(const c in nodeEls){ const n=NODES[c]; const base=n.azrf?(n.role==='local'?2.2:2.6+6*Math.sqrt(n.seats/maxNode)):(n.role==='hub'||c==='MOW'?4:2.2+4*Math.sqrt(n.seats/maxNode)); nodeEls[c].setAttribute('r',(base*Math.max(1,k*0.9)).toFixed(1)); }
     for(const m of missEls) m.setAttribute('r',(2.6*Math.max(1,k*0.9)).toFixed(1));
-    for(const c in lblEls){ const t=lblEls[c]; t.setAttribute('font-size',(12*Math.max(1,k)).toFixed(1)); t.style.display=(narrow&&!NARROW.has(c))?'none':''; } if(api.onResize) api.onResize(k); }
-  new ResizeObserver(resize).observe(container); resize();
+    for(const c in lblEls){ const t=lblEls[c]; t.setAttribute('font-size',(12*Math.max(1,k)).toFixed(1)); t.style.display=(narrow&&!NARROW.has(c))?'none':''; }
+    // подпись не выходит за рамку карты: если на узком экране она не помещается сбоку, то встаёт под точкой
+    for(const c in lblEls){ const t=lblEls[c]; if(t.style.display==='none') continue; const o=OFF[c]||[6,-4,'start']; const [x,y]=XY[c]; t.setAttribute('x',(x+o[0]).toFixed(1)); t.setAttribute('y',(y+o[1]).toFixed(1)); t.setAttribute('text-anchor',o[2]);
+      let bb=null; try{ bb=t.getBBox(); }catch(e){} if(bb&&bb.width&&(bb.x<0||bb.x+bb.width>BM.W)){ t.setAttribute('text-anchor','middle'); t.setAttribute('x',Math.min(BM.W-bb.width/2-2,Math.max(bb.width/2+2,x)).toFixed(1)); t.setAttribute('y',(y+14*Math.max(1,k)).toFixed(1)); } }
+    if(api.onResize) api.onResize(k); }
+  new ResizeObserver(resize).observe(container); resize(); if(document.fonts&&document.fonts.ready) document.fonts.ready.then(resize);
   api.setMode=function(mode,sel){ for(const p of routeEls){ const r=p.__r; const w=0.5+3.2*Math.sqrt(r.seats/maxSeats); const cls='route'+(r.local?' in':''); let show=true, dim=false;
       if(mode==='capitals') dim=!(CAPITALS.has(r.a)||CAPITALS.has(r.b)); else if(mode==='hubs') dim=!(HUBS2.has(r.a)||HUBS2.has(r.b)); else if(mode==='inside') show=r.local; else if(mode==='clusters') show=r.cluster; else if(mode==='mine'&&sel) dim=!(r.a===sel||r.b===sel);
       p.setAttribute('class',cls+(dim?' dim':'')+(show?'':' hide')); p.setAttribute('stroke-width',(show?w:0).toFixed(2)); p.style.strokeOpacity=''; if(show&&!dim) p.style.strokeOpacity=r.local?0.85:(mode==='all'?0.3:0.55);
