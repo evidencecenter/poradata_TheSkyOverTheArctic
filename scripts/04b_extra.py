@@ -313,6 +313,46 @@ extra['load_factor'] = {'airports': lf, 'src': 'https://abnews.ru/szfo/news/murm
 print('загрузка:', lf)
 
 # ---------------------------------------------------------------- 8. сутки рейсов для анимации
+# Рейс с промежуточной посадкой летит на анимации двумя участками, с посадкой между ними. Участок, который
+# касается Арктики, записан в данных целиком (запись stage). У второго участка известно одно время: прилёт
+# в конечный пункт или вылет из начального; другое оцениваем по скорости того же борта на известном участке
+# (плюс 25 минут на взлёт и посадку, не меньше 30 минут на земле). Второй участок помечен седьмым полем:
+# в число рейсов за сутки он не входит.
+def gc_km(a, b):
+    la1, lo1, la2, lo2 = map(math.radians, [ap.lat[a], ap.lon[a], ap.lat[b], ap.lon[b]])
+    h = math.sin((la2 - la1) / 2) ** 2 + math.cos(la1) * math.cos(la2) * math.sin((lo2 - lo1) / 2) ** 2
+    return 2 * 6371 * math.asin(math.sqrt(h))
+
+
+def is_local(a, b):
+    return bool(ap.azrf[a] and ap.azrf[b]) or (a in LOCAL and b in ROOT_OUT) or (b in LOCAL and a in ROOT_OUT)
+
+
+STAGES = f_all[f_all.stop_role == 'stage']
+
+
+def stop_legs(r, mins):
+    """Участки рейса с промежуточной посадкой: [(откуда, куда, вылет, прилёт)] в минутах от начала суток."""
+    o, d, st = r.origin_airport_iata, r.destination_airport_iata, STAGES[STAGES.flight_number == r.flight_number]
+    out = st[(st.origin_airport_iata == o) & (st.scheduled_departure_utc == r.scheduled_departure_utc)]
+    inn = st[(st.destination_airport_iata == d) & (st.scheduled_arrival_utc == r.scheduled_arrival_utc)]
+    if len(out):                                   # из Арктики: известен первый участок
+        x = out.iloc[0].destination_airport_iata
+        t0, t1, t3 = mins(r.scheduled_departure_utc), mins(out.iloc[0].scheduled_arrival_utc), mins(r.scheduled_arrival_utc)
+        v = gc_km(o, x) / max(30, t1 - t0 - 25)
+        t2 = max(t1 + 30, t3 - int(round(25 + gc_km(x, d) / v)))
+    elif len(inn):                                 # в Арктику: известен второй участок
+        x = inn.iloc[0].origin_airport_iata
+        t0, t2, t3 = mins(r.scheduled_departure_utc), mins(inn.iloc[0].scheduled_departure_utc), mins(r.scheduled_arrival_utc)
+        v = gc_km(x, d) / max(30, t3 - t2 - 25)
+        t1 = min(t2 - 30, t0 + int(round(25 + gc_km(o, x) / v)))
+    else:
+        return None
+    if not (t0 < t1 <= t2 < t3):
+        return None
+    return [(o, x, t0, t1), (x, d, t2, t3)]
+
+
 f['msk_date'] = (f.scheduled_departure_utc + pd.Timedelta('3h')).dt.normalize()
 cnt = f.groupby('msk_date').size()
 days = {}
@@ -325,13 +365,22 @@ for label, month in [('winter', 2), ('summer', 7)]:
     end = start + pd.Timedelta('1D')
     sub = f[(f.scheduled_departure_utc < end) & (f.scheduled_arrival_utc > start)]
     rows = []
+    mins = lambda t: int((t - start).total_seconds() // 60)
+    n_split = 0
     for _, r in sub.iterrows():
         o, d = r.origin_airport_iata, r.destination_airport_iata
+        legs = stop_legs(r, mins) if r.stop_role == 'through' else None
+        if legs:
+            n_split += 1
+            for k, (a, b, ta, tb) in enumerate(legs):
+                if tb > 0 and ta < 1440:
+                    rows.append([ap.city_key[a], ap.city_key[b], ta, tb, int(is_local(a, b)), int(r.seats)] + ([1] if k else []))
+            continue
         local = bool(r.both_azrf) or (o in LOCAL and d in ROOT_OUT) or (d in LOCAL and o in ROOT_OUT)
-        rows.append([r.origin_city, r.destination_city, int((r.scheduled_departure_utc - start).total_seconds() // 60), int((r.scheduled_arrival_utc - start).total_seconds() // 60),
+        rows.append([r.origin_city, r.destination_city, mins(r.scheduled_departure_utc), mins(r.scheduled_arrival_utc),
                      int(local), int(r.seats)])
     days[label] = {'date': day.strftime('%Y-%m-%d'), 'n': int(c.loc[day]), 'flights': rows}
-    print('день для анимации', label, day.date(), 'рейсов', c.loc[day], 'в окне', len(rows))
+    print('день для анимации', label, day.date(), 'рейсов', c.loc[day], 'в окне', len(rows), 'с посадкой (два участка):', n_split)
 extra['day'] = days
 
 # ---------------------------------------------------------------- 9. аэродромы АЗРФ из реестра без рейсов в данных

@@ -168,8 +168,9 @@ function makeMap(container,opts){ opts=opts||{}; const svg=svgEl('svg',{viewBox:
   for(const c in map.lblEls){ if(!D.profiles[c]&&!['MOW','LED','OVB','KJA','YKS'].includes(c)) map.lblEls[c].style.display='none'; }
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches; let day='winter', t=reduce?720:0, playing=!reduce, last=null, flights=[];
   const slider=$('#sky-time'), clock=$('#sky-clock'), air=$('#sky-air'), total=$('#sky-total'), totalW=$('#sky-total-w'), btn=$('#sky-play');
-  function load(){ map.gTop.innerHTML=''; flights=X.day[day].flights.filter(f=>NODES[f[0]]&&NODES[f[1]]).map(f=>{ const pts=gcPts(NODES[f[0]],NODES[f[1]],40); const el=svgEl('circle',{class:'plane-dot',r:3,fill:f[4]?'var(--accent)':'var(--sky-deep)',opacity:0},map.gTop); return {a:f[0],b:f[1],dep:f[2],arr:f[3],local:f[4],seats:f[5],pts,el}; });
-    const n=flights.filter(f=>f.dep>=0&&f.dep<1440).length; total.textContent=fmt(n); totalW.textContent=pl(n,'рейс','рейса','рейсов'); size(); draw(); }
+  function load(){ map.gTop.innerHTML=''; flights=X.day[day].flights.filter(f=>NODES[f[0]]&&NODES[f[1]]).map(f=>{ const pts=gcPts(NODES[f[0]],NODES[f[1]],40); const el=svgEl('circle',{class:'plane-dot',r:3,fill:f[4]?'var(--accent)':'var(--sky-deep)',opacity:0},map.gTop); return {a:f[0],b:f[1],dep:f[2],arr:f[3],local:f[4],seats:f[5],cont:f[6]||0,pts,el}; });
+    // рейс с промежуточной посадкой летит двумя участками; второй участок — тот же рейс, в число рейсов за сутки он не входит
+    const n=flights.filter(f=>!f.cont&&f.dep>=0&&f.dep<1440).length; total.textContent=fmt(n); totalW.textContent=pl(n,'рейс','рейса','рейсов'); size(); draw(); }
   function size(){ const k=map.k(); for(const f of flights) f.el.setAttribute('r',((2+2.4*Math.sqrt(Math.min(f.seats,200)/200))*Math.max(1,k*0.85)).toFixed(1)); }
   map.onResize=()=>size();
   function draw(){ let n=0; for(const f of flights){ if(t>=f.dep&&t<=f.arr){ const q=(t-f.dep)/Math.max(1,f.arr-f.dep); const i=Math.min(39,Math.floor(q*40)), r=q*40-i; const p0=f.pts[i], p1=f.pts[i+1]; const x=p0[0]+(p1[0]-p0[0])*r, y=p0[1]+(p1[1]-p0[1])*r; f.el.setAttribute('cx',x.toFixed(1)); f.el.setAttribute('cy',y.toFixed(1)); f.el.setAttribute('opacity',1); n++; } else f.el.setAttribute('opacity',0); }
